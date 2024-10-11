@@ -1,10 +1,21 @@
+import jakarta.persistence.*;
+
 import java.util.GregorianCalendar;
 
+@Entity
+@Access(AccessType.FIELD)
 public class Borrowing {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private GregorianCalendar BorrowingBeginDate;
     private GregorianCalendar BorrowingEndDate;
+    @ManyToOne
+    @JoinColumn
     private Client client;
+
+    @ManyToOne
+    @JoinColumn
     private Literature literature;
 
     public Borrowing(GregorianCalendar beginDate, GregorianCalendar endDate, Client client, Literature literature) {
@@ -12,6 +23,10 @@ public class Borrowing {
         this.BorrowingEndDate = endDate;
         this.client = client;
         this.literature = literature;
+    }
+
+    public Borrowing() {
+
     }
 
     public long getId() {

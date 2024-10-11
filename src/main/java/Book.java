@@ -1,3 +1,8 @@
+import jakarta.persistence.*;
+
+@Entity
+@Access(AccessType.FIELD)
+@DiscriminatorValue("book")
 public class Book extends Literature{
     private String genre;
     private String Author;
@@ -6,6 +11,10 @@ public class Book extends Literature{
         super(maxBorrowingLength, name);
         this.genre = genre;
         Author = author;
+    }
+
+    public Book() {
+
     }
 
     @Override

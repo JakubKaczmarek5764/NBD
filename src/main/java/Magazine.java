@@ -1,3 +1,11 @@
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@Access(AccessType.FIELD)
+@DiscriminatorValue("magazine")
 public class Magazine extends Literature{
     private String issue;
 
@@ -5,6 +13,11 @@ public class Magazine extends Literature{
         super(maxBorrowingLength, name);
         this.issue = issue;
     }
+
+    public Magazine() {
+
+    }
+
     @Override
     String getLiteratureInfo() {
         return "id: "+ getLiteratureId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" issue: "+getIssue();

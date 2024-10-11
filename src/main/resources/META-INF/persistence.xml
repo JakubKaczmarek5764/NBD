@@ -6,6 +6,10 @@
   <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
     <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
     <class>Literature</class>
+    <class>Magazine</class>
+    <class>Book</class>
+    <class>Borrowing</class>
+    <class>Client</class>
     <properties>
       <!-- PostgreSQL -->
       <property name="jakarta.persistence.jdbc.url"
