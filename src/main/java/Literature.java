@@ -1,11 +1,9 @@
 public abstract class Literature {
     private long id;
-    private double basePenalty;
     private int maxBorrowingLength;
     private String name;
 
-    public Literature(double basePenalty, int maxBorrowingLength, String name) {
-        this.basePenalty = basePenalty;
+    public Literature(int maxBorrowingLength, String name) {
         this.maxBorrowingLength = maxBorrowingLength;
         this.name = name;
     }
@@ -13,19 +11,9 @@ public abstract class Literature {
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
-
-    public double getBasePenalty() {
-        return basePenalty;
-    }
-
-    public void setBasePenalty(double basePenalty) {
-        this.basePenalty = basePenalty;
-    }
-
     public int getMaxBorrowingLength() {
         return maxBorrowingLength;
     }
@@ -44,6 +32,4 @@ public abstract class Literature {
 
 
     abstract String getLiteratureInfo();
-
-    abstract double getPenaltyPrice();
 }

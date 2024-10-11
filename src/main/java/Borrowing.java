@@ -47,6 +47,5 @@ public class Borrowing {
         }
         int BorrowingLengthInDays = (int)Math.ceil((double) (BorrowingEndDate.getTimeInMillis() -
                 BorrowingBeginDate.getTimeInMillis()) / 86400000);
-        client.addPenalty(BorrowingLengthInDays, literature.getPenaltyPrice());
     }
 }
