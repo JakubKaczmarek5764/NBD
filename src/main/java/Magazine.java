@@ -7,7 +7,7 @@ public class Magazine extends Literature{
     }
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" issue: "+getIssue();
+        return "id: "+ getLiteratureId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" issue: "+getIssue();
     }
 
     public String getIssue() {

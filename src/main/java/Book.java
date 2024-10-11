@@ -10,7 +10,7 @@ public class Book extends Literature{
 
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" genre: "+getGenre()+" author: "+getAuthor();
+        return "id: "+ getLiteratureId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" genre: "+getGenre()+" author: "+getAuthor();
     }
     public String getGenre() {
         return genre;

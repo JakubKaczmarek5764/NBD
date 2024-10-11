@@ -5,5 +5,16 @@
              version="3.0">
   <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
     <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
+    <properties>
+      <!-- PostgreSQL -->
+      <property name="jakarta.persistence.jdbc.url"
+                value="jdbc:postgresql://localhost:5432/nbddb"/>
+      <!-- Credentials -->
+      <property name="jakarta.persistence.jdbc.user"
+                value="nbd"/>
+      <property name="jakarta.persistence.jdbc.password"
+                value="nbdpassword"/>
+    </properties>
   </persistence-unit>
+
 </persistence>
