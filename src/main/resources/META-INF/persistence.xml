@@ -5,6 +5,7 @@
              version="3.0">
   <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
     <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
+    <class>Literature</class>
     <properties>
       <!-- PostgreSQL -->
       <property name="jakarta.persistence.jdbc.url"
@@ -14,6 +15,9 @@
                 value="nbd"/>
       <property name="jakarta.persistence.jdbc.password"
                 value="nbdpassword"/>
+      <!-- Automatic schema export -->
+      <property name="jakarta.persistence.schema-generation.database.action"
+                value="drop-and-create"/>
     </properties>
   </persistence-unit>
 
