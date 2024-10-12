@@ -13,10 +13,11 @@ public abstract class Literature {
     private String name;
     @Column(unique = true)
     private String literatureId;
-
-    public Literature(int maxBorrowingLength, String name) {
+    private int weight;
+    public Literature(int maxBorrowingLength, String name, int weight) {
         this.maxBorrowingLength = maxBorrowingLength;
         this.name = name;
+        this.weight = weight;
     }
 
     public Literature() {
@@ -52,4 +53,12 @@ public abstract class Literature {
     }
 
     abstract String getLiteratureInfo();
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+    abstract int getTotalWeight();
 }

@@ -12,10 +12,14 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    public Client(String firstName, String lastName, String personalID) {
+
+
+    private int maxWeight;
+    public Client(String firstName, String lastName, String personalID, int maxWeight) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
+        this.maxWeight = maxWeight;
     }
 
     public Client() {
@@ -51,5 +55,12 @@ public class Client {
 
     public Long getId() {
         return id;
+    }
+    public int getMaxWeight() {
+        return maxWeight;
+    }
+
+    public void setMaxWeight(int maxWeight) {
+        this.maxWeight = maxWeight;
     }
 }
