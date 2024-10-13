@@ -1,16 +1,19 @@
 import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity
 @Access(AccessType.FIELD)
 public class Client {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
     private String firstName;
     private String lastName;
     @Column(unique = true)
     private String personalID;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+
 
 
 
@@ -62,5 +65,32 @@ public class Client {
 
     public void setMaxWeight(int maxWeight) {
         this.maxWeight = maxWeight;
+    }
+
+    @Override
+    public String toString() {
+        return new org.apache.commons.lang3.builder.ToStringBuilder(this)
+                .append("firstName", firstName)
+                .append("lastName", lastName)
+                .append("personalID", personalID)
+                .append("id", id)
+                .append("maxWeight", maxWeight)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Client client = (Client) o;
+
+        return new EqualsBuilder().append(id, client.id).append(maxWeight, client.maxWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(firstName).append(lastName).append(personalID).append(id).append(maxWeight).toHashCode();
     }
 }

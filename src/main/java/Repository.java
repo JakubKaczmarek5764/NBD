@@ -6,15 +6,15 @@ import jakarta.persistence.criteria.*;
 
 import java.util.List;
 // tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
-abstract class Repository {
-    protected static EntityManagerFactory emf;
+class Repository {
+    private static EntityManagerFactory emf;
 
     private static void emfChecker(){
         if (emf == null) {
             emf = Persistence.createEntityManagerFactory("nbd");
         }
     }
-    protected static <T> void create(T obj) {
+    static <T> void create(T obj) {
         emfChecker();
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -31,16 +31,18 @@ abstract class Repository {
             em.close();
         }
     }
-    protected static <T> List<T> getAll(Class<T> objClass){
+    static <T> List<T> getAll(Class<T> objClass) throws NotFoundException {
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
         Root<T> rootEntry = query.from(objClass);
         query.select(rootEntry);
-        return em.createQuery(query).getResultList();
+        List<T> output = em.createQuery(query).getResultList();
+        if (output.isEmpty()){ throw new NotFoundException();}
+        return output;
     }
-    protected static <T> List<T> getBy(Class<T> objClass, Object parameter, String parameterName){
+    static <T> List<T> getBy(Class<T> objClass, Object parameter, String parameterName) throws NotFoundException {
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -48,9 +50,11 @@ abstract class Repository {
         Root<T> rootEntry = query.from(objClass);
         Predicate predicate = cb.equal(rootEntry.get(parameterName), parameter);
         query.where(predicate);
-        return em.createQuery(query).getResultList();
+        List<T> output = em.createQuery(query).getResultList();
+        if (output.isEmpty()){ throw new NotFoundException();}
+        return output;
     }
-    protected static <T> void update(Class<T> objClass, Object parameter, Object newValue, String parameterName, Long id){
+    static <T> void update(Class<T> objClass, Object parameter, Object newValue, String parameterName, Long id){
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
