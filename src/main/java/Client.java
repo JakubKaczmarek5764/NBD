@@ -13,9 +13,8 @@ public class Client {
     @Column(unique = true)
     private String personalID;
 
-
-
-
+    @Version
+    private long version;
 
     private int maxWeight;
     public Client(String firstName, String lastName, String personalID, int maxWeight) {

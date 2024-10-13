@@ -1,4 +1,5 @@
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.GregorianCalendar;
 
@@ -8,14 +9,18 @@ public class Borrowing {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
+    @Version
+    private long version;
     private GregorianCalendar BorrowingBeginDate;
     private GregorianCalendar BorrowingEndDate;
     @ManyToOne
     @JoinColumn
+    @NotNull
     private Client client;
 
     @ManyToOne
     @JoinColumn
+    @NotNull
     private Literature literature;
 
     public Borrowing(GregorianCalendar beginDate, GregorianCalendar endDate, Client client, Literature literature) {

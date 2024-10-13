@@ -12,6 +12,9 @@ public abstract class Literature {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private long id;
+
+    @Version
+    private long version;
     private String name;
     private int weight;
     public Literature(String name, int weight) {

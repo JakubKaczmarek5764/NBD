@@ -22,6 +22,7 @@
       <!-- Automatic schema export -->
       <property name="jakarta.persistence.schema-generation.database.action"
                 value="drop-and-create"/>
+      <!-- Transaction isolation level -->
       <property name="hibernate.connection.isolation" value="2"/>
     </properties>
   </persistence-unit>
