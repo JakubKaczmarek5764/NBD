@@ -27,7 +27,6 @@ public class BorrowingRepository {
         for (Borrowing b : list){
             sum += b.getLiterature().getTotalWeight();
         }
-
         return sum;
     }
     public static List<Borrowing> getAllBorrowingsByClientId(long id){
