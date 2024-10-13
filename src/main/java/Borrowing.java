@@ -1,5 +1,8 @@
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.GregorianCalendar;
 
@@ -32,6 +35,34 @@ public class Borrowing {
 
     public Borrowing() {
 
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("version", version)
+//                .append("BorrowingBeginDate", BorrowingBeginDate)
+//                .append("BorrowingEndDate", BorrowingEndDate)
+                .append("client", client)
+                .append("literature", literature)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Borrowing borrowing = (Borrowing) o;
+
+        return new EqualsBuilder().append(id, borrowing.id).append(BorrowingBeginDate, borrowing.BorrowingBeginDate).append(BorrowingEndDate, borrowing.BorrowingEndDate).append(client, borrowing.client).append(literature, borrowing.literature).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(BorrowingBeginDate).append(BorrowingEndDate).append(client).append(literature).toHashCode();
     }
 
     public long getId() {

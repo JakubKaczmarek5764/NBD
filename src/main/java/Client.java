@@ -1,6 +1,7 @@
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -67,17 +68,6 @@ public class Client {
     }
 
     @Override
-    public String toString() {
-        return new org.apache.commons.lang3.builder.ToStringBuilder(this)
-                .append("firstName", firstName)
-                .append("lastName", lastName)
-                .append("personalID", personalID)
-                .append("id", id)
-                .append("maxWeight", maxWeight)
-                .toString();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -90,6 +80,18 @@ public class Client {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(firstName).append(lastName).append(personalID).append(id).append(maxWeight).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(firstName).append(lastName).append(personalID).append(maxWeight).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("firstName", firstName)
+                .append("lastName", lastName)
+                .append("personalID", personalID)
+                .append("version", version)
+                .append("maxWeight", maxWeight)
+                .toString();
     }
 }

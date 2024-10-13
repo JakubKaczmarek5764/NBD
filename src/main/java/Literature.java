@@ -26,6 +26,7 @@ public abstract class Literature {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
+                .append("version", version)
                 .append("name", name)
                 .append("weight", weight)
                 .toString();

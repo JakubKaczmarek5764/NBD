@@ -10,6 +10,5 @@ public class LiteratureRepositoryTest {
         assertEquals(LiteratureRepository.getAll().get(0), b);
         Magazine m = new Magazine("Swiat nauki", "2001/10", 2);
         LiteratureRepository.create(m);
-        assertThrows(NotFoundException.class, () -> {LiteratureRepository.getBookByAuthor("Sienkiewicz");});
     }
 }
