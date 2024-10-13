@@ -9,8 +9,8 @@ import jakarta.persistence.Entity;
 public class Magazine extends Literature{
     private String issue;
 
-    public Magazine(int maxBorrowingLength, String name, String issue, int weight) {
-        super(maxBorrowingLength, name, weight);
+    public Magazine(String name, String issue, int weight) {
+        super(name, weight);
         this.issue = issue;
     }
 
@@ -20,7 +20,7 @@ public class Magazine extends Literature{
 
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getLiteratureId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" issue: "+getIssue();
+        return "id: "+ getId() + " name: "+getName()+" issue: "+getIssue();
     }
 
     @Override

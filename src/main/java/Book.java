@@ -1,4 +1,7 @@
 import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -7,12 +10,37 @@ public class Book extends Literature{
     private String genre;
     private String author;
     private int tier;
-    public Book(int maxBorrowingLength, String name, String genre, String author, int weight, int tier) {
-        super(maxBorrowingLength, name, weight);
+    public Book(String name, String genre, String author, int weight, int tier) {
+        super(name, weight);
         this.genre = genre;
         this.author = author;
         this.tier = tier;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        return new EqualsBuilder().appendSuper(super.equals(o)).append(tier, book.tier).append(genre, book.genre).append(author, book.author).isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .append("genre", genre)
+                .append("author", author)
+                .append("tier", tier)
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(genre).append(author).append(tier).toHashCode();
     }
 
     public Book() {
@@ -21,7 +49,7 @@ public class Book extends Literature{
 
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getLiteratureId() +" maxBorrowingLength: "+ getMaxBorrowingLength()+" name: "+getName()+" genre: "+getGenre()+" author: "+getAuthor();
+        return "id: "+ getId() + " name: "+getName()+" genre: "+getGenre()+" author: "+getAuthor();
     }
 
     @Override
