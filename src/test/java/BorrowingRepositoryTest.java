@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BorrowingRepositoryTest {
     @Test
-    public void persistBorrowing(){
+    public void borrowingTests(){
         Client c = new Client("Jan", "Kowalski", "123", 10);
         ClientRepository.create(c);
 

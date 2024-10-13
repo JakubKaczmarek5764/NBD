@@ -1,7 +1,4 @@
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 
 import java.util.List;
@@ -36,9 +33,9 @@ class Repository {
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
-        Root<T> rootEntry = query.from(objClass);
-        query.select(rootEntry);
-        List<T> output = em.createQuery(query).getResultList();
+        TypedQuery<T> typedQuery = em.createQuery(query);
+        typedQuery.setLockMode(LockModeType.PESSIMISTIC_READ);
+        List<T> output = typedQuery.getResultList();
         if (output.isEmpty()){ throw new NotFoundException();}
         return output;
     }
@@ -50,7 +47,8 @@ class Repository {
         Root<T> rootEntry = query.from(objClass);
         Predicate predicate = cb.equal(rootEntry.get(parameterName), parameter);
         query.where(predicate);
-        List<T> output = em.createQuery(query).getResultList();
+        TypedQuery<T> typedQuery = em.createQuery(query);
+        List<T> output = typedQuery.getResultList();
         if (output.isEmpty()){ throw new NotFoundException();}
         return output;
     }

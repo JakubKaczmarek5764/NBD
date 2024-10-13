@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ClientRepositoryTest {
     @Test
-    public void persistClient(){
+    public void clientTests(){
         Client c = new Client("Jan", "Kowalski", "123", 10);
         ClientRepository.create(c);
         assertEquals(ClientRepository.getByFirstName("Jan").get(0), c);
