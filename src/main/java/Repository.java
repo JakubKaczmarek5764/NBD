@@ -1,6 +1,7 @@
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 // tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
 class Repository {
@@ -33,9 +34,7 @@ class Repository {
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
-        TypedQuery<T> typedQuery = em.createQuery(query);
-        typedQuery.setLockMode(LockModeType.OPTIMISTIC);
-        List<T> output = typedQuery.getResultList();
+        List<T> output = em.createQuery(query).setLockMode(LockModeType.OPTIMISTIC).getResultList();
         if (output.isEmpty()){ throw new NotFoundException();}
         return output;
     }
@@ -47,29 +46,29 @@ class Repository {
         Root<T> rootEntry = query.from(objClass);
         Predicate predicate = cb.equal(rootEntry.get(parameterName), parameter);
         query.where(predicate);
-        TypedQuery<T> typedQuery = em.createQuery(query);
-        List<T> output = typedQuery.getResultList();
+        List<T> output = em.createQuery(query).setLockMode(LockModeType.OPTIMISTIC).getResultList();
         if (output.isEmpty()){ throw new NotFoundException();}
         return output;
     }
-    static <T> void update(Class<T> objClass, Object parameter, Object newValue, String parameterName, Long id){
+    static <T> void update(Class<T> objClass, Object newValue, String parameterName, Long id){
         emfChecker();
         EntityManager em = emf.createEntityManager();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaUpdate<T> criteriaUpdate = cb.createCriteriaUpdate(objClass);
-        Root<T> root = criteriaUpdate.from(objClass);
-        criteriaUpdate.set(parameterName, newValue);
-        criteriaUpdate.where(cb.equal(root.get("id"), id)); // do sprawdzenia na pewno
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.createQuery(criteriaUpdate).executeUpdate();
+            T obj = em.find(objClass, id, LockModeType.OPTIMISTIC);
+            if (obj == null){
+                throw new NotFoundException();
+            }
+            Field param = objClass.getDeclaredField(parameterName);
+            param.set(obj, newValue);
+            em.merge(obj);
             transaction.commit();
-        } catch (Exception e){
+        } catch (NotFoundException | IllegalAccessException | NoSuchFieldException e){
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw e;
+            throw new RuntimeException(e);
         } finally {
             em.close();
         }
