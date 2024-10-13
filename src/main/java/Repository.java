@@ -5,16 +5,16 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.*;
 
 import java.util.List;
-
-public class Repository {
-    private static EntityManagerFactory emf;
+// tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
+abstract class Repository {
+    protected static EntityManagerFactory emf;
 
     private static void emfChecker(){
         if (emf == null) {
             emf = Persistence.createEntityManagerFactory("nbd");
         }
     }
-    public static <T> void create(T obj) {
+    protected static <T> void create(T obj) {
         emfChecker();
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -31,7 +31,7 @@ public class Repository {
             em.close();
         }
     }
-    private static <T> List<T> getAll(Class<T> objClass){
+    protected static <T> List<T> getAll(Class<T> objClass){
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -40,7 +40,7 @@ public class Repository {
         query.select(rootEntry);
         return em.createQuery(query).getResultList();
     }
-    private static <T> List<T> getBy(Class<T> objClass, Object parameter, String parameterName){
+    protected static <T> List<T> getBy(Class<T> objClass, Object parameter, String parameterName){
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -50,7 +50,7 @@ public class Repository {
         query.where(predicate);
         return em.createQuery(query).getResultList();
     }
-    private static <T> void update(Class<T> objClass, Object parameter, Object newValue, String parameterName, Long id){
+    protected static <T> void update(Class<T> objClass, Object parameter, Object newValue, String parameterName, Long id){
         emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
