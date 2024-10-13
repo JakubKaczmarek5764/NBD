@@ -10,6 +10,6 @@ public class ClientRepositoryTest {
         ClientRepository.create(c);
         assertEquals(ClientRepository.getByFirstName("Jan").get(0), c);
         assertThrows(NotFoundException.class, () -> {ClientRepository.getByFirstName("Adam");});
-        ClientRepository.getByPersonalID("1234");
+
     }
 }

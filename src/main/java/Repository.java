@@ -34,7 +34,7 @@ class Repository {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
         TypedQuery<T> typedQuery = em.createQuery(query);
-        typedQuery.setLockMode(LockModeType.PESSIMISTIC_READ);
+        typedQuery.setLockMode(LockModeType.OPTIMISTIC);
         List<T> output = typedQuery.getResultList();
         if (output.isEmpty()){ throw new NotFoundException();}
         return output;
