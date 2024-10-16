@@ -21,6 +21,10 @@ public class Client {
         return currentWeight;
     }
 
+    public void addCurrentWeight(int currentWeight) {
+        this.currentWeight += currentWeight;
+    }
+
     private int currentWeight;
     public Client(String firstName, String lastName, String personalID, int maxWeight) {
         this.firstName = firstName;

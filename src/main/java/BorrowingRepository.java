@@ -2,11 +2,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-public class BorrowingRepository {
+public class BorrowingRepository implements IBorrowingRepository{
     private static ClientRepository clientRepository = new ClientRepository();
-    private static LiteratureRepository literatureRepository = new LiteratureRepository();
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    public static void create(Borrowing borrowing){
+    public void create(Borrowing borrowing){
         EntityManager em =  emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
@@ -17,6 +16,8 @@ public class BorrowingRepository {
                 Client client = em.find(Client.class, borrowing.getClient().getId(), LockModeType.OPTIMISTIC);
                 if ((client.getCurrentWeight() + literature.getTotalWeight()) <= client.getMaxWeight()) {
                     em.persist(borrowing);
+                    client.addCurrentWeight(literature.getTotalWeight());
+                    literature.setBorrowed(true);
                     transaction.commit();
                 }
             } else {
@@ -34,13 +35,8 @@ public class BorrowingRepository {
 
     }
 
-    public static List<Borrowing> getAll(){
+    public List<Borrowing> getAll(){
         return Repository.getAll(Borrowing.class);
-    }
-    public static boolean checkLiteratureById(long id){
-        Literature literature = literatureRepository.getById(id);
-        List<Borrowing> output = Repository.getByParam(Borrowing.class, literature, "literature");
-        return !output.isEmpty();
     }
     public List<Borrowing> getAllBorrowingsByClientId(long id){
         Client client = clientRepository.getById(id);
