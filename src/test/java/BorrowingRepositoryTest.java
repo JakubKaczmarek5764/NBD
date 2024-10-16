@@ -1,5 +1,6 @@
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.EntityType;
@@ -30,4 +31,5 @@ public class BorrowingRepositoryTest {
         Borrowing bor2 = new Borrowing(date, date, c, lit2);
         assertThrows(WeightExceededException.class,() -> {BorrowingRepository.create(bor2);});
     }
+
 }

@@ -2,19 +2,12 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 // tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
 class Repository {
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");;
 
-    private static void emfChecker(){
-        if (emf == null) {
-            emf = Persistence.createEntityManagerFactory("nbd");
-        }
-    }
     static <T> void create(T obj) {
-        emfChecker();
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
@@ -30,8 +23,8 @@ class Repository {
             em.close();
         }
     }
+
     static <T> List<T> getAll(Class<T> objClass) {
-        emfChecker();
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
@@ -39,8 +32,8 @@ class Repository {
         query.select(rootEntry);
         return em.createQuery(query).getResultList();
     }
-    static <T> List<T> getBy(Class<T> objClass, Object parameter, String parameterName) {
-        emfChecker();
+    static <T> List<T> getByParam(Class<T> objClass, Object parameter, String parameterName) {
+
         EntityManager em = emf.createEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> query = cb.createQuery(objClass);
@@ -50,7 +43,7 @@ class Repository {
         return em.createQuery(query).getResultList();
     }
     static <T> void update(Class<T> objClass, Object newValue, String parameterName, Long id){
-        emfChecker();
+
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {

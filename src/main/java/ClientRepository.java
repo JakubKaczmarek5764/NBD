@@ -10,18 +10,20 @@ public class ClientRepository {
     // tu bedziemy tylko cos takiego pisac
     public static List<Client> getByFirstName(String firstName){
 
-        return Repository.getBy(Client.class, firstName, "firstName");
+        return Repository.getByParam(Client.class, firstName, "firstName");
     }
 
     public static List<Client> getByLastName(String lastName){
-        return Repository.getBy(Client.class, lastName, "lastName");
+        return Repository.getByParam(Client.class, lastName, "lastName");
     }
     // chyba wszystkie parametry by wypadalo napisac
     public static Client getByPersonalID(String personalID){
-        return Repository.getBy(Client.class, personalID, "personalID").get(0);
+        return Repository.getByParam(Client.class, personalID, "personalID").get(0);
     }
     public static Client getById(long id){
-        return Repository.getBy(Client.class, id, "id").get(0);
+        return Repository.getByParam(Client.class, id, "id").get(0);
     }
-
+    public static void updateClientFirstNameById(long id, String newName) {
+        Repository.update(Client.class, newName, "firstName", id);
+    };
 }

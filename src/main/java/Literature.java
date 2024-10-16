@@ -17,19 +17,19 @@ public abstract class Literature {
     private long version;
     private String name;
     private int weight;
+
+    public boolean isBorrowed() {
+        return isBorrowed;
+    }
+
+    public void setBorrowed(boolean borrowed) {
+        isBorrowed = borrowed;
+    }
+
+    private boolean isBorrowed;
     public Literature(String name, int weight) {
         this.name = name;
         this.weight = weight;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("version", version)
-                .append("name", name)
-                .append("weight", weight)
-                .toString();
     }
 
     @Override
@@ -40,12 +40,23 @@ public abstract class Literature {
 
         Literature that = (Literature) o;
 
-        return new EqualsBuilder().append(id, that.id).append(weight, that.weight).append(name, that.name).isEquals();
+        return new EqualsBuilder().append(id, that.id).append(version, that.version).append(weight, that.weight).append(isBorrowed, that.isBorrowed).append(name, that.name).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(name).append(weight).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(version).append(name).append(weight).append(isBorrowed).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("version", version)
+                .append("name", name)
+                .append("weight", weight)
+                .append("isBorrowed", isBorrowed)
+                .toString();
     }
 
     public Literature() {

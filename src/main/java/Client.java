@@ -13,11 +13,15 @@ public class Client {
     private String lastName;
     @Column(unique = true)
     private String personalID;
-
     @Version
     private long version;
-
     private int maxWeight;
+
+    public int getCurrentWeight() {
+        return currentWeight;
+    }
+
+    private int currentWeight;
     public Client(String firstName, String lastName, String personalID, int maxWeight) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -75,12 +79,12 @@ public class Client {
 
         Client client = (Client) o;
 
-        return new EqualsBuilder().append(id, client.id).append(maxWeight, client.maxWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
+        return new EqualsBuilder().append(id, client.id).append(maxWeight, client.maxWeight).append(currentWeight, client.currentWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(firstName).append(lastName).append(personalID).append(maxWeight).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(firstName).append(lastName).append(personalID).append(maxWeight).append(currentWeight).toHashCode();
     }
 
     @Override
@@ -90,8 +94,8 @@ public class Client {
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("personalID", personalID)
-                .append("version", version)
                 .append("maxWeight", maxWeight)
+                .append("currentWeight", currentWeight)
                 .toString();
     }
 }
