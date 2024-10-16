@@ -4,6 +4,7 @@ import java.util.List;
 
 public class BorrowingRepository {
     private static ClientRepository clientRepository = new ClientRepository();
+    private static LiteratureRepository literatureRepository = new LiteratureRepository();
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
     public static void create(Borrowing borrowing){
         EntityManager em =  emf.createEntityManager();
@@ -37,7 +38,7 @@ public class BorrowingRepository {
         return Repository.getAll(Borrowing.class);
     }
     public static boolean checkLiteratureById(long id){
-        Literature literature = LiteratureRepository.getById(id);
+        Literature literature = literatureRepository.getById(id);
         List<Borrowing> output = Repository.getByParam(Borrowing.class, literature, "literature");
         return !output.isEmpty();
     }
