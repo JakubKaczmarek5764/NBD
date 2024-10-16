@@ -11,4 +11,12 @@ public class ClientRepositoryTest {
         assertEquals(ClientRepository.getByFirstName("Jan").get(0), c);
 
     }
+
+    @Test
+    public void clientUpdateTest() {
+        Client c = new Client("Jan", "Kowalski", "123", 10);
+        ClientRepository.create(c);
+        ClientRepository.updateClientFirstNameById(c.getId(), "Marcin");
+        assertEquals(ClientRepository.getById(c.getId()).getFirstName(), "Marcin");
+    }
 }

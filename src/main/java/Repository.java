@@ -50,6 +50,7 @@ class Repository {
             transaction.begin();
             T obj = em.find(objClass, id, LockModeType.OPTIMISTIC);
             Field param = objClass.getDeclaredField(parameterName);
+            param.setAccessible(true);
             param.set(obj, newValue);
             em.merge(obj);
             transaction.commit();
