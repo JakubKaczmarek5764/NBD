@@ -3,6 +3,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 
 import java.util.GregorianCalendar;
 
@@ -16,12 +17,12 @@ public class Borrowing {
     private long version;
     private GregorianCalendar BorrowingBeginDate;
     private GregorianCalendar BorrowingEndDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     @NotNull
     private Client client;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     @NotNull
     private Literature literature;
