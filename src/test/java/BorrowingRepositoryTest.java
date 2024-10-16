@@ -14,11 +14,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BorrowingRepositoryTest {
+    ClientRepository clientRepository = new ClientRepository();
     @Test
     public void borrowingTests(){
         Client c = new Client("Jan", "Kowalski", "123", 10);
-        ClientRepository.create(c);
-        System.out.println(ClientRepository.getById(c.getId()));
+        clientRepository.create(c);
+        System.out.println(clientRepository.getById(c.getId()));
         Literature lit1 = new Book("Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2);
         LiteratureRepository.create(lit1);
         GregorianCalendar date = GregorianCalendar.from(ZonedDateTime.now());

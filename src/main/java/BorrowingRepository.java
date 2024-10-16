@@ -2,7 +2,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-public class BorrowingRepository implements IRepository {
+public class BorrowingRepository {
+    private static ClientRepository clientRepository = new ClientRepository();
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
     public static void create(Borrowing borrowing){
         EntityManager em =  emf.createEntityManager();
@@ -40,8 +41,8 @@ public class BorrowingRepository implements IRepository {
         List<Borrowing> output = Repository.getByParam(Borrowing.class, literature, "literature");
         return !output.isEmpty();
     }
-    public static List<Borrowing> getAllBorrowingsByClientId(long id){
-        Client client = ClientRepository.getById(id);
+    public List<Borrowing> getAllBorrowingsByClientId(long id){
+        Client client = clientRepository.getById(id);
         return Repository.getByParam(Borrowing.class, client, "client");
     }
 
