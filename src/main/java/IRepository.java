@@ -1,7 +1,6 @@
 import java.util.List;
 
 public interface IRepository<T> {
-    void create();
+    <T> void create(T obj);
     List<T> getAll();
-
 }
