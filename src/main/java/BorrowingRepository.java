@@ -20,19 +20,27 @@ public class BorrowingRepository implements IBorrowingRepository{
                     literature.setBorrowed(true);
                     em.persist(borrowing);
                     transaction.commit();
+                    borrowing.getClient().addCurrentWeight(literature.getTotalWeight());
+                    borrowing.getLiterature().setBorrowed(true);
                     Client client2 = em.find(Client.class, borrowing.getClient().getId());
                     Literature literature2 = em.find(Literature.class, borrowing.getLiterature().getId());
                     System.out.println("BR klient "+client2.getCurrentWeight()+"literatura "+literature2.isBorrowed());
+                } else {
+                    throw new WeightExceededException("Can't add borrowing, client exceeded the limit");
                 }
-            } else {
-                throw new WeightExceededException("Can't add borrowing, client exceeded the limit");
             }
-        } catch (Exception e){
+        } catch (WeightExceededException e){
+            if (transaction.isActive()){
+                transaction.rollback();
+            }
+            throw new WeightExceededException(e.getMessage());
+        }   catch (Exception e){
             if (transaction.isActive()){
                 transaction.rollback();
             }
             throw new RuntimeException(e);
-        } finally {
+        }
+        finally {
             em.close();
         }
 

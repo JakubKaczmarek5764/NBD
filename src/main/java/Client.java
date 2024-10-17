@@ -75,6 +75,7 @@ public class Client {
         this.maxWeight = maxWeight;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
