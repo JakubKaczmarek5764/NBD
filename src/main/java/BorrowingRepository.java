@@ -74,7 +74,13 @@ public class BorrowingRepository implements IBorrowingRepository{
             em.close();
         }
     }
-    public void delete(long id){
-        Repository.delete(Borrowing.class, id);
+    @Override
+    public void delete(Borrowing borrowing){
+        Repository.delete(borrowing);
+    }
+
+    @Override
+    public void update(Borrowing borrowing) {
+        Repository.update(borrowing);
     }
 }

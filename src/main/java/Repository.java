@@ -42,13 +42,12 @@ class Repository {
         query.where(predicate);
         return em.createQuery(query).getResultList();
     }
-    static <T> void update(Class<T> objClass, long id){
+    static <T> void update(T obj){
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            T obj = em.find(objClass, id, LockModeType.OPTIMISTIC);
             em.merge(obj);
             transaction.commit();
         } catch (Exception e){
@@ -60,16 +59,14 @@ class Repository {
             em.close();
         }
     }
-    static <T> void delete(Class<T> objClass, long id){
+    static <T> void delete(T obj){
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            T obj = em.find(objClass, id);
-            if (obj != null){
-                em.remove(obj);
-                transaction.commit();
-            }
+            em.remove(obj);
+            transaction.commit();
+
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
