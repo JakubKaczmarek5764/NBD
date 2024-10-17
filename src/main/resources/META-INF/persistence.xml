@@ -3,28 +3,28 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-  <persistence-unit name="nbd" transaction-type="RESOURCE_LOCAL">
-    <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
-    <class>Literature</class>
-    <class>Magazine</class>
-    <class>Book</class>
-    <class>Borrowing</class>
-    <class>Client</class>
-    <properties>
-      <!-- PostgreSQL -->
-      <property name="jakarta.persistence.jdbc.url"
-                value="jdbc:postgresql://localhost:5432/nbddb"/>
-      <!-- Credentials -->
-      <property name="jakarta.persistence.jdbc.user"
-                value="nbd"/>
-      <property name="jakarta.persistence.jdbc.password"
-                value="nbdpassword"/>
-      <!-- Automatic schema export -->
-      <property name="jakarta.persistence.schema-generation.database.action"
-                value="drop-and-create"/>
-      <!-- Transaction isolation level -->
-      <property name="hibernate.connection.isolation" value="2"/>
-    </properties>
-  </persistence-unit>
+    <persistence-unit name="nbd" transaction-type="RESOURCE_LOCAL">
+        <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
+        <class>Literature</class>
+        <class>Magazine</class>
+        <class>Book</class>
+        <class>Borrowing</class>
+        <class>Client</class>
+        <properties>
+            <!-- PostgreSQL -->
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:postgresql://localhost:5432/nbddb"/>
+            <!-- Credentials -->
+            <property name="jakarta.persistence.jdbc.user"
+                      value="nbd"/>
+            <property name="jakarta.persistence.jdbc.password"
+                      value="nbdpassword"/>
+            <!-- Automatic schema export -->
+            <property name="jakarta.persistence.schema-generation.database.action"
+                      value="drop-and-create"/>
+            <!-- Transaction isolation level -->
+            <property name="hibernate.connection.isolation" value="2"/>
+        </properties>
+    </persistence-unit>
 
 </persistence>

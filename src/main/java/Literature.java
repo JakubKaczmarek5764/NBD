@@ -27,6 +27,7 @@ public abstract class Literature {
     }
 
     private boolean isBorrowed;
+
     public Literature(String name, int weight) {
         this.name = name;
         this.weight = weight;
@@ -74,7 +75,9 @@ public abstract class Literature {
     public void setName(String name) {
         this.name = name;
     }
+
     abstract String getLiteratureInfo();
+
     public int getWeight() {
         return weight;
     }
@@ -82,5 +85,6 @@ public abstract class Literature {
     public void setWeight(int weight) {
         this.weight = weight;
     }
+
     abstract int getTotalWeight();
 }

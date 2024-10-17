@@ -5,14 +5,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LiteratureRepositoryTest {
     private static final LiteratureRepository literatureRepository = new LiteratureRepository();
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    private static  final EntityManager em = emf.createEntityManager();
+    private static final EntityManager em = emf.createEntityManager();
     private Book b;
     private Magazine m;
+
     @BeforeEach
     public void prepareForTests() {
         em.getTransaction().begin();
@@ -28,8 +29,9 @@ public class LiteratureRepositoryTest {
             emf.close();
         }
     }
+
     @Test
-    public void literatureCreateTest(){
+    public void literatureCreateTest() {
         literatureRepository.create(b);
         assertEquals(literatureRepository.getAll().getFirst(), b);
     }

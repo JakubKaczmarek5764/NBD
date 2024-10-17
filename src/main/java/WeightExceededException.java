@@ -1,6 +1,8 @@
-public class WeightExceededException extends RuntimeException{
-    public WeightExceededException(){};
-    public WeightExceededException(String message){
+public class WeightExceededException extends RuntimeException {
+    public WeightExceededException() {
+    }
+
+    public WeightExceededException(String message) {
         super(message);
     }
 }

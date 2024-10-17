@@ -64,13 +64,15 @@ public class Client {
     public void setPersonalID(String personalID) {
         this.personalID = personalID;
     }
+
     public String getClientInfo() {
-        return getFirstName() + " " + getLastName() + " "+ getPersonalID();
+        return getFirstName() + " " + getLastName() + " " + getPersonalID();
     }
 
     public Long getId() {
         return id;
     }
+
     public int getMaxWeight() {
         return maxWeight;
     }
