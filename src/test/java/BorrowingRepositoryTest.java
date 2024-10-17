@@ -28,6 +28,8 @@ public class BorrowingRepositoryTest {
         GregorianCalendar date = GregorianCalendar.from(ZonedDateTime.now());
         Borrowing bor1 = new Borrowing(date, date, c, lit1);
         borrowingRepository.create(bor1);
+        Client c2 = clientRepository.getById(bor1.getClient().getId());
+        System.out.println("po bor1: " + c2.getCurrentWeight());
         Literature lit2 = new Magazine("Swiat Nauki", "2002/11", 8);
         literatureRepository.create(lit2);
         Borrowing bor2 = new Borrowing(date, date, c, lit2);
