@@ -42,19 +42,16 @@ class Repository {
         query.where(predicate);
         return em.createQuery(query).getResultList();
     }
-    static <T> void update(Class<T> objClass, Object newValue, String parameterName, Long id){
+    static <T> void update(Class<T> objClass, long id){
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
             T obj = em.find(objClass, id, LockModeType.OPTIMISTIC);
-            Field param = objClass.getDeclaredField(parameterName);
-            param.setAccessible(true);
-            param.set(obj, newValue);
             em.merge(obj);
             transaction.commit();
-        } catch (IllegalAccessException | NoSuchFieldException e){
+        } catch (Exception e){
             if (transaction.isActive()) {
                 transaction.rollback();
             }
@@ -63,7 +60,7 @@ class Repository {
             em.close();
         }
     }
-    static <T> void delete(Class<T> objClass, Long id){
+    static <T> void delete(Class<T> objClass, long id){
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {

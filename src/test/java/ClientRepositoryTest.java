@@ -21,7 +21,7 @@ public class ClientRepositoryTest {
     public void clientUpdateTest() {
         Client c = new Client("Marcin", "Kowalski", "456", 10);
         clientRepository.create(c);
-        clientRepository.updateClientFirstNameById(c.getId(), "Marcin");
+        clientRepository.update(c.getId());
         assertEquals(clientRepository.getById(c.getId()).getFirstName(), "Marcin");
     }
 }

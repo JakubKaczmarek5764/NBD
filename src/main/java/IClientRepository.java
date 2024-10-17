@@ -7,6 +7,6 @@ public interface IClientRepository {
     List<Client> getByLastName(String lastName);
     Client getByPersonalID(String personalID);
     Client getById(long id);
-    void updateClientFirstNameById(long id, String newName);
+    void update(long id);
     void delete(long id);
 }
