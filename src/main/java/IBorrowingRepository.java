@@ -5,4 +5,5 @@ public interface IBorrowingRepository {
     List<Borrowing> getAll();
     List<Borrowing> getAllBorrowingsByClientId(long id);
     void delete(long id);
+    void update(Borrowing borrowing);
 }

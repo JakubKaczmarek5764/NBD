@@ -17,14 +17,9 @@ public class BorrowingRepository implements IBorrowingRepository{
                 Client client = em.find(Client.class, borrowing.getClient().getId(), LockModeType.OPTIMISTIC);
                 if ((client.getCurrentWeight() + literature.getTotalWeight()) <= client.getMaxWeight()) {
                     client.addCurrentWeight(literature.getTotalWeight());
-                    System.out.println("BR: "+client.getCurrentWeight());
                     literature.setBorrowed(true);
                     em.persist(borrowing);
                     transaction.commit();
-
-                    Client client2 = em.find(Client.class, borrowing.getClient().getId());
-                    Literature literature2 = em.find(Literature.class, borrowing.getLiterature().getId());
-                    System.out.println("BR klient "+client2.getCurrentWeight()+"literatura "+literature2.isBorrowed());
                 } else {
                     throw new WeightExceededException("Can't add borrowing, client exceeded the limit");
                 }
@@ -76,7 +71,13 @@ public class BorrowingRepository implements IBorrowingRepository{
             em.close();
         }
     }
+    @Override
     public void delete(long id){
         Repository.delete(Borrowing.class, id);
+    }
+
+    @Override
+    public void update(Borrowing borrowing) {
+        Repository.update(borrowing);
     }
 }

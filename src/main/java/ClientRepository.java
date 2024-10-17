@@ -23,8 +23,8 @@ public class ClientRepository implements IClientRepository {
     public Client getById(long id){
         return Repository.getByParam(Client.class, id, "id").get(0);
     }
-    public void update(long id) {
-        Repository.update(Client.class, id);
+    public void update(Client client) {
+        Repository.update(client);
     };
     public void delete(long id){
         Repository.delete(Client.class, id);

@@ -8,4 +8,5 @@ public interface ILiteratureRepository {
     List<Literature> getByWeight(int weight);
     List<Book> getBookByAuthor(String author);
     void delete(long id);
+    void update(Literature literature);
 }
