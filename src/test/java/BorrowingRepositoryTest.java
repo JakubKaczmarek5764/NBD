@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,6 +76,8 @@ public class BorrowingRepositoryTest {
         borrowingRepository.endBorrowing(bor1);
         assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
         assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
+        List<Borrowing> list = borrowingRepository.getAllBorrowingsByClientId(c.getId());
+        assertEquals(list.size(), 1);
     }
 
     @Test
@@ -101,6 +104,5 @@ public class BorrowingRepositoryTest {
         assertEquals(borrowingRepository.getAll().size(), 2);
         borrowingRepository.delete(bor1.getId());
         assertEquals(borrowingRepository.getAll().size(), 1);
-
     }
 }
