@@ -9,7 +9,6 @@ public class ClientRepository implements IClientRepository {
         return Repository.getAll(Client.class);
     }
 
-    // tu bedziemy tylko cos takiego pisac
     public List<Client> getByFirstName(String firstName) {
 
         return Repository.getByParam(Client.class, firstName, "firstName");
@@ -19,7 +18,6 @@ public class ClientRepository implements IClientRepository {
         return Repository.getByParam(Client.class, lastName, "lastName");
     }
 
-    // chyba wszystkie parametry by wypadalo napisac
     public Client getByPersonalID(String personalID) {
         return Repository.getByParam(Client.class, personalID, "personalID").get(0);
     }

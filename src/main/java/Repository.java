@@ -9,7 +9,7 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
-// tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
+
 class Repository {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
 
