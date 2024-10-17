@@ -1,24 +1,16 @@
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.OptimisticLockException;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.metamodel.Attribute;
-import jakarta.persistence.metamodel.EntityType;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BorrowingRepositoryTest {
     BorrowingRepository borrowingRepository = new BorrowingRepository();
     ClientRepository clientRepository = new ClientRepository();
     LiteratureRepository literatureRepository = new LiteratureRepository();
     @Test
-    public void borrowingTests(){
+    public void borrowingTests() {
         Client c = new Client("Jan", "Kowalski", "123", 10);
         clientRepository.create(c);
         System.out.println(clientRepository.getById(c.getId()));

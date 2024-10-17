@@ -21,8 +21,7 @@ public class BorrowingRepository implements IBorrowingRepository{
                     literature.setBorrowed(true);
                     em.persist(borrowing);
                     transaction.commit();
-                    borrowing.getClient().addCurrentWeight(literature.getTotalWeight());
-                    borrowing.getLiterature().setBorrowed(true);
+
                     Client client2 = em.find(Client.class, borrowing.getClient().getId());
                     Literature literature2 = em.find(Literature.class, borrowing.getLiterature().getId());
                     System.out.println("BR klient "+client2.getCurrentWeight()+"literatura "+literature2.isBorrowed());
@@ -66,6 +65,7 @@ public class BorrowingRepository implements IBorrowingRepository{
             Client client = em.find(Client.class, borrowing.getClient().getId(), LockModeType.OPTIMISTIC);
             client.substractCurrentWeight(literature.getTotalWeight());
             borrowing.endBorrowing(new GregorianCalendar());
+            em.merge(borrowing);
             transaction.commit();
         } catch (Exception e) {
 
