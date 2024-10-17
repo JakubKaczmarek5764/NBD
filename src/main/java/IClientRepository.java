@@ -8,4 +8,5 @@ public interface IClientRepository {
     Client getByPersonalID(String personalID);
     Client getById(long id);
     void updateClientFirstNameById(long id, String newName);
+    void delete(long id);
 }

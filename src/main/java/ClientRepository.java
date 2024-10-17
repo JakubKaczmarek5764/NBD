@@ -26,4 +26,7 @@ public class ClientRepository implements IClientRepository {
     public void updateClientFirstNameById(long id, String newName) {
         Repository.update(Client.class, newName, "firstName", id);
     };
+    public void delete(long id){
+        Repository.delete(Client.class, id);
+    }
 }

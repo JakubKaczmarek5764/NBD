@@ -63,4 +63,23 @@ class Repository {
             em.close();
         }
     }
+    static <T> void delete(Class<T> objClass, Long id){
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            T obj = em.find(objClass, id);
+            if (obj != null){
+                em.remove(obj);
+                transaction.commit();
+            }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

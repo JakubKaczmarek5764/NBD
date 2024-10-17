@@ -17,5 +17,7 @@ public class LiteratureRepository implements ILiteratureRepository{
     public List<Book> getBookByAuthor(String author){
         return Repository.getByParam(Book.class, author, "author");
     }
-
+    public void delete(long id){
+        Repository.delete(Literature.class, id);
+    }
 }
