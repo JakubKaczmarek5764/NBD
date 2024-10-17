@@ -1,5 +1,6 @@
 import jakarta.persistence.*;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class BorrowingRepository implements IBorrowingRepository{
@@ -53,6 +54,25 @@ public class BorrowingRepository implements IBorrowingRepository{
     public List<Borrowing> getAllBorrowingsByClientId(long id){
         Client client = clientRepository.getById(id);
         return Repository.getByParam(Borrowing.class, client, "client");
+    }
+
+    public void endBorrowing(Borrowing borrowing) {
+        EntityManager em =  emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            Literature literature = em.find(Literature.class, borrowing.getLiterature().getId(), LockModeType.OPTIMISTIC);
+            literature.setBorrowed(false);
+            Client client = em.find(Client.class, borrowing.getClient().getId(), LockModeType.OPTIMISTIC);
+            client.substractCurrentWeight(literature.getTotalWeight());
+            borrowing.endBorrowing(new GregorianCalendar());
+            transaction.commit();
+        } catch (Exception e) {
+
+        }
+        finally {
+            em.close();
+        }
     }
 
 }

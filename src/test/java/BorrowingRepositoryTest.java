@@ -35,6 +35,7 @@ public class BorrowingRepositoryTest {
         Borrowing bor2 = new Borrowing(date, date, c, lit2);
         System.out.println(c.getCurrentWeight());
         assertThrows(WeightExceededException.class,() -> {borrowingRepository.create(bor2);});
+        borrowingRepository.endBorrowing(bor1);
     }
 
 }
