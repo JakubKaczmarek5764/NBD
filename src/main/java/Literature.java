@@ -67,8 +67,6 @@ public abstract class Literature {
         return id;
     }
 
-
-
     public String getName() {
         return name;
     }
