@@ -7,6 +7,6 @@ public interface ILiteratureRepository {
     List<Literature> getByName(String name);
     List<Literature> getByWeight(int weight);
     List<Book> getBookByAuthor(String author);
-    void delete(Literature literature);
+    void delete(long id);
     void update(Literature literature);
 }

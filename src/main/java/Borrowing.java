@@ -43,8 +43,8 @@ public class Borrowing {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("version", version)
-//                .append("BorrowingBeginDate", BorrowingBeginDate)
-//                .append("BorrowingEndDate", BorrowingEndDate)
+                .append("BorrowingBeginDate", BorrowingBeginDate)
+                .append("BorrowingEndDate", BorrowingEndDate)
                 .append("client", client)
                 .append("literature", literature)
                 .toString();
@@ -97,7 +97,5 @@ public class Borrowing {
         else {
             BorrowingEndDate = endDate;
         }
-        int BorrowingLengthInDays = (int)Math.ceil((double) (BorrowingEndDate.getTimeInMillis() -
-                BorrowingBeginDate.getTimeInMillis()) / 86400000);
     }
 }

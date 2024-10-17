@@ -18,8 +18,8 @@ public class LiteratureRepository implements ILiteratureRepository{
         return Repository.getByParam(Book.class, author, "author");
     }
     @Override
-    public void delete(Literature literature){
-        Repository.delete(literature);
+    public void delete(long id){
+        Repository.delete(Literature.class, id);
     }
     @Override
     public void update(Literature literature){
