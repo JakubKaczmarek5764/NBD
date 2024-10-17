@@ -89,4 +89,18 @@ public class BorrowingRepositoryTest {
         assertNotEquals(timeAfterCreation, newTime);
     }
 
+    @Test
+    public void borrowingDelete() {
+        clientRepository.create(c);
+        c.setMaxWeight(20);
+        clientRepository.update(c);
+        literatureRepository.create(lit1);
+        borrowingRepository.create(bor1);
+        literatureRepository.create(lit2);
+        borrowingRepository.create(bor2);
+        assertEquals(borrowingRepository.getAll().size(), 2);
+        borrowingRepository.delete(bor1.getId());
+        assertEquals(borrowingRepository.getAll().size(), 1);
+
+    }
 }
