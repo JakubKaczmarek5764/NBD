@@ -77,4 +77,16 @@ public class BorrowingRepositoryTest {
         assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
     }
 
+    @Test
+    public void borrowingUpdate() {
+        clientRepository.create(c);
+        literatureRepository.create(lit1);
+        borrowingRepository.create(bor1);
+        GregorianCalendar timeAfterCreation = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
+        bor1.setBorrowingEndDate(new GregorianCalendar());
+        borrowingRepository.update(bor1);
+        GregorianCalendar newTime = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
+        assertNotEquals(timeAfterCreation, newTime);
+    }
+
 }

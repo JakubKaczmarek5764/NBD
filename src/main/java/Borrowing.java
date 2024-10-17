@@ -37,6 +37,10 @@ public class Borrowing {
 
     }
 
+    public void setBorrowingEndDate(GregorianCalendar borrowingEndDate) {
+        BorrowingEndDate = borrowingEndDate;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)

@@ -54,4 +54,13 @@ public class LiteratureRepositoryTest {
         literatureRepository.delete(b.getId());
         assertEquals(literatureRepository.getAll().size(), 1);
     }
+
+    @Test
+    public void literatureUpdate() {
+        literatureRepository.create(b);
+        assertEquals(literatureRepository.getAll().getFirst().getName(), "Pan Tadeusz");
+        b.setName("Dziady");
+        literatureRepository.update(b);
+        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
+    }
 }
