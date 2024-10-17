@@ -16,6 +16,7 @@ public class Client {
     @Version
     private long version;
     private int maxWeight;
+    private int currentWeight;
 
     public int getCurrentWeight() {
         return currentWeight;
@@ -25,11 +26,10 @@ public class Client {
         this.currentWeight += currentWeight;
     }
 
-    public void substractCurrentWeight(int currentWeight) {
+    public void subtractCurrentWeight(int currentWeight) {
         this.currentWeight -= currentWeight;
     }
 
-    private int currentWeight;
     public Client(String firstName, String lastName, String personalID, int maxWeight) {
         this.firstName = firstName;
         this.lastName = lastName;
