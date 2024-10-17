@@ -1,19 +1,19 @@
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ClientRepositoryTest {
     private static final ClientRepository clientRepository = new ClientRepository();
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    private static  final EntityManager em = emf.createEntityManager();
+    private static final EntityManager em = emf.createEntityManager();
     private Client c;
     private Client c2;
+
     @BeforeEach
     public void prepareForTests() {
         em.getTransaction().begin();
@@ -31,7 +31,7 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    public void clientCreateTest(){
+    public void clientCreateTest() {
         clientRepository.create(c);
         assertEquals(clientRepository.getByFirstName("Jan").getFirst(), c);
     }
@@ -40,8 +40,8 @@ public class ClientRepositoryTest {
     public void clientUpdateTest() {
         clientRepository.create(c);
         c.setFirstName("Marcin");
-        clientRepository.update(c.getId());
-//        assertEquals(clientRepository.getById(c.getId()).getFirstName(), "Marcin");
+        clientRepository.update(c);
+        assertEquals(clientRepository.getById(c.getId()).getFirstName(), "Marcin");
     }
 
     @Test

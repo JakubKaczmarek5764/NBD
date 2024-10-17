@@ -3,11 +3,12 @@ import jakarta.persistence.*;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class BorrowingRepository implements IBorrowingRepository{
-    private static ClientRepository clientRepository = new ClientRepository();
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    public void create(Borrowing borrowing){
-        EntityManager em =  emf.createEntityManager();
+public class BorrowingRepository implements IBorrowingRepository {
+    private static final ClientRepository clientRepository = new ClientRepository();
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
+
+    public void create(Borrowing borrowing) {
+        EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -24,34 +25,34 @@ public class BorrowingRepository implements IBorrowingRepository{
                     throw new WeightExceededException("Can't add borrowing, client exceeded the limit");
                 }
             }
-        } catch (WeightExceededException e){
-            if (transaction.isActive()){
+        } catch (WeightExceededException e) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             throw new WeightExceededException(e.getMessage());
-        }   catch (Exception e){
-            if (transaction.isActive()){
+        } catch (Exception e) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             em.close();
         }
 
 
     }
 
-    public List<Borrowing> getAll(){
+    public List<Borrowing> getAll() {
         return Repository.getAll(Borrowing.class);
     }
-    public List<Borrowing> getAllBorrowingsByClientId(long id){
+
+    public List<Borrowing> getAllBorrowingsByClientId(long id) {
         Client client = clientRepository.getById(id);
         return Repository.getByParam(Borrowing.class, client, "client");
     }
 
     public void endBorrowing(Borrowing borrowing) {
-        EntityManager em =  emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -63,16 +64,16 @@ public class BorrowingRepository implements IBorrowingRepository{
             em.merge(borrowing);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction.isActive()){
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
+
     @Override
-    public void delete(long id){
+    public void delete(long id) {
         Repository.delete(Borrowing.class, id);
     }
 

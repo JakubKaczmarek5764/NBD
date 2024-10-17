@@ -15,13 +15,14 @@ public class BorrowingRepositoryTest {
     private static final ClientRepository clientRepository = new ClientRepository();
     private static final LiteratureRepository literatureRepository = new LiteratureRepository();
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    private static  final EntityManager em = emf.createEntityManager();
+    private static final EntityManager em = emf.createEntityManager();
     private Client c;
     private Client c2;
     private Literature lit1;
     private Literature lit2;
     private Borrowing bor1;
     private Borrowing bor2;
+
     @BeforeEach
     public void prepareForTests() {
         em.getTransaction().begin();
@@ -43,6 +44,7 @@ public class BorrowingRepositoryTest {
             emf.close();
         }
     }
+
     @Test
     public void borrowingCreateTest() {
         clientRepository.create(c);
@@ -60,7 +62,9 @@ public class BorrowingRepositoryTest {
         literatureRepository.create(lit1);
         borrowingRepository.create(bor1);
         literatureRepository.create(lit2);
-        assertThrows(WeightExceededException.class,() -> {borrowingRepository.create(bor2);});
+        assertThrows(WeightExceededException.class, () -> {
+            borrowingRepository.create(bor2);
+        });
     }
 
     @Test
@@ -71,6 +75,18 @@ public class BorrowingRepositoryTest {
         borrowingRepository.endBorrowing(bor1);
         assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
         assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
+    }
+
+    @Test
+    public void borrowingUpdate() {
+        clientRepository.create(c);
+        literatureRepository.create(lit1);
+        borrowingRepository.create(bor1);
+        GregorianCalendar timeAfterCreation = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
+        bor1.setBorrowingEndDate(new GregorianCalendar());
+        borrowingRepository.update(bor1);
+        GregorianCalendar newTime = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
+        assertNotEquals(timeAfterCreation, newTime);
     }
 
 }

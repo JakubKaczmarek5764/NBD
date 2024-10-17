@@ -3,7 +3,6 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 
 import java.util.GregorianCalendar;
 
@@ -36,6 +35,10 @@ public class Borrowing {
 
     public Borrowing() {
 
+    }
+
+    public void setBorrowingEndDate(GregorianCalendar borrowingEndDate) {
+        BorrowingEndDate = borrowingEndDate;
     }
 
     @Override
@@ -87,14 +90,13 @@ public class Borrowing {
     }
 
     public String getBorrowingInfo() {
-        return getId() + getClient().getClientInfo()+getLiterature().getLiteratureInfo();
+        return getId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
     }
 
     public void endBorrowing(GregorianCalendar endDate) {
-        if(endDate.before(BorrowingBeginDate)) {
+        if (endDate.before(BorrowingBeginDate)) {
             BorrowingEndDate = BorrowingBeginDate;
-        }
-        else {
+        } else {
             BorrowingEndDate = endDate;
         }
     }

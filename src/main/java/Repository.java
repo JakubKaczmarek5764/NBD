@@ -1,9 +1,17 @@
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
+
+// tu albo w child repozytoriach musi byc zrobiona jakas sanityzacja danych
 class Repository {
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");;
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
 
     static <T> void create(T obj) {
         EntityManager em = emf.createEntityManager();
@@ -30,6 +38,7 @@ class Repository {
         query.select(rootEntry);
         return em.createQuery(query).getResultList();
     }
+
     static <T> List<T> getByParam(Class<T> objClass, Object parameter, String parameterName) {
 
         EntityManager em = emf.createEntityManager();
@@ -40,7 +49,8 @@ class Repository {
         query.where(predicate);
         return em.createQuery(query).getResultList();
     }
-    static <T> void update(T obj){
+
+    static <T> void update(T obj) {
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -48,7 +58,7 @@ class Repository {
             transaction.begin();
             em.merge(obj);
             transaction.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
@@ -57,7 +67,8 @@ class Repository {
             em.close();
         }
     }
-    static <T> void delete(Class<T> objClass, long id){
+
+    static <T> void delete(Class<T> objClass, long id) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {

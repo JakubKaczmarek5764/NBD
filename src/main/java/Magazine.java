@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 @Entity
 @Access(AccessType.FIELD)
 @DiscriminatorValue("magazine")
-public class Magazine extends Literature{
+public class Magazine extends Literature {
     private String issue;
 
     public Magazine(String name, String issue, int weight) {
@@ -20,7 +20,7 @@ public class Magazine extends Literature{
 
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getId() + " name: "+getName()+" issue: "+getIssue();
+        return "id: " + getId() + " name: " + getName() + " issue: " + getIssue();
     }
 
     @Override

@@ -1,4 +1,7 @@
-import jakarta.persistence.*;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -6,10 +9,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Access(AccessType.FIELD)
 @DiscriminatorValue("book")
-public class Book extends Literature{
+public class Book extends Literature {
     private String genre;
     private String author;
     private int tier;
+
     public Book(String name, String genre, String author, int weight, int tier) {
         super(name, weight);
         this.genre = genre;
@@ -49,7 +53,7 @@ public class Book extends Literature{
 
     @Override
     String getLiteratureInfo() {
-        return "id: "+ getId() + " name: "+getName()+" genre: "+getGenre()+" author: "+getAuthor();
+        return "id: " + getId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
     }
 
     @Override
@@ -64,6 +68,7 @@ public class Book extends Literature{
     public String getAuthor() {
         return author;
     }
+
     public void setGenre(String genre) {
         this.genre = genre;
     }
