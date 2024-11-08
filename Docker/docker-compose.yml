@@ -62,7 +62,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
       - MONGO_INITDB_DATABASE=nbd # temu trzeb sie przyjrzec
-    command: --config /etc/mongod.conf --port 270179
+    command: --config /etc/mongod.conf --port 27019
     healthcheck:
       test: [ "CMD", "mongosh", "--port", "27019","--eval", "db.adminCommand('ping')" ]
       interval: 10s
