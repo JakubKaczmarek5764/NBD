@@ -14,9 +14,9 @@ import java.util.GregorianCalendar;
 public class Borrowing {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @BsonProperty("id")
+    @BsonProperty("_id")
     @NonNull
-    private MongoUniqueId id;
+    private MongoUniqueId borrowingId;
 //    @Version
 //    private long version;
 
@@ -46,13 +46,13 @@ public class Borrowing {
 
     @BsonCreator
     public Borrowing(
-            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("_id") MongoUniqueId borrowingId,
             @BsonProperty("beginDate") GregorianCalendar beginDate,
             @BsonProperty("endDate") GregorianCalendar endDate,
             @BsonProperty("client") Client client,
             @BsonProperty("literature") Literature literature
     ) {
-        this.id = id;
+        this.borrowingId = borrowingId;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.client = client;
@@ -67,7 +67,7 @@ public class Borrowing {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
+                .append("id", borrowingId)
                 .append("BorrowingBeginDate", beginDate)
                 .append("BorrowingEndDate", endDate)
                 .append("client", client)
@@ -83,16 +83,16 @@ public class Borrowing {
 
         Borrowing borrowing = (Borrowing) o;
 
-        return new EqualsBuilder().append(id, borrowing.id).append(beginDate, borrowing.beginDate).append(endDate, borrowing.endDate).append(client, borrowing.client).append(literature, borrowing.literature).isEquals();
+        return new EqualsBuilder().append(borrowingId, borrowing.borrowingId).append(beginDate, borrowing.beginDate).append(endDate, borrowing.endDate).append(client, borrowing.client).append(literature, borrowing.literature).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(beginDate).append(endDate).append(client).append(literature).toHashCode();
+        return new HashCodeBuilder(17, 37).append(borrowingId).append(beginDate).append(endDate).append(client).append(literature).toHashCode();
     }
 
     public MongoUniqueId getId() {
-        return id;
+        return borrowingId;
     }
 
     public GregorianCalendar getBeginDate() {

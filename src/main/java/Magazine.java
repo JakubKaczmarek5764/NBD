@@ -16,12 +16,13 @@ public class Magazine extends Literature {
     }
     @BsonCreator
     public Magazine(
-            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("_id") MongoUniqueId literatureId,
             @BsonProperty("name") String name,
             @BsonProperty("issue") String issue,
-            @BsonProperty("weight") int weight
+            @BsonProperty("weight") int weight,
+            @BsonProperty("isBorrowed") int isBorrowed
     ) {
-        super(id, name, weight);
+        super(literatureId, name, weight, isBorrowed);
         this.issue = issue;
     }
 

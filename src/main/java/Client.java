@@ -6,17 +6,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-import java.util.UUID;
-
 //@Entity
 //@Access(AccessType.FIELD)
 public class Client {
     // adapter?
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @BsonProperty("id")
+    @BsonProperty("_id")
     @NonNull
-    private MongoUniqueId id;
+    private MongoUniqueId clientId;
 
     @BsonProperty("firstName")
     private String firstName;
@@ -58,13 +56,13 @@ public class Client {
 
     @BsonCreator
     public Client(
-            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("_id") MongoUniqueId clientId,
             @BsonProperty("firstName") String firstName,
             @BsonProperty("lastName") String lastName,
             @BsonProperty("personalID") String personalID,
             @BsonProperty("maxWeight") int maxWeight
     ) {
-        this.id = id;
+        this.clientId = clientId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
@@ -104,7 +102,7 @@ public class Client {
     }
 
     public MongoUniqueId getId() {
-        return id;
+        return clientId;
     }
 
     public int getMaxWeight() {
@@ -124,18 +122,18 @@ public class Client {
 
         Client client = (Client) o;
 
-        return new EqualsBuilder().append(id, client.id).append(maxWeight, client.maxWeight).append(currentWeight, client.currentWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
+        return new EqualsBuilder().append(clientId, client.clientId).append(maxWeight, client.maxWeight).append(currentWeight, client.currentWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(firstName).append(lastName).append(personalID).append(maxWeight).append(currentWeight).toHashCode();
+        return new HashCodeBuilder(17, 37).append(clientId).append(firstName).append(lastName).append(personalID).append(maxWeight).append(currentWeight).toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
+                .append("id", clientId)
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("personalID", personalID)

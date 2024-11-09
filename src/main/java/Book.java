@@ -32,9 +32,10 @@ public class Book extends Literature {
                 @BsonProperty("genre") String genre,
                 @BsonProperty("author") String author,
                 @BsonProperty("weight") int weight,
-                @BsonProperty("tier") int tier
+                @BsonProperty("tier") int tier,
+                @BsonProperty("isBorrowed") int isBorrowed
                 ){
-        super(id, name, weight);
+        super(id, name, weight, isBorrowed);
         this.genre = genre;
         this.author = author;
         this.tier = tier;

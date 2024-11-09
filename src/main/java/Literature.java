@@ -1,7 +1,5 @@
 import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -18,10 +16,9 @@ public abstract class Literature {
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "id", nullable = false)
     // nie wiem jeszcze jak sie robi unique aby
-    @BsonProperty("id")
+    @BsonProperty("_id")
     @NonNull
-
-    private MongoUniqueId id;
+    private MongoUniqueId literatureId;
 
 //    @Version
 //    private long version;
@@ -32,15 +29,20 @@ public abstract class Literature {
     @BsonProperty("weight")
     private int weight;
 
-    public boolean isBorrowed() {
+
+    // z tym borrowed trzeba pokminic, najlepiej chyba zrobic ta inkrementacje
+    @BsonProperty("isBorrowed")
+    private int isBorrowed;
+
+    public int isBorrowed() {
         return isBorrowed;
     }
 
-    public void setBorrowed(boolean borrowed) {
+    public void setBorrowed(int borrowed) {
         isBorrowed = borrowed;
     }
 
-    private boolean isBorrowed;
+
 
     public Literature(String name, int weight) {
         this.name = name;
@@ -48,12 +50,12 @@ public abstract class Literature {
     }
     @BsonCreator
     public Literature(
-            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("_id") MongoUniqueId literatureId,
             @BsonProperty("name") String name,
-            @BsonProperty("weight") int weight
-
+            @BsonProperty("weight") int weight,
+            @BsonProperty("isBorrowed") int isBorrowed
     ) {
-        this.id = id;
+        this.literatureId = literatureId;
         this.name = name;
         this.weight = weight;
     }
@@ -63,18 +65,18 @@ public abstract class Literature {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Literature that = (Literature) o;
-        return weight == that.weight && isBorrowed == that.isBorrowed && Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return weight == that.weight && isBorrowed == that.isBorrowed && Objects.equals(literatureId, that.literatureId) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, weight, isBorrowed);
+        return Objects.hash(literatureId, name, weight, isBorrowed);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
+                .append("id", literatureId)
                 .append("name", name)
                 .append("weight", weight)
                 .append("isBorrowed", isBorrowed)
@@ -85,7 +87,7 @@ public abstract class Literature {
 
 
     public MongoUniqueId getId() {
-        return id;
+        return literatureId;
     }
 
     public String getName() {
