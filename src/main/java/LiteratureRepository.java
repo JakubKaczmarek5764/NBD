@@ -1,37 +1,35 @@
-//import java.util.List;
-//
-//public class LiteratureRepository implements ILiteratureRepository {
-//    public void create(Literature literature) {
-//        Repository.create(literature);
-//    }
-//
-//    public List<Literature> getAll() {
-//        return Repository.getAll(Literature.class);
-//    }
-//
-//    public Literature getById(long id) {
-//        return Repository.getByParam(Literature.class, id, "id").get(0);
-//    }
-//
-//    public List<Literature> getByName(String name) {
-//        return Repository.getByParam(Literature.class, name, "name");
-//    }
-//
-//    public List<Literature> getByWeight(int weight) {
-//        return Repository.getByParam(Literature.class, weight, "weight");
-//    }
-//
-//    public List<Book> getBookByAuthor(String author) {
-//        return Repository.getByParam(Book.class, author, "author");
-//    }
-//
-//    @Override
-//    public void delete(long id) {
-//        Repository.delete(Literature.class, id);
-//    }
-//
-//    @Override
-//    public void update(Literature literature) {
-//        Repository.update(literature);
-//    }
-//}
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.conversions.Bson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class LiteratureRepository extends AbstractMongoRepository implements ILiteratureRepository {
+
+    private final MongoCollection<Literature> literatureCollection = initDbConnection().getCollection("literature", Literature.class);
+
+    @Override
+    public void updateAuthor(Literature literature, String author) {
+        Bson filter = Filters.eq("_id", literature.getId());
+        Bson update = Updates.set("author", author);
+        literatureCollection.updateOne(filter, update);
+    }
+
+    @Override
+    public void create(Literature obj) {
+        literatureCollection.insertOne(obj);
+    }
+
+    @Override
+    public List<Literature> readAll() {
+        return literatureCollection.find().into(new ArrayList<Literature>());
+    }
+
+    @Override
+    public void delete(Literature obj) {
+        Bson filter = Filters.eq("_id", obj.getId());
+        literatureCollection.deleteOne(filter);
+    }
+}

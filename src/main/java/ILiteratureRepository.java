@@ -1,19 +1,5 @@
 import java.util.List;
 
-public interface ILiteratureRepository {
-    void create(Literature literature);
-
-    List<Literature> getAll();
-
-    Literature getById(long id);
-
-    List<Literature> getByName(String name);
-
-    List<Literature> getByWeight(int weight);
-
-    List<Book> getBookByAuthor(String author);
-
-    void delete(long id);
-
-    void update(Literature literature);
+public interface ILiteratureRepository extends Repository<Literature> {
+    void updateAuthor(Literature literature, String author);
 }

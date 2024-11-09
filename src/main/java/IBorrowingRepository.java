@@ -1,13 +1,6 @@
 import java.util.List;
 
-public interface IBorrowingRepository {
-    void create(Borrowing borrowing);
-
-    List<Borrowing> getAll();
-
-    List<Borrowing> getAllBorrowingsByClientId(long id);
-
-    void delete(long id);
-
-    void update(Borrowing borrowing);
+public interface IBorrowingRepository extends Repository<Borrowing> {
+    // update to chyba powinny byc jakies konkretne, np update endDate
+    void updateClient(Borrowing borrowing, Client client);
 }

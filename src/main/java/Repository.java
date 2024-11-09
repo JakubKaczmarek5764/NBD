@@ -1,89 +1,9 @@
-//import jakarta.persistence.EntityManager;
-//import jakarta.persistence.EntityManagerFactory;
-//import jakarta.persistence.EntityTransaction;
-//import jakarta.persistence.Persistence;
-//import jakarta.persistence.criteria.CriteriaBuilder;
-//import jakarta.persistence.criteria.CriteriaQuery;
-//import jakarta.persistence.criteria.Predicate;
-//import jakarta.persistence.criteria.Root;
-//
-//import java.util.List;
-//
-//
-//class Repository {
-//    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-//
-//    static <T> void create(T obj) {
-//        EntityManager em = emf.createEntityManager();
-//        EntityTransaction transaction = em.getTransaction();
-//        try {
-//            transaction.begin();
-//            em.persist(obj);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            if (transaction.isActive()) {
-//                transaction.rollback();
-//            }
-//            throw e;
-//        } finally {
-//            em.close();
-//        }
-//    }
-//
-//    static <T> List<T> getAll(Class<T> objClass) {
-//        EntityManager em = emf.createEntityManager();
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<T> query = cb.createQuery(objClass);
-//        Root<T> rootEntry = query.from(objClass);
-//        query.select(rootEntry);
-//        return em.createQuery(query).getResultList();
-//    }
-//
-//    static <T> List<T> getByParam(Class<T> objClass, Object parameter, String parameterName) {
-//
-//        EntityManager em = emf.createEntityManager();
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<T> query = cb.createQuery(objClass);
-//        Root<T> rootEntry = query.from(objClass);
-//        Predicate predicate = cb.equal(rootEntry.get(parameterName), parameter);
-//        query.where(predicate);
-//        return em.createQuery(query).getResultList();
-//    }
-//
-//    static <T> void update(T obj) {
-//
-//        EntityManager em = emf.createEntityManager();
-//        EntityTransaction transaction = em.getTransaction();
-//        try {
-//            transaction.begin();
-//            em.merge(obj);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            if (transaction.isActive()) {
-//                transaction.rollback();
-//            }
-//            throw new RuntimeException(e);
-//        } finally {
-//            em.close();
-//        }
-//    }
-//
-//    static <T> void delete(Class<T> objClass, long id) {
-//        EntityManager em = emf.createEntityManager();
-//        EntityTransaction transaction = em.getTransaction();
-//        try {
-//            transaction.begin();
-//            T obj = em.find(objClass, id);
-//            em.remove(obj);
-//            transaction.commit();
-//
-//        } catch (Exception e) {
-//            if (transaction.isActive()) {
-//                transaction.rollback();
-//            }
-//            throw e;
-//        } finally {
-//            em.close();
-//        }
-//    }
-//}
+import java.util.List;
+
+
+interface Repository<T> {
+
+    void create(T obj);
+    List<T> readAll();
+    void delete(T obj);
+}

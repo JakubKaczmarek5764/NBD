@@ -30,7 +30,8 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     private MongoClient mongoClient;
     private MongoDatabase nbd;
 
-    public void initDbConnection() {
+    // to bylo void, ale chyba lepiej jak zwraca
+    public MongoDatabase initDbConnection() {
         MongoClientSettings settings = MongoClientSettings.builder()
                 .credential(credential)
                 .applyConnectionString(connectionString)
@@ -44,5 +45,9 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
 
         mongoClient = MongoClients.create(settings);
         nbd = mongoClient.getDatabase("tbc");
+        return nbd;
+    }
+    public void close(){
+        mongoClient.close();
     }
 }

@@ -1,36 +1,34 @@
-//import java.util.List;
-//
-//public class ClientRepository implements IClientRepository {
-//    public void create(Client client) {
-//        Repository.create(client);
-//    }
-//
-//    public List<Client> getAll() {
-//        return Repository.getAll(Client.class);
-//    }
-//
-//    public List<Client> getByFirstName(String firstName) {
-//
-//        return Repository.getByParam(Client.class, firstName, "firstName");
-//    }
-//
-//    public List<Client> getByLastName(String lastName) {
-//        return Repository.getByParam(Client.class, lastName, "lastName");
-//    }
-//
-//    public Client getByPersonalID(String personalID) {
-//        return Repository.getByParam(Client.class, personalID, "personalID").get(0);
-//    }
-//
-//    public Client getById(long id) {
-//        return Repository.getByParam(Client.class, id, "id").get(0);
-//    }
-//
-//    public void update(Client client) {
-//        Repository.update(client);
-//    }
-//
-//    public void delete(long id) {
-//        Repository.delete(Client.class, id);
-//    }
-//}
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.conversions.Bson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClientRepository extends AbstractMongoRepository implements IClientRepository {
+    private final MongoCollection<Client> clientCollection = initDbConnection().getCollection("clients", Client.class);
+
+    @Override
+    public void updateFirstName(Client client, String firstName) {
+        Bson filter = Filters.eq("_id", client.getId());
+        Bson update = Updates.set("firstName", firstName);
+        clientCollection.updateOne(filter, update);
+    }
+
+    @Override
+    public void create(Client obj) {
+        clientCollection.insertOne(obj);
+    }
+
+    @Override
+    public List<Client> readAll() {
+        return clientCollection.find().into(new ArrayList<>());
+    }
+
+    @Override
+    public void delete(Client obj) {
+        Bson filter = Filters.eq("_id", obj.getId());
+        clientCollection.deleteOne(filter);
+    }
+}
