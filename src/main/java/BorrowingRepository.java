@@ -22,6 +22,8 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 
     @Override
     public void delete(Borrowing obj) {
+        // mozliwe ze do wszystkich obj.getId() trzeba bedzie dodac jeszcze jedno getId() zeby wyciagac UUID,
+        // ale to zobaczymy jak baza bedzie stala
         Bson filter = Filters.eq("_id", obj.getId());
         borrowingCollection.deleteOne(filter);
     }
