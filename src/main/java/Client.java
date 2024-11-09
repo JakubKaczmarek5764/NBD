@@ -1,21 +1,38 @@
-import jakarta.persistence.*;
+import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@Entity
-@Access(AccessType.FIELD)
+import java.util.UUID;
+
+//@Entity
+//@Access(AccessType.FIELD)
 public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    // adapter?
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @BsonProperty("id")
+    private MongoUniqueId id;
+
+    @BsonProperty("firstName")
     private String firstName;
+
+    @BsonProperty("lastName")
     private String lastName;
-    @Column(unique = true)
+
+//    @Column(unique = true)
+    @BsonProperty("personalID")
     private String personalID;
-    @Version
-    private long version;
+
+//    @Version
+//    private long version;
+
+    @BsonProperty("maxWeight")
     private int maxWeight;
+
+    @BsonProperty("currentWeight")
     private int currentWeight;
 
     public int getCurrentWeight() {
@@ -31,6 +48,21 @@ public class Client {
     }
 
     public Client(String firstName, String lastName, String personalID, int maxWeight) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalID = personalID;
+        this.maxWeight = maxWeight;
+    }
+
+    @BsonCreator
+    public Client(
+            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("firstName") String firstName,
+            @BsonProperty("lastName") String lastName,
+            @BsonProperty("personalID") String personalID,
+            @BsonProperty("maxWeight") int maxWeight
+    ) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
@@ -69,7 +101,7 @@ public class Client {
         return getFirstName() + " " + getLastName() + " " + getPersonalID();
     }
 
-    public Long getId() {
+    public MongoUniqueId getId() {
         return id;
     }
 

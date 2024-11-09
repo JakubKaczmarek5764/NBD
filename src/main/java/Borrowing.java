@@ -1,53 +1,73 @@
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+
+import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.GregorianCalendar;
 
-@Entity
-@Access(AccessType.FIELD)
+//@Entity
+//@Access(AccessType.FIELD)
 public class Borrowing {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
-    @Version
-    private long version;
-    private GregorianCalendar BorrowingBeginDate;
-    private GregorianCalendar BorrowingEndDate;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    @NotNull
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @BsonProperty("id")
+    private MongoUniqueId id;
+//    @Version
+//    private long version;
+
+    @BsonProperty("beginDate")
+    private GregorianCalendar beginDate;
+
+    @BsonProperty("endDate")
+    private GregorianCalendar endDate;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn
+//    @NotNull
+    @BsonProperty("client")
     private Client client;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn
+//    @NotNull
+    @BsonProperty("literature")
     private Literature literature;
 
     public Borrowing(GregorianCalendar beginDate, GregorianCalendar endDate, Client client, Literature literature) {
-        this.BorrowingBeginDate = beginDate;
-        this.BorrowingEndDate = endDate;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
         this.client = client;
         this.literature = literature;
     }
 
-    public Borrowing() {
-
+    @BsonCreator
+    public Borrowing(
+            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("beginDate") GregorianCalendar beginDate,
+            @BsonProperty("endDate") GregorianCalendar endDate,
+            @BsonProperty("client") Client client,
+            @BsonProperty("literature") Literature literature
+    ) {
+        this.id = id;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.client = client;
+        this.literature = literature;
     }
 
-    public void setBorrowingEndDate(GregorianCalendar borrowingEndDate) {
-        BorrowingEndDate = borrowingEndDate;
+
+    public void setEndDate(GregorianCalendar endDate) {
+        this.endDate = endDate;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("version", version)
-                .append("BorrowingBeginDate", BorrowingBeginDate)
-                .append("BorrowingEndDate", BorrowingEndDate)
+                .append("BorrowingBeginDate", beginDate)
+                .append("BorrowingEndDate", endDate)
                 .append("client", client)
                 .append("literature", literature)
                 .toString();
@@ -61,24 +81,24 @@ public class Borrowing {
 
         Borrowing borrowing = (Borrowing) o;
 
-        return new EqualsBuilder().append(id, borrowing.id).append(BorrowingBeginDate, borrowing.BorrowingBeginDate).append(BorrowingEndDate, borrowing.BorrowingEndDate).append(client, borrowing.client).append(literature, borrowing.literature).isEquals();
+        return new EqualsBuilder().append(id, borrowing.id).append(beginDate, borrowing.beginDate).append(endDate, borrowing.endDate).append(client, borrowing.client).append(literature, borrowing.literature).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(BorrowingBeginDate).append(BorrowingEndDate).append(client).append(literature).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(beginDate).append(endDate).append(client).append(literature).toHashCode();
     }
 
-    public long getId() {
+    public MongoUniqueId getId() {
         return id;
     }
 
-    public GregorianCalendar getBorrowingBeginDate() {
-        return BorrowingBeginDate;
+    public GregorianCalendar getBeginDate() {
+        return beginDate;
     }
 
-    public GregorianCalendar getBorrowingEndDate() {
-        return BorrowingEndDate;
+    public GregorianCalendar getEndDate() {
+        return endDate;
     }
 
     public Client getClient() {
@@ -94,10 +114,10 @@ public class Borrowing {
     }
 
     public void endBorrowing(GregorianCalendar endDate) {
-        if (endDate.before(BorrowingBeginDate)) {
-            BorrowingEndDate = BorrowingBeginDate;
+        if (endDate.before(beginDate)) {
+            this.endDate = beginDate;
         } else {
-            BorrowingEndDate = endDate;
+            this.endDate = endDate;
         }
     }
 }

@@ -1,21 +1,28 @@
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 
-@Entity
-@Access(AccessType.FIELD)
-@DiscriminatorValue("magazine")
+import mappers.MongoUniqueId;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
+//@Entity
+//@Access(AccessType.FIELD)
+//@DiscriminatorValue("magazine")
 public class Magazine extends Literature {
+    @BsonProperty("issue")
     private String issue;
 
     public Magazine(String name, String issue, int weight) {
         super(name, weight);
         this.issue = issue;
     }
-
-    public Magazine() {
-
+    @BsonCreator
+    public Magazine(
+            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("name") String name,
+            @BsonProperty("issue") String issue,
+            @BsonProperty("weight") int weight
+    ) {
+        super(id, name, weight);
+        this.issue = issue;
     }
 
     @Override

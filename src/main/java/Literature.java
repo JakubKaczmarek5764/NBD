@@ -1,21 +1,32 @@
-import jakarta.persistence.*;
+import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
-@Access(AccessType.FIELD)
+import java.util.Objects;
+
+//@Entity
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "type")
+//@Access(AccessType.FIELD)
+
 public abstract class Literature {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Column(name = "id", nullable = false)
+    // nie wiem jeszcze jak sie robi unique aby
+    @BsonProperty("id")
+    private MongoUniqueId id;
 
-    @Version
-    private long version;
+//    @Version
+//    private long version;
+
+    @BsonProperty("name")
     private String name;
+
+    @BsonProperty("weight")
     private int weight;
 
     public boolean isBorrowed() {
@@ -32,39 +43,45 @@ public abstract class Literature {
         this.name = name;
         this.weight = weight;
     }
+    @BsonCreator
+    public Literature(
+            @BsonProperty("id") MongoUniqueId id,
+            @BsonProperty("name") String name,
+            @BsonProperty("weight") int weight
+
+    ) {
+        this.id = id;
+        this.name = name;
+        this.weight = weight;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         Literature that = (Literature) o;
-
-        return new EqualsBuilder().append(id, that.id).append(version, that.version).append(weight, that.weight).append(isBorrowed, that.isBorrowed).append(name, that.name).isEquals();
+        return weight == that.weight && isBorrowed == that.isBorrowed && Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(version).append(name).append(weight).append(isBorrowed).toHashCode();
+        return Objects.hash(id, name, weight, isBorrowed);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("version", version)
                 .append("name", name)
                 .append("weight", weight)
                 .append("isBorrowed", isBorrowed)
                 .toString();
     }
 
-    public Literature() {
 
-    }
 
-    public long getId() {
+
+    public MongoUniqueId getId() {
         return id;
     }
 

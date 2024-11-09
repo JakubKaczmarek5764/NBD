@@ -45,5 +45,10 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.13.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
+            <version>4.10.2</version>
+        </dependency>
     </dependencies>
 </project>

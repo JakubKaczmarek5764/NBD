@@ -1,36 +1,36 @@
-import java.util.List;
-
-public class ClientRepository implements IClientRepository {
-    public void create(Client client) {
-        Repository.create(client);
-    }
-
-    public List<Client> getAll() {
-        return Repository.getAll(Client.class);
-    }
-
-    public List<Client> getByFirstName(String firstName) {
-
-        return Repository.getByParam(Client.class, firstName, "firstName");
-    }
-
-    public List<Client> getByLastName(String lastName) {
-        return Repository.getByParam(Client.class, lastName, "lastName");
-    }
-
-    public Client getByPersonalID(String personalID) {
-        return Repository.getByParam(Client.class, personalID, "personalID").get(0);
-    }
-
-    public Client getById(long id) {
-        return Repository.getByParam(Client.class, id, "id").get(0);
-    }
-
-    public void update(Client client) {
-        Repository.update(client);
-    }
-
-    public void delete(long id) {
-        Repository.delete(Client.class, id);
-    }
-}
+//import java.util.List;
+//
+//public class ClientRepository implements IClientRepository {
+//    public void create(Client client) {
+//        Repository.create(client);
+//    }
+//
+//    public List<Client> getAll() {
+//        return Repository.getAll(Client.class);
+//    }
+//
+//    public List<Client> getByFirstName(String firstName) {
+//
+//        return Repository.getByParam(Client.class, firstName, "firstName");
+//    }
+//
+//    public List<Client> getByLastName(String lastName) {
+//        return Repository.getByParam(Client.class, lastName, "lastName");
+//    }
+//
+//    public Client getByPersonalID(String personalID) {
+//        return Repository.getByParam(Client.class, personalID, "personalID").get(0);
+//    }
+//
+//    public Client getById(long id) {
+//        return Repository.getByParam(Client.class, id, "id").get(0);
+//    }
+//
+//    public void update(Client client) {
+//        Repository.update(client);
+//    }
+//
+//    public void delete(long id) {
+//        Repository.delete(Client.class, id);
+//    }
+//}

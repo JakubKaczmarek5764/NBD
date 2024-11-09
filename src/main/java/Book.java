@@ -1,17 +1,22 @@
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+
+import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@Entity
-@Access(AccessType.FIELD)
-@DiscriminatorValue("book")
+//@Entity
+//@Access(AccessType.FIELD)
+//@DiscriminatorValue("book")
 public class Book extends Literature {
+    @BsonProperty("genre")
     private String genre;
+
+    @BsonProperty("author")
     private String author;
+
+    @BsonProperty("tier")
     private int tier;
 
     public Book(String name, String genre, String author, int weight, int tier) {
@@ -21,7 +26,19 @@ public class Book extends Literature {
         this.tier = tier;
 
     }
-
+    @BsonCreator
+    public Book(@BsonProperty("id")MongoUniqueId id,
+                @BsonProperty("name") String name,
+                @BsonProperty("genre") String genre,
+                @BsonProperty("author") String author,
+                @BsonProperty("weight") int weight,
+                @BsonProperty("tier") int tier
+                ){
+        super(id, name, weight);
+        this.genre = genre;
+        this.author = author;
+        this.tier = tier;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,10 +62,6 @@ public class Book extends Literature {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(genre).append(author).append(tier).toHashCode();
-    }
-
-    public Book() {
-
     }
 
     @Override
