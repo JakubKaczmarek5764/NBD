@@ -1,3 +1,4 @@
+import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,6 +19,8 @@ public abstract class Literature {
 //    @Column(name = "id", nullable = false)
     // nie wiem jeszcze jak sie robi unique aby
     @BsonProperty("id")
+    @NonNull
+
     private MongoUniqueId id;
 
 //    @Version
