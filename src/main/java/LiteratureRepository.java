@@ -1,6 +1,7 @@
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import mappers.MongoUniqueId;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -10,12 +11,6 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
 
     private final MongoCollection<Literature> literatureCollection = initDbConnection().getCollection("literature", Literature.class);
 
-    @Override
-    public void updateAuthor(Literature literature, String author) {
-        Bson filter = Filters.eq("_id", literature.getId());
-        Bson update = Updates.set("author", author);
-        literatureCollection.updateOne(filter, update);
-    }
 
     @Override
     public void create(Literature obj) {
@@ -23,13 +18,30 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
     }
 
     @Override
-    public List<Literature> readAll() {
+    public List<Literature> getAll() {
         return literatureCollection.find().into(new ArrayList<Literature>());
+    }
+
+    @Override
+    public Literature getById(MongoUniqueId id) {
+        Bson filter = Filters.eq("_id", id);
+        return literatureCollection.find(filter).first();
     }
 
     @Override
     public void delete(Literature obj) {
         Bson filter = Filters.eq("_id", obj.getId());
         literatureCollection.deleteOne(filter);
+    }
+
+    @Override
+    public void update(Literature obj) {
+        Bson filter = Filters.eq("_id", obj.getId());
+        literatureCollection.replaceOne(filter, obj);
+    }
+
+    @Override
+    public void drop() {
+        literatureCollection.drop();
     }
 }

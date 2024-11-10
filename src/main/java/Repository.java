@@ -1,9 +1,15 @@
+import mappers.MongoUniqueId;
+
 import java.util.List;
 
 
 interface Repository<T> {
 
     void create(T obj);
-    List<T> readAll();
+    List<T> getAll();
+    T getById(MongoUniqueId id);
     void delete(T obj);
+    void update(T obj);
+    void drop();
+
 }

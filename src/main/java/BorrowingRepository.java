@@ -2,6 +2,7 @@
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import mappers.MongoUniqueId;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -16,8 +17,14 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     }
 
     @Override
-    public List<Borrowing> readAll() {
+    public List<Borrowing> getAll() {
         return borrowingCollection.find().into(new ArrayList<Borrowing>());
+    }
+
+    @Override
+    public Borrowing getById(MongoUniqueId id) {
+        Bson filter = Filters.eq("_id", id);
+        return borrowingCollection.find(filter).first();
     }
 
     @Override
@@ -29,10 +36,15 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     }
 
     @Override
-    public void updateClient(Borrowing borrowing, Client client) {
-        Bson filter = Filters.eq("_id", borrowing.getId());
-        Bson update = Updates.set("client", client);
-        borrowingCollection.updateOne(filter, update);
+    public void update(Borrowing obj) {
+        Bson filter = Filters.eq("_id", obj.getId());
+        borrowingCollection.replaceOne(filter, obj);
     }
+
+    @Override
+    public void drop() {
+        borrowingCollection.drop();
+    }
+
 
 }

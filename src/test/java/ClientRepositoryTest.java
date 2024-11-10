@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClientRepositoryTest {
-
+    private IClientRepository clientRepository = new ClientRepository();
     private Client c;
     private Client c2;
 
     @BeforeEach
     public void prepareForTests() {
+        clientRepository.drop();
         c = new Client("Jan", "Kowalski", "123", 10);
         c2 = new Client("Jan", "Kowalski", "456", 10);
     }
@@ -23,19 +24,20 @@ public class ClientRepositoryTest {
 
     @Test
     public void clientCreateTest() {
-        ClientRepository cr = new ClientRepository();
-        cr.create(c);
-        System.out.println(cr.readAll());
+        clientRepository.create(c);
+        System.out.println(clientRepository.getAll());
 
     }
 
-//    @Test
-//    public void clientUpdateTest() {
-//        clientRepository.create(c);
-//        c.setFirstName("Marcin");
-//        clientRepository.update(c);
+    @Test
+    public void clientUpdateTest() {
+        clientRepository.create(c);
+        c.setFirstName("Marcin");
+        System.out.println(c);
+        clientRepository.update(c);
+        System.out.print(clientRepository.getAll());
 //        assertEquals(clientRepository.getById(c.getId()).getFirstName(), "Marcin");
-//    }
+    }
 //
 //    @Test
 //    public void clientGettersTests() {

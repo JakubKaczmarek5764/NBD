@@ -27,7 +27,7 @@ public class Book extends Literature {
 
     }
     @BsonCreator
-    public Book(@BsonProperty("id")MongoUniqueId id,
+    public Book(@BsonProperty("_id")MongoUniqueId id,
                 @BsonProperty("name") String name,
                 @BsonProperty("genre") String genre,
                 @BsonProperty("author") String author,
