@@ -1,18 +1,19 @@
 package mappers;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bson.types.ObjectId;
 
-import java.util.UUID;
+
 
 public class MongoUniqueId {
-    private UUID id;
-    public MongoUniqueId(UUID id){
+    private ObjectId id;
+    public MongoUniqueId(ObjectId id){
         this.id = id;
     }
-    public UUID getId(){
+    public ObjectId getId(){
         return id;
     }
-
+    public MongoUniqueId(){}
     @Override
     public String toString() {
         return new ToStringBuilder(this)

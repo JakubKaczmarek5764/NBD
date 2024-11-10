@@ -19,7 +19,10 @@ public class UniqueIdCodecProvider implements CodecProvider {
 
     // ta funkcja do dogadania
     @Override
-    public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry codecRegistry) {
+        if (clazz == MongoUniqueId.class){
+            return (Codec<T>) new MongoUniqueIdCodec(codecRegistry);
+        }
         return null;
     }
 }

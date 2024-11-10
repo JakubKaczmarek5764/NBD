@@ -6,20 +6,20 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.types.ObjectId;
 
-import java.util.UUID;
 
 public class MongoUniqueIdCodec implements Codec<MongoUniqueId> {
 
-    private Codec<UUID> uniqueIdCodec;
+    private Codec<ObjectId> uniqueIdCodec;
 
     public MongoUniqueIdCodec(CodecRegistry codecRegistry) {
-        this.uniqueIdCodec = codecRegistry.get(UUID.class);
+        this.uniqueIdCodec = codecRegistry.get(ObjectId.class);
     }
 
     @Override
     public MongoUniqueId decode(BsonReader bsonReader, DecoderContext decoderContext) {
-        UUID uniqueId = uniqueIdCodec.decode(bsonReader, decoderContext);
+        ObjectId uniqueId = uniqueIdCodec.decode(bsonReader, decoderContext);
         return new MongoUniqueId(uniqueId);
     }
 
