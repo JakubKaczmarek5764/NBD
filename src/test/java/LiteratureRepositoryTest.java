@@ -1,8 +1,12 @@
 import mappers.MongoUniqueId;
+import objects.Book;
+import objects.Magazine;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repositories.ILiteratureRepository;
+import repositories.LiteratureRepository;
 
 import static junit.framework.Assert.assertEquals;
 

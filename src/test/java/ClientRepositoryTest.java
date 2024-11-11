@@ -1,11 +1,11 @@
-import junit.framework.Assert;
 import mappers.MongoUniqueId;
+import objects.Client;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
+import repositories.ClientRepository;
+import repositories.IClientRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,6 +38,7 @@ public class ClientRepositoryTest {
         clientRepository.create(c);
         c.setFirstName("Marcin");
         clientRepository.update(c);
+
         assertEquals(clientRepository.getById(c.getClientId()).getFirstName(), "Marcin");
     }
 

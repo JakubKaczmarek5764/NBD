@@ -1,7 +1,9 @@
+package repositories;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import mappers.MongoUniqueId;
+import objects.Borrowing;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;

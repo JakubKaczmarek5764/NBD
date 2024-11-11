@@ -1,3 +1,4 @@
+package objects;
 
 import mappers.MongoUniqueId;
 import org.bson.codecs.pojo.annotations.BsonCreator;

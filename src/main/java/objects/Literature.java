@@ -1,3 +1,5 @@
+package objects;
+
 import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,7 +19,6 @@ public abstract class Literature {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "id", nullable = false)
-    // nie wiem jeszcze jak sie robi unique aby
     @BsonProperty("_id")
     @NonNull
     private MongoUniqueId literatureId;

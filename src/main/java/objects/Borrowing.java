@@ -1,3 +1,4 @@
+package objects;
 
 import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
