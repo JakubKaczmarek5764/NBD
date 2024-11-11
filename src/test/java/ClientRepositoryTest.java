@@ -1,3 +1,4 @@
+import junit.framework.Assert;
 import mappers.MongoUniqueId;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
@@ -17,7 +18,7 @@ public class ClientRepositoryTest {
     public void prepareForTests() {
         clientRepository.drop();
         c = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "123", 10);
-        c2 = new Client("Jan", "Kowalski", "456", 10);
+        c2 = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "456", 10);
     }
 
     @AfterAll
@@ -29,41 +30,38 @@ public class ClientRepositoryTest {
     @Test
     public void clientCreateTest() {
         clientRepository.create(c);
-        System.out.println(clientRepository.getAll());
-
+        assertEquals(1, clientRepository.getAll().size());
     }
 
     @Test
     public void clientUpdateTest() {
-        System.out.println(c);
         clientRepository.create(c);
-        System.out.println(c);
         c.setFirstName("Marcin");
-
-        System.out.println(clientRepository.getAll());
         clientRepository.update(c);
-        System.out.print(clientRepository.getAll());
         assertEquals(clientRepository.getById(c.getClientId()).getFirstName(), "Marcin");
     }
-//
-//    @Test
-//    public void clientGettersTests() {
-//        clientRepository.create(c);
-//        clientRepository.create(c2);
-//        assertEquals(clientRepository.getByFirstName("Jan").getFirst(), c);
-//        assertEquals(clientRepository.getByFirstName("Jan").size(), 2);
-//        assertEquals(clientRepository.getByLastName("Kowalski").getFirst(), c);
-//        assertEquals(clientRepository.getByLastName("Kowalski").size(), 2);
-//        assertEquals(clientRepository.getByPersonalID("123"), c);
-//        assertEquals(clientRepository.getAll().size(), 2);
-//    }
-//
-//    @Test
-//    public void clientDeleteTest() {
-//        clientRepository.create(c);
-//        clientRepository.create(c2);
-//        assertEquals(clientRepository.getAll().size(), 2);
-//        clientRepository.delete(c.getId());
-//        assertEquals(clientRepository.getAll().size(), 1);
-//    }
+
+    @Test
+    public void clientGettersTests() {
+        clientRepository.create(c);
+        clientRepository.create(c2);
+        assertEquals(clientRepository.getAll().size(), 2);
+    }
+
+    @Test
+    public void clientDeleteTest() {
+        clientRepository.create(c);
+        clientRepository.create(c2);
+        assertEquals(clientRepository.getAll().size(), 2);
+        clientRepository.delete(c);
+        assertEquals(clientRepository.getAll().size(), 1);
+    }
+
+    @Test
+    public void clientCollectionDropTest() {
+        clientRepository.create(c);
+        clientRepository.create(c2);
+        clientRepository.drop();
+        assertEquals(clientRepository.getAll().size(), 0);
+    }
 }
