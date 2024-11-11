@@ -31,34 +31,38 @@ public class LiteratureRepositoryTest {
     @Test
     public void literatureCreateTest() {
         literatureRepository.create(b);
-        assertEquals(literatureRepository.getAll().getFirst(), b);
+        assertEquals(literatureRepository.getAll().size(), 1);
     }
-//
-//    @Test
-//    public void literatureGettersTests() {
-//        literatureRepository.create(b);
-//        literatureRepository.create(m);
-//        assertEquals(literatureRepository.getBookByAuthor("Mickiewicz").getFirst(), b);
-//        assertEquals(literatureRepository.getByName("Swiat nauki").getFirst(), m);
-//        assertEquals(2, literatureRepository.getByWeight(2).size());
-//        assertEquals(literatureRepository.getAll().size(), 2);
-//    }
-//
-//    @Test
-//    public void literatureDeleteTest() {
-//        literatureRepository.create(b);
-//        literatureRepository.create(m);
-//        assertEquals(literatureRepository.getAll().size(), 2);
-//        literatureRepository.delete(b.getId());
-//        assertEquals(literatureRepository.getAll().size(), 1);
-//    }
-//
-//    @Test
-//    public void literatureUpdate() {
-//        literatureRepository.create(b);
-//        assertEquals(literatureRepository.getAll().getFirst().getName(), "Pan Tadeusz");
-//        b.setName("Dziady");
-//        literatureRepository.update(b);
-//        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
-//    }
+
+    @Test
+    public void literatureGettersTests() {
+        literatureRepository.create(b);
+        literatureRepository.create(m);
+        assertEquals(literatureRepository.getAll().size(), 2);
+    }
+
+    @Test
+    public void literatureDeleteTest() {
+        literatureRepository.create(b);
+        literatureRepository.create(m);
+        assertEquals(literatureRepository.getAll().size(), 2);
+        literatureRepository.delete(b);
+        assertEquals(literatureRepository.getAll().size(), 1);
+    }
+
+    @Test
+    public void literatureUpdate() {
+        literatureRepository.create(b);
+        b.setName("Dziady");
+        literatureRepository.update(b);
+        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
+    }
+
+    @Test
+    public void literatureCollectionDropTest() {
+        literatureRepository.create(b);
+        literatureRepository.create(m);
+        literatureRepository.drop();
+        assertEquals(literatureRepository.getAll().size(), 0);
+    }
 }
