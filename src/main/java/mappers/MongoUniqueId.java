@@ -16,8 +16,6 @@ public class MongoUniqueId {
     public MongoUniqueId(){}
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .toString();
-    }
+        return id.toString();
+}
 }

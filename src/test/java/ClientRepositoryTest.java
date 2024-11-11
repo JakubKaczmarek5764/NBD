@@ -1,6 +1,10 @@
+import mappers.MongoUniqueId;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,7 +16,7 @@ public class ClientRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         clientRepository.drop();
-        c = new Client("Jan", "Kowalski", "123", 10);
+        c = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "123", 10);
         c2 = new Client("Jan", "Kowalski", "456", 10);
     }
 
@@ -31,12 +35,15 @@ public class ClientRepositoryTest {
 
     @Test
     public void clientUpdateTest() {
-        clientRepository.create(c);
-        c.setFirstName("Marcin");
         System.out.println(c);
+        clientRepository.create(c);
+        System.out.println(c);
+        c.setFirstName("Marcin");
+
+        System.out.println(clientRepository.getAll());
         clientRepository.update(c);
         System.out.print(clientRepository.getAll());
-//        assertEquals(clientRepository.getById(c.getId()).getFirstName(), "Marcin");
+        assertEquals(clientRepository.getById(c.getClientId()).getFirstName(), "Marcin");
     }
 //
 //    @Test

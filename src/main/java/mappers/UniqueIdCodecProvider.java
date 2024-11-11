@@ -8,8 +8,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class UniqueIdCodecProvider implements CodecProvider {
+    public UniqueIdCodecProvider() {
+    }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry codecRegistry) {
         if (clazz == MongoUniqueId.class){
             return (Codec<T>) new MongoUniqueIdCodec(codecRegistry);
@@ -19,6 +22,7 @@ public class UniqueIdCodecProvider implements CodecProvider {
 
     // ta funkcja do dogadania
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry codecRegistry) {
         if (clazz == MongoUniqueId.class){
             return (Codec<T>) new MongoUniqueIdCodec(codecRegistry);

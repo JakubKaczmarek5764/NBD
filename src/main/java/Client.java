@@ -1,4 +1,3 @@
-import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,7 +12,6 @@ public class Client {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @BsonProperty("_id")
-    @NonNull
     private MongoUniqueId clientId;
 
     @BsonProperty("firstName")
@@ -101,7 +99,7 @@ public class Client {
         return getFirstName() + " " + getLastName() + " " + getPersonalID();
     }
 
-    public MongoUniqueId getId() {
+    public MongoUniqueId getClientId() {
         return clientId;
     }
 

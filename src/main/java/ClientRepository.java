@@ -1,6 +1,5 @@
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import mappers.MongoUniqueId;
 import org.bson.conversions.Bson;
 
@@ -29,13 +28,13 @@ public class ClientRepository extends AbstractMongoRepository implements IClient
 
     @Override
     public void delete(Client obj) {
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getClientId());
         clientCollection.deleteOne(filter);
     }
 
     @Override
     public void update(Client obj) {
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getClientId());
         clientCollection.replaceOne(filter, obj);
     }
 
