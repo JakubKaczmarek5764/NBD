@@ -86,13 +86,9 @@ public abstract class Literature {
                 .toString();
     }
 
-    /
+
     @NonNull
     public MongoUniqueId getLiteratureId() {
-        return literatureId;
-    }
-
-    public MongoUniqueId getId() {
         return literatureId;
     }
 

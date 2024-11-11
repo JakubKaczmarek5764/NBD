@@ -1,6 +1,7 @@
 package mappers;
 
 import objects.Book;
+import objects.Literature;
 import objects.Magazine;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -10,11 +11,9 @@ public class LiteratureCodecProvider implements CodecProvider {
 
     @Override
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry codecRegistry) {
-        if (clazz.equals(Book.class)){
-            return (Codec<T>) new BookCodec(codecRegistry);
+        if (clazz == Literature.class){
+                return (Codec<T>) new LiteratureCodec(codecRegistry);
         }
-        else if (clazz.equals(Magazine.class)){
-            return (Codec<T>) new MagazineCodec(codecRegistry);
-        }
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import mappers.LiteratureCodecProvider;
 import mappers.UniqueIdCodecProvider;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -40,6 +41,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(CodecRegistries.fromRegistries(
                         CodecRegistries.fromProviders(new UniqueIdCodecProvider()), // tbc
+                        CodecRegistries.fromProviders(new LiteratureCodecProvider()),
                         MongoClientSettings.getDefaultCodecRegistry(),
                         pojoCodecRegistry
                 ))

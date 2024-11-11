@@ -32,7 +32,7 @@ public class Magazine extends Literature {
 
     @Override
     String getLiteratureInfo() {
-        return "id: " + getId() + " name: " + getName() + " issue: " + getIssue();
+        return "id: " + getLiteratureId() + " name: " + getName() + " issue: " + getIssue();
     }
 
     @Override

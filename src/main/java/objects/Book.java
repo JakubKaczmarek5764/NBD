@@ -71,7 +71,7 @@ public class Book extends Literature {
 
     @Override
     String getLiteratureInfo() {
-        return "id: " + getId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
+        return "id: " + getLiteratureId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
     }
 
     @Override

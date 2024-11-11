@@ -32,13 +32,13 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
 
     @Override
     public void delete(Literature obj) {
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getLiteratureId());
         literatureCollection.deleteOne(filter);
     }
 
     @Override
     public void update(Literature obj) {
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getLiteratureId());
         literatureCollection.replaceOne(filter, obj);
     }
 
