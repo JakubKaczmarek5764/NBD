@@ -19,14 +19,4 @@ public class UniqueIdCodecProvider implements CodecProvider {
         }
         return null;
     }
-
-    // ta funkcja do dogadania
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry codecRegistry) {
-        if (clazz == MongoUniqueId.class){
-            return (Codec<T>) new MongoUniqueIdCodec(codecRegistry);
-        }
-        return null;
-    }
 }
