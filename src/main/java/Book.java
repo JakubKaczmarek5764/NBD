@@ -4,11 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 //@Entity
 //@Access(AccessType.FIELD)
 //@DiscriminatorValue("book")
+
+@BsonDiscriminator(key = "_clazz", value = "book")
 public class Book extends Literature {
     @BsonProperty("genre")
     private String genre;

@@ -2,6 +2,7 @@ import com.mongodb.lang.NonNull;
 import mappers.MongoUniqueId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 //@DiscriminatorColumn(name = "type")
 //@Access(AccessType.FIELD)
 
+@BsonDiscriminator(key = "_clazz")
 public abstract class Literature {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)

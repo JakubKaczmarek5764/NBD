@@ -1,11 +1,14 @@
 
 import mappers.MongoUniqueId;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 //@Entity
 //@Access(AccessType.FIELD)
 //@DiscriminatorValue("magazine")
+
+@BsonDiscriminator(key = "_clazz", value = "magazine")
 public class Magazine extends Literature {
     @BsonProperty("issue")
     private String issue;

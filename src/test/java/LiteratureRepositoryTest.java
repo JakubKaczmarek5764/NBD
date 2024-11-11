@@ -1,40 +1,34 @@
-//import jakarta.persistence.EntityManager;
-//import jakarta.persistence.EntityManagerFactory;
-//import jakarta.persistence.Persistence;
-//import org.junit.jupiter.api.AfterAll;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
+import mappers.MongoUniqueId;
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static junit.framework.Assert.assertEquals;
+
+public class LiteratureRepositoryTest {
+    private ILiteratureRepository literatureRepository = new LiteratureRepository();
+
+    private Book b;
+    private Magazine m;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//
-//public class LiteratureRepositoryTest {
-//    private static final LiteratureRepository literatureRepository = new LiteratureRepository();
-//    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-//    private static final EntityManager em = emf.createEntityManager();
-//    private Book b;
-//    private Magazine m;
-//
-//    @BeforeEach
-//    public void prepareForTests() {
-//        em.getTransaction().begin();
-//        em.createQuery("delete from Literature").executeUpdate();
-//        em.getTransaction().commit();
-//        b = new Book("Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2);
-//        m = new Magazine("Swiat nauki", "2001/10", 2);
-//    }
-//
-//    @AfterAll
-//    public static void close() {
-//        if (em != null) {
-//            emf.close();
-//        }
-//    }
-//
-//    @Test
-//    public void literatureCreateTest() {
-//        literatureRepository.create(b);
-//        assertEquals(literatureRepository.getAll().getFirst(), b);
-//    }
+    @BeforeEach
+    public void prepareForTests() {
+        literatureRepository.drop();
+        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 0);
+        m = new Magazine(new MongoUniqueId(new ObjectId()), "Swiat nauki", "2001/10", 2, 0);
+    }
+
+    @AfterAll
+    public static void close() {
+
+    }
+
+    @Test
+    public void literatureCreateTest() {
+        literatureRepository.create(b);
+        assertEquals(literatureRepository.getAll().getFirst(), b);
+    }
 //
 //    @Test
 //    public void literatureGettersTests() {
@@ -63,4 +57,4 @@
 //        literatureRepository.update(b);
 //        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
 //    }
-//}
+}
