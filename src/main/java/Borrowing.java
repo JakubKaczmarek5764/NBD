@@ -91,7 +91,7 @@ public class Borrowing {
         return new HashCodeBuilder(17, 37).append(borrowingId).append(beginDate).append(endDate).append(client).append(literature).toHashCode();
     }
 
-    public MongoUniqueId getId() {
+    public MongoUniqueId getBorrowingId() {
         return borrowingId;
     }
 
@@ -112,7 +112,7 @@ public class Borrowing {
     }
 
     public String getBorrowingInfo() {
-        return getId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
+        return getBorrowingId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
     }
 
     public void endBorrowing(GregorianCalendar endDate) {

@@ -1,7 +1,6 @@
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import mappers.MongoUniqueId;
 import org.bson.conversions.Bson;
 
@@ -31,13 +30,13 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     public void delete(Borrowing obj) {
         // mozliwe ze do wszystkich obj.getId() trzeba bedzie dodac jeszcze jedno getId() zeby wyciagac UUID,
         // ale to zobaczymy jak baza bedzie stala
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getBorrowingId());
         borrowingCollection.deleteOne(filter);
     }
 
     @Override
     public void update(Borrowing obj) {
-        Bson filter = Filters.eq("_id", obj.getId());
+        Bson filter = Filters.eq("_id", obj.getBorrowingId());
         borrowingCollection.replaceOne(filter, obj);
     }
 
