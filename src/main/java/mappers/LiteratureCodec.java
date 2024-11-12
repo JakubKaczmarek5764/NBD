@@ -42,7 +42,7 @@ public class LiteratureCodec implements Codec<Literature> {
         Literature literature = null;
         bsonReader.readEndDocument();
         String clazz = document.getString("_clazz");
-        if ("book".equals(clazz)){
+        if ("Book".equals(clazz)){
             literature = new Book(
                     id,
                     document.getString("name"),
@@ -53,7 +53,7 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getInteger("borrowed")
                     );
         }
-        else if ("magazine".equals(clazz)){
+        else if ("Magazine".equals(clazz)){
             literature = new Magazine(
                     id,
                     document.getString("name"),
@@ -71,7 +71,7 @@ public class LiteratureCodec implements Codec<Literature> {
     @Override
     public void encode(BsonWriter bsonWriter, Literature literature, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("_clazz", literature.getClass().getName());
+        bsonWriter.writeString("_clazz", literature.getClass().getSimpleName());
         bsonWriter.writeString("name", literature.getName());
         bsonWriter.writeInt32("weight", literature.getWeight());
         bsonWriter.writeInt32("borrowed", literature.isBorrowed());

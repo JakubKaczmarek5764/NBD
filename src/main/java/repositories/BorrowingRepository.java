@@ -18,18 +18,18 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 
     @Override
     public void create(Borrowing obj) {
-        System.out.println(obj.getClient());
-        Bson filter = Filters.eq("client", obj.getClient().getClientId().getId());
-        Bson projections = Projections.exclude(obj.getClient().getClientId().getId().toString(), obj.getLiterature().getLiteratureId().getId().toString());
-        AggregateIterable<Borrowing> aggregates = borrowingCollection.aggregate(List.of(
-                Aggregates.match(filter),
-                Aggregates.lookup("clients", obj.getClient().getClientId().getId().toString(), "_id", obj.getClient().toString()),
-                Aggregates.unwind("$" + obj.getClient().toString()),
-                Aggregates.lookup("literature", obj.getLiterature().getLiteratureId().getId().toString(), "_id", obj.getLiterature().toString()),
-                Aggregates.unwind("$" + obj.getLiterature().toString()),
-                Aggregates.project(projections)
-        ));
-
+//        Bson filter = Filters.eq("client", obj.getClient().getClientId().getId());
+//        Bson projections = Projections.exclude(obj.getClient().getClientId().toString(), obj.getLiterature().getLiteratureId().toString());
+//        AggregateIterable<Document> aggregates = borrowingCollection.aggregate(List.of(
+//                Aggregates.match(filter),
+//                Aggregates.lookup("clients", obj.getClient().getClientId().getId().toString(), "_id", "clientData"),
+//                Aggregates.unwind("$" + "clientData"),
+//                Aggregates.lookup("literature", obj.getLiterature().getLiteratureId().getId().toString(), "_id", "literatureData"),
+//                Aggregates.unwind("$" + "literatureData"),
+//                Aggregates.project(projections)
+//        ));
+//        ArrayList<Document> documents = aggregates.into(new ArrayList<>());
+//        System.out.println(documents);
         borrowingCollection.insertOne(obj);
     }
 

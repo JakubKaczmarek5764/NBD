@@ -31,6 +31,7 @@ public class ClientRepositoryTest {
     public void clientCreateTest() {
         clientRepository.create(c);
         assertEquals(1, clientRepository.getAll().size());
+//        System.out.println(ZonedDateTime.now());
     }
 
     @Test

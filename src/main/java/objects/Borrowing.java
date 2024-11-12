@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 
 //@Entity
@@ -22,10 +23,10 @@ public class Borrowing {
 //    private long version;
 
     @BsonProperty("beginDate")
-    private GregorianCalendar beginDate;
+    private ZonedDateTime beginDate;
 
     @BsonProperty("endDate")
-    private GregorianCalendar endDate;
+    private ZonedDateTime endDate;
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn
 //    @NotNull
@@ -38,7 +39,7 @@ public class Borrowing {
     @BsonProperty("literature")
     private Literature literature;
 
-    public Borrowing(GregorianCalendar beginDate, GregorianCalendar endDate, Client client, Literature literature) {
+    public Borrowing(ZonedDateTime beginDate, ZonedDateTime endDate, Client client, Literature literature) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.client = client;
@@ -48,8 +49,8 @@ public class Borrowing {
     @BsonCreator
     public Borrowing(
             @BsonProperty("_id") MongoUniqueId borrowingId,
-            @BsonProperty("beginDate") GregorianCalendar beginDate,
-            @BsonProperty("endDate") GregorianCalendar endDate,
+            @BsonProperty("beginDate") ZonedDateTime beginDate,
+            @BsonProperty("endDate") ZonedDateTime endDate,
             @BsonProperty("client") Client client,
             @BsonProperty("literature") Literature literature
     ) {
@@ -61,7 +62,7 @@ public class Borrowing {
     }
 
 
-    public void setEndDate(GregorianCalendar endDate) {
+    public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -96,11 +97,11 @@ public class Borrowing {
         return borrowingId;
     }
 
-    public GregorianCalendar getBeginDate() {
+    public ZonedDateTime getBeginDate() {
         return beginDate;
     }
 
-    public GregorianCalendar getEndDate() {
+    public ZonedDateTime getEndDate() {
         return endDate;
     }
 
@@ -116,8 +117,8 @@ public class Borrowing {
         return getBorrowingId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
     }
 
-    public void endBorrowing(GregorianCalendar endDate) {
-        if (endDate.before(beginDate)) {
+    public void endBorrowing(ZonedDateTime endDate) {
+        if (endDate.isBefore(beginDate)) {
             this.endDate = beginDate;
         } else {
             this.endDate = endDate;

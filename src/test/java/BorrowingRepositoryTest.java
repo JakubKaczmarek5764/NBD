@@ -8,8 +8,8 @@ import repositories.BorrowingRepository;
 import repositories.IBorrowingRepository;
 
 import java.time.ZonedDateTime;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,12 +27,13 @@ public class BorrowingRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         IBorrowingRepository borrowingRepository = new BorrowingRepository();
+        borrowingRepository.drop();
         c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10);
         lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
-        GregorianCalendar date = GregorianCalendar.from(ZonedDateTime.now());
-        bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), null, null, c, lit1);
-        lit2 = new objects.Magazine("Swiat Nauki", "2002/11", 8);
-        bor2 = new objects.Borrowing(date, null, c, lit2);
+        ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+        bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit1);
+        lit2 = new objects.Magazine(new MongoUniqueId(new ObjectId()), "Swiat Nauki", "2002/11", 8, 0);
+        bor2 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit2);
     }
 
     @AfterAll
@@ -49,7 +50,7 @@ public class BorrowingRepositoryTest {
     public void borrowingGettersTests() {
         borrowingRepository.create(bor1);
         borrowingRepository.create(bor2);
-        assertEquals(clientRepository.getAll().size(), 2);
+        assertEquals(borrowingRepository.getAll().size(), 2);
     }
 
     @Test
@@ -63,7 +64,7 @@ public class BorrowingRepositoryTest {
     @Test
     public void borrowingUpdateTest() {
         borrowingRepository.create(bor1);
-        GregorianCalendar date = GregorianCalendar.from(ZonedDateTime.now());
+        ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
         bor1.setEndDate(date);
         borrowingRepository.update(bor1);
         assertEquals(borrowingRepository.getById(bor1.getBorrowingId()).getEndDate(), date);
