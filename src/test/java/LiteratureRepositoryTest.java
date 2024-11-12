@@ -1,6 +1,9 @@
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import mappers.MongoUniqueId;
 import objects.Book;
 import objects.Magazine;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +22,7 @@ public class LiteratureRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         literatureRepository.drop();
-        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 0);
+        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
         m = new Magazine(new MongoUniqueId(new ObjectId()), "Swiat nauki", "2001/10", 2, 0);
     }
 
@@ -54,7 +57,12 @@ public class LiteratureRepositoryTest {
     public void literatureUpdate() {
         literatureRepository.create(b);
         b.setName("Dziady");
+        b.setIsBorrowed(1);
         literatureRepository.update(b);
+        Bson filter = Filters.eq("_id", b.getLiteratureId());
+        Bson update = Updates.inc("isBorrowed", 1);
+        literatureRepository.getLiteratureCollection().updateOne(filter, update);
+        System.out.println(literatureRepository.getAll());
         assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
     }
 

@@ -1,13 +1,12 @@
 package repositories;
 
-import com.mongodb.client.AggregateIterable;
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
+import exceptions.WeightExceededException;
 import mappers.MongoUniqueId;
 import objects.Borrowing;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -18,6 +17,17 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 
     @Override
     public void create(Borrowing obj) {
+        ClientSession clientSession = mongoClient.startSession();
+        try {
+            clientSession.startTransaction();
+            // tu chyba te twoje
+
+            clientSession.commitTransaction();
+        } catch (MongoCommandException | WeightExceededException e) {
+            clientSession.abortTransaction();
+        } finally {
+            clientSession.close();
+        }
 //        Bson filter = Filters.eq("client", obj.getClient().getClientId().getId());
 //        Bson projections = Projections.exclude(obj.getClient().getClientId().toString(), obj.getLiterature().getLiteratureId().toString());
 //        AggregateIterable<Document> aggregates = borrowingCollection.aggregate(List.of(

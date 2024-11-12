@@ -37,13 +37,13 @@ public abstract class Literature {
     @BsonProperty("isBorrowed")
     private int isBorrowed;
 
-    public int isBorrowed() {
-        return isBorrowed;
-    }
-
-    public void setBorrowed(int borrowed) {
-        isBorrowed = borrowed;
-    }
+//    public int isBorrowed() {
+//        return isBorrowed;
+//    }
+//
+//    public void setBorrowed(int borrowed) {
+//        isBorrowed = borrowed;
+//    }
 
 
 
@@ -111,4 +111,12 @@ public abstract class Literature {
     }
 
     abstract int getTotalWeight();
+
+    public int getIsBorrowed() {
+        return isBorrowed;
+    }
+
+    public void setIsBorrowed(int isBorrowed) {
+        this.isBorrowed = isBorrowed;
+    }
 }

@@ -6,14 +6,19 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ValidationOptions;
 import mappers.LiteratureCodecProvider;
 import mappers.UniqueIdCodecProvider;
 import mappers.ZonedDateTimeProvider;
+import org.bson.BsonType;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 
 import java.util.List;
 
@@ -31,8 +36,8 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                 .build());
 
 
-    private MongoClient mongoClient;
-    private MongoDatabase nbd;
+    protected MongoClient mongoClient;
+    protected MongoDatabase nbd;
 
     // to bylo void, ale chyba lepiej jak zwraca
     public MongoDatabase initDbConnection() {
@@ -48,11 +53,11 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                         pojoCodecRegistry
                 ))
                 .build();
-
         mongoClient = MongoClients.create(settings);
         nbd = mongoClient.getDatabase("nbd");
         return nbd;
     }
+
     public void close(){
         mongoClient.close();
     }

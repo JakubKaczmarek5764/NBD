@@ -50,7 +50,7 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getString("author"),
                     document.getInteger("weight"),
                     document.getInteger("tier"),
-                    document.getInteger("borrowed")
+                    document.getInteger("isBorrowed")
                     );
         }
         else if ("magazine".equals(clazz.toLowerCase())){
@@ -59,7 +59,7 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getString("name"),
                     document.getString("issue"),
                     document.getInteger("weight"),
-                    document.getInteger("borrowed")
+                    document.getInteger("isBorrowed")
             );
         }
         else {
@@ -74,7 +74,7 @@ public class LiteratureCodec implements Codec<Literature> {
         bsonWriter.writeString("_clazz", literature.getClass().getSimpleName());
         bsonWriter.writeString("name", literature.getName());
         bsonWriter.writeInt32("weight", literature.getWeight());
-        bsonWriter.writeInt32("borrowed", literature.isBorrowed());
+        bsonWriter.writeInt32("isBorrowed", literature.getIsBorrowed());
         if (literature instanceof Book){
             bsonWriter.writeString("author", ((Book)literature).getAuthor());
             bsonWriter.writeInt32("tier", ((Book)literature).getTier());
