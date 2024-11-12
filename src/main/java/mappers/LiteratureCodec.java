@@ -42,7 +42,7 @@ public class LiteratureCodec implements Codec<Literature> {
         Literature literature = null;
         bsonReader.readEndDocument();
         String clazz = document.getString("_clazz");
-        if ("Book".equals(clazz)){
+        if ("book".equals(clazz.toLowerCase())){
             literature = new Book(
                     id,
                     document.getString("name"),
@@ -53,7 +53,7 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getInteger("borrowed")
                     );
         }
-        else if ("Magazine".equals(clazz)){
+        else if ("magazine".equals(clazz.toLowerCase())){
             literature = new Magazine(
                     id,
                     document.getString("name"),
