@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientRepository extends AbstractMongoRepository implements IClientRepository {
-    private final MongoCollection<Client> clientCollection = initDbConnection().getCollection("clients", Client.class);
+    private final MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class);
 
 
     @Override
@@ -45,5 +45,8 @@ public class ClientRepository extends AbstractMongoRepository implements IClient
     @Override
     public void emptyCollection() {
         clientCollection.deleteMany(new Document());
+    }
+    public boolean collectionExists() {
+        return this.collectionExists("clients");
     }
 }

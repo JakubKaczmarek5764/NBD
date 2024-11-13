@@ -18,12 +18,13 @@ import java.util.List;
 public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
     private MongoCollection<Borrowing> borrowingCollection;
     public BorrowingRepository() {
-        for (String name : initDbConnection().listCollectionNames()){
+        for (String name : getDatabase().listCollectionNames()){
             if (name.equals("borrowings")){
-                initDbConnection().getCollection("borrowings").drop();
+                getDatabase().getCollection("borrowings").drop();
             }
         }
-        initDbConnection().createCollection("borrowings", new CreateCollectionOptions().validationOptions(new ValidationOptions().validator(
+
+        getDatabase().createCollection("borrowings", new CreateCollectionOptions().validationOptions(new ValidationOptions().validator(
                 Document.parse("""
                         {
                           $jsonSchema: {
@@ -40,7 +41,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
                         }                           \s
                     """)
         )));
-        borrowingCollection = initDbConnection().getCollection("borrowings", Borrowing.class);
+        borrowingCollection = getDatabase().getCollection("borrowings", Borrowing.class);
 
     }
     @Override
@@ -98,6 +99,8 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     public void emptyCollection() {
         borrowingCollection.deleteMany(new Document());
     }
-
+    public boolean collectionExists() {
+        return this.collectionExists("borrowings");
+    }
 
 }

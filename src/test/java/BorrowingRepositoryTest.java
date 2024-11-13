@@ -42,11 +42,6 @@ public class BorrowingRepositoryTest {
     public void borrowingCreateTest() {
         borrowingRepository.create(bor1);
         assertEquals(borrowingRepository.getAll().size(), 1);
-        System.out.println("\n\n\n\n");
-        System.out.println(borrowingRepository.getValidationOptions("borrowings"));
-        System.out.println("\n\n\n\n");
-
-
     }
 
     @Test

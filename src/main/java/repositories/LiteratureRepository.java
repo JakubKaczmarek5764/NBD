@@ -18,7 +18,7 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
     private MongoCollection<Literature> literatureCollection;
 
     public LiteratureRepository() {
-        nbd = super.initDbConnection();
+        nbd = super.getDatabase();
         nbd.drop();
         if (!collectionExists()) {
             System.out.println("Collection does not exist");
@@ -45,16 +45,10 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
                     .validationOptions(validationOptions);
             nbd.createCollection("literature", createCollectionOptions);
         }
-        literatureCollection = initDbConnection().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
+        literatureCollection = getDatabase().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
     }
     public boolean collectionExists() {
-        MongoDatabase db = initDbConnection();
-        for (String name : db.listCollectionNames()) {
-            if (name.equalsIgnoreCase("literature")) {
-                return true;
-            }
-        }
-        return false;
+        return this.collectionExists("literature");
     }
 
     private void createValidationOptions() {

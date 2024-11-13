@@ -6,20 +6,14 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ValidationOptions;
 import mappers.LiteratureCodecProvider;
 import mappers.UniqueIdCodecProvider;
 import mappers.ZonedDateTimeProvider;
-import org.bson.BsonType;
-import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bson.conversions.Bson;
 
 import java.util.List;
 
@@ -41,7 +35,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     protected MongoDatabase nbd;
 
     // to bylo void, ale chyba lepiej jak zwraca
-    public MongoDatabase initDbConnection() {
+    public MongoDatabase getDatabase() {
         if (mongoClient != null && nbd != null) {
             return nbd;
         }
@@ -61,29 +55,14 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
         nbd = mongoClient.getDatabase("nbd");
         return nbd;
     }
-    public Document getValidationOptions( String collectionName) {
-        // Define the command to retrieve collection options, including validation rules
-        MongoDatabase database = this.nbd;
-        Document command = new Document("listCollections", 1)
-                .append("filter", new Document("name", collectionName));
-
-        // Execute the command and retrieve the result
-        Document result = database.runCommand(command);
-
-        // Extract the collection options
-        Document collectionOptions = result.get("cursor", Document.class)
-                .getList("firstBatch", Document.class).get(0)
-                .get("options", Document.class);
-
-        // Retrieve validation options specifically
-        Document validationOptions = new Document();
-        if (collectionOptions != null) {
-            validationOptions.put("validator", collectionOptions.get("validator"));
-            validationOptions.put("validationLevel", collectionOptions.get("validationLevel"));
-            validationOptions.put("validationAction", collectionOptions.get("validationAction"));
+    public boolean collectionExists(String collectionName) {
+        MongoDatabase db = getDatabase();
+        for (String name : db.listCollectionNames()) {
+            if (name.equalsIgnoreCase("literature")) {
+                return true;
+            }
         }
-
-        return validationOptions;
+        return false;
     }
     public void close(){
         mongoClient.close();
