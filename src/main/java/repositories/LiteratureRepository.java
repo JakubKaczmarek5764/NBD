@@ -6,6 +6,7 @@ import com.mongodb.client.model.*;
 import mappers.MongoUniqueId;
 import objects.Literature;
 import org.bson.BsonType;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -20,14 +21,33 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
         nbd.drop();
         if (!collectionExists()) {
             System.out.println("Collection does not exist");
-            Bson isBorrowedType = Filters.type("isBorrowed", BsonType.INT32);
-            Bson isBorrowedMax = Filters.lte("isBorrowed", 1);
-            Bson isBorrowedMin = Filters.gte("isBorrowed", 0);
-            Bson isBorrowed = Filters.and(isBorrowedType, isBorrowedMin, isBorrowedMax);
+//            Bson isBorrowedType = Filters.type("isBorrowed", BsonType.INT32);
+//            Bson isBorrowedMax = Filters.lte("isBorrowed", 1);
+//            Bson isBorrowedMin = Filters.gte("isBorrowed", 0);
+//            Bson isBorrowed = Filters.and(isBorrowedType, isBorrowedMin, isBorrowedMax);
+//            ValidationOptions validationOptions = new ValidationOptions()
+//                    .validator(isBorrowed)
+//                    .validationLevel(ValidationLevel.STRICT)      // Ensure validation applies to all documents
+//                    .validationAction(ValidationAction.ERROR);     // Reject invalid documents
+//            CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions()
+//                    .validationOptions(validationOptions);
             ValidationOptions validationOptions = new ValidationOptions()
-                    .validator(isBorrowed)
-                    .validationLevel(ValidationLevel.STRICT)      // Ensure validation applies to all documents
-                    .validationAction(ValidationAction.ERROR);     // Reject invalid documents
+                    .validator(Document.parse("""
+                            {
+                                $jsonSchema:{
+                                    "bsonType": "object",
+                                    "required": ["isBorrowed"],
+                                    "properties": {
+                                    "isBorrowed": {
+                                        "bsonType": "int",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                        }
+                                    }
+                                }
+                            }
+                            """))
+                    .validationAction(ValidationAction.ERROR);
             CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions()
                     .validationOptions(validationOptions);
             nbd.createCollection("literature", createCollectionOptions);
