@@ -5,18 +5,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.ClientRepository;
-import repositories.IClientRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClientRepositoryTest {
-    private IClientRepository clientRepository = new ClientRepository();
+    private ClientRepository clientRepository = new ClientRepository();
     private Client c;
     private Client c2;
 
     @BeforeEach
     public void prepareForTests() {
-        clientRepository.drop();
+        clientRepository.emptyCollection();
         c = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "123", 10);
         c2 = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "456", 10);
     }
@@ -60,10 +59,10 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    public void clientCollectionDropTest() {
+    public void clientCollectionEmptyCollectionTest() {
         clientRepository.create(c);
         clientRepository.create(c2);
-        clientRepository.drop();
+        clientRepository.emptyCollection();
         assertEquals(clientRepository.getAll().size(), 0);
     }
 }

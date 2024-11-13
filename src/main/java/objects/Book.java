@@ -44,6 +44,7 @@ public class Book extends Literature {
         this.author = author;
         this.tier = tier;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,6 +13,7 @@ import mappers.LiteratureCodecProvider;
 import mappers.UniqueIdCodecProvider;
 import mappers.ZonedDateTimeProvider;
 import org.bson.BsonType;
+import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -41,6 +42,9 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
 
     // to bylo void, ale chyba lepiej jak zwraca
     public MongoDatabase initDbConnection() {
+        if (mongoClient != null && nbd != null) {
+            return nbd;
+        }
         MongoClientSettings settings = MongoClientSettings.builder()
                 .credential(credential)
                 .applyConnectionString(connectionString)
@@ -57,7 +61,30 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
         nbd = mongoClient.getDatabase("nbd");
         return nbd;
     }
+    public Document getValidationOptions( String collectionName) {
+        // Define the command to retrieve collection options, including validation rules
+        MongoDatabase database = this.nbd;
+        Document command = new Document("listCollections", 1)
+                .append("filter", new Document("name", collectionName));
 
+        // Execute the command and retrieve the result
+        Document result = database.runCommand(command);
+
+        // Extract the collection options
+        Document collectionOptions = result.get("cursor", Document.class)
+                .getList("firstBatch", Document.class).get(0)
+                .get("options", Document.class);
+
+        // Retrieve validation options specifically
+        Document validationOptions = new Document();
+        if (collectionOptions != null) {
+            validationOptions.put("validator", collectionOptions.get("validator"));
+            validationOptions.put("validationLevel", collectionOptions.get("validationLevel"));
+            validationOptions.put("validationAction", collectionOptions.get("validationAction"));
+        }
+
+        return validationOptions;
+    }
     public void close(){
         mongoClient.close();
     }

@@ -3,18 +3,46 @@ package repositories;
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ValidationOptions;
 import exceptions.WeightExceededException;
 import mappers.MongoUniqueId;
 import objects.Borrowing;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
-    private MongoCollection<Borrowing> borrowingCollection = initDbConnection().getCollection("borrowings", Borrowing.class);
+    private MongoCollection<Borrowing> borrowingCollection;
+    public BorrowingRepository() {
+        for (String name : initDbConnection().listCollectionNames()){
+            if (name.equals("borrowings")){
+                initDbConnection().getCollection("borrowings").drop();
+            }
+        }
+        initDbConnection().createCollection("borrowings", new CreateCollectionOptions().validationOptions(new ValidationOptions().validator(
+                Document.parse("""
+                        {
+                          $jsonSchema: {
+                             bsonType: "object"
+                             properties: {
+                                has_rent: {
+                                   bsonType: "int",
+                                   minimum: 0,
+                                   maximum: 1,
+                                   description: "has_rent can have only value of 0 or 1"
+                                },
+                             }
+                          }
+                        }                           \s
+                    """)
+        )));
+        borrowingCollection = initDbConnection().getCollection("borrowings", Borrowing.class);
 
+    }
     @Override
     public void create(Borrowing obj) {
         ClientSession clientSession = mongoClient.startSession();
@@ -45,7 +73,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 
     @Override
     public List<Borrowing> getAll() {
-        return borrowingCollection.find().into(new ArrayList<Borrowing>());
+        return borrowingCollection.find().into(new ArrayList<>());
     }
 
     @Override
@@ -67,8 +95,8 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     }
 
     @Override
-    public void drop() {
-        borrowingCollection.drop();
+    public void emptyCollection() {
+        borrowingCollection.deleteMany(new Document());
     }
 
 

@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import mappers.MongoUniqueId;
 import objects.Client;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ClientRepository extends AbstractMongoRepository implements IClient
     }
 
     @Override
-    public void drop() {
-        clientCollection.drop();
+    public void emptyCollection() {
+        clientCollection.deleteMany(new Document());
     }
 }

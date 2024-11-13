@@ -1,5 +1,6 @@
 package repositories;
 
+import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.*;
@@ -21,16 +22,7 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
         nbd.drop();
         if (!collectionExists()) {
             System.out.println("Collection does not exist");
-//            Bson isBorrowedType = Filters.type("isBorrowed", BsonType.INT32);
-//            Bson isBorrowedMax = Filters.lte("isBorrowed", 1);
-//            Bson isBorrowedMin = Filters.gte("isBorrowed", 0);
-//            Bson isBorrowed = Filters.and(isBorrowedType, isBorrowedMin, isBorrowedMax);
-//            ValidationOptions validationOptions = new ValidationOptions()
-//                    .validator(isBorrowed)
-//                    .validationLevel(ValidationLevel.STRICT)      // Ensure validation applies to all documents
-//                    .validationAction(ValidationAction.ERROR);     // Reject invalid documents
-//            CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions()
-//                    .validationOptions(validationOptions);
+
             ValidationOptions validationOptions = new ValidationOptions()
                     .validator(Document.parse("""
                             {
@@ -41,7 +33,8 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
                                     "isBorrowed": {
                                         "bsonType": "int",
                                         "minimum": 0,
-                                        "maximum": 1
+                                        "maximum": 1,
+                                        "description": "Must be 0 or 1"
                                         }
                                     }
                                 }
@@ -52,12 +45,12 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
                     .validationOptions(validationOptions);
             nbd.createCollection("literature", createCollectionOptions);
         }
-        literatureCollection = initDbConnection().getCollection("literature", Literature.class);
+        literatureCollection = initDbConnection().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
     }
     public boolean collectionExists() {
         MongoDatabase db = initDbConnection();
         for (String name : db.listCollectionNames()) {
-            if (name.equals("literature")) {
+            if (name.equalsIgnoreCase("literature")) {
                 return true;
             }
         }
@@ -103,8 +96,8 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
     }
 
     @Override
-    public void drop() {
-        literatureCollection.drop();
+    public void emptyCollection() {
+        literatureCollection.deleteMany(new Document());
     }
 
     @Override

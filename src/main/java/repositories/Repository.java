@@ -12,6 +12,6 @@ interface Repository<T> {
     T getById(MongoUniqueId id);
     void delete(T obj);
     void update(T obj);
-    void drop();
+    void emptyCollection();
 
 }

@@ -4,8 +4,6 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repositories.BorrowingRepository;
-import repositories.IBorrowingRepository;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -26,8 +24,7 @@ public class BorrowingRepositoryTest {
 
     @BeforeEach
     public void prepareForTests() {
-        IBorrowingRepository borrowingRepository = new BorrowingRepository();
-        borrowingRepository.drop();
+        borrowingRepository.emptyCollection();
         c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10);
         lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
         ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
@@ -38,12 +35,18 @@ public class BorrowingRepositoryTest {
 
     @AfterAll
     public static void close() {
+        borrowingRepository.close();
     }
 
     @Test
     public void borrowingCreateTest() {
         borrowingRepository.create(bor1);
         assertEquals(borrowingRepository.getAll().size(), 1);
+        System.out.println("\n\n\n\n");
+        System.out.println(borrowingRepository.getValidationOptions("borrowings"));
+        System.out.println("\n\n\n\n");
+
+
     }
 
     @Test
@@ -54,10 +57,10 @@ public class BorrowingRepositoryTest {
     }
 
     @Test
-    public void borrowingCollectionDropTest() {
+    public void borrowingCollectionEmptyCollectionTest() {
         borrowingRepository.create(bor1);
         borrowingRepository.create(bor2);
-        borrowingRepository.drop();
+        borrowingRepository.emptyCollection();
         assertEquals(borrowingRepository.getAll().size(), 0);
     }
 
