@@ -61,6 +61,7 @@ public abstract class Literature {
         this.literatureId = literatureId;
         this.name = name;
         this.weight = weight;
+        this.isBorrowed = isBorrowed;
     }
 
     @Override

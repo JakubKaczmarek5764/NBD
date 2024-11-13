@@ -57,7 +57,6 @@ public class LiteratureRepositoryTest {
     public void literatureUpdate() {
         literatureRepository.create(b);
         b.setName("Dziady");
-        b.setIsBorrowed(1);
         literatureRepository.update(b);
         Bson filter = Filters.eq("_id", b.getLiteratureId());
         Bson update = Updates.inc("isBorrowed", 1);
