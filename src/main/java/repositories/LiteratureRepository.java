@@ -2,9 +2,7 @@ package repositories;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ValidationOptions;
+import com.mongodb.client.model.*;
 import mappers.MongoUniqueId;
 import objects.Literature;
 import org.bson.BsonType;
@@ -18,13 +16,18 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
     private MongoCollection<Literature> literatureCollection;
 
     public LiteratureRepository() {
+        nbd = super.initDbConnection();
+        nbd.drop();
         if (!collectionExists()) {
+            System.out.println("Collection does not exist");
             Bson isBorrowedType = Filters.type("isBorrowed", BsonType.INT32);
             Bson isBorrowedMax = Filters.lte("isBorrowed", 1);
             Bson isBorrowedMin = Filters.gte("isBorrowed", 0);
             Bson isBorrowed = Filters.and(isBorrowedType, isBorrowedMin, isBorrowedMax);
             ValidationOptions validationOptions = new ValidationOptions()
-                    .validator(isBorrowed);
+                    .validator(isBorrowed)
+                    .validationLevel(ValidationLevel.STRICT)      // Ensure validation applies to all documents
+                    .validationAction(ValidationAction.ERROR);     // Reject invalid documents
             CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions()
                     .validationOptions(validationOptions);
             nbd.createCollection("literature", createCollectionOptions);
