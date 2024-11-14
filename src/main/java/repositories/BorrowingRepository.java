@@ -17,6 +17,8 @@ import objects.Literature;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,6 +96,25 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     }
     public boolean collectionExists() {
         return this.collectionExists("borrowings");
+    }
+
+    @Override
+    public void endBorrowing(Borrowing obj) {
+        ClientSession clientSession = mongoClient.startSession();
+        try {
+            clientSession.startTransaction();
+            MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
+            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
+            literatureCollection.updateOne(clientSession, Filters.eq("_id",
+                    obj.getLiterature().getLiteratureId()), Updates.inc("isBorrowed", -1));
+            clientCollection.updateOne(clientSession, Filters.eq("_id", obj.getClient().getClientId()), Updates.inc("currentWeight", -obj.getLiterature().getTotalWeight()));
+            borrowingCollection.updateOne(clientSession, Filters.eq("_id", obj.getBorrowingId()), Updates.set("endDate", ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS)));
+            clientSession.commitTransaction();
+        } catch (Exception e) {
+            clientSession.abortTransaction();
+        } finally {
+            clientSession.close();
+        }
     }
 
 }

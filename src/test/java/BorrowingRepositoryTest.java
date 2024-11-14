@@ -49,6 +49,7 @@ public class BorrowingRepositoryTest {
         borrowingRepository.create(bor1);
         borrowingRepository.create(bor2);
         assertEquals(borrowingRepository.getAll().size(), 2);
+        System.out.println(borrowingRepository.getAll());
     }
 
     @Test
@@ -63,7 +64,7 @@ public class BorrowingRepositoryTest {
     public void borrowingUpdateTest() {
         borrowingRepository.create(bor1);
         ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
-        bor1.setEndDate(date);
+        bor1.endBorrowing(date);
         borrowingRepository.update(bor1);
         assertEquals(borrowingRepository.getById(bor1.getBorrowingId()).getEndDate(), date);
     }
@@ -87,15 +88,13 @@ public class BorrowingRepositoryTest {
         });
     }
 
-//    @Test
-//    public void endBorrowingTest() {
-//        clientRepository.create(c);
-//        literatureRepository.create(lit1);
-//        borrowingRepository.create(bor1);
-//        borrowingRepository.endBorrowing(bor1);
-//        assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
-//        assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
-//        List<objects.Borrowing> list = borrowingRepository.getAllBorrowingsByClientId(c.getId());
-//        assertEquals(list.size(), 1);
-//    }
+    @Test
+    public void endBorrowingTest() {
+        clientRepository.create(c);
+        literatureRepository.create(lit1);
+        borrowingRepository.create(bor1);
+        borrowingRepository.endBorrowing(bor1);
+        assertEquals(literatureRepository.getById(lit1.getLiteratureId()).getIsBorrowed(), 0);
+        assertEquals(clientRepository.getById(c.getClientId()).getCurrentWeight(), 0);
+    }
 }
