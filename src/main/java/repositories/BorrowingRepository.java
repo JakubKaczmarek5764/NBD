@@ -1,6 +1,8 @@
 package repositories;
 
+import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
+import com.mongodb.TransactionOptions;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -21,14 +23,18 @@ import java.util.List;
 
 public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
     private final MongoCollection<Borrowing> borrowingCollection = getDatabase().getCollection("borrowing", Borrowing.class);
-
+    private final ClientSessionOptions sessionOptions = ClientSessionOptions.builder()
+            .defaultTransactionOptions(TransactionOptions.builder()
+                    .writeConcern(WriteConcern.MAJORITY)
+                    .build())
+            .build();
 
     @Override
     public void create(Borrowing obj) {
-        ClientSession clientSession = mongoClient.startSession();
+        ClientSession clientSession = mongoClient.startSession(sessionOptions);
         try {
             clientSession.startTransaction();
-            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
+            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class);
             Bson clientFilter = Filters.eq("_id", obj.getClient().getClientId());
             Client client = clientCollection.find(clientFilter).first();
             if (client != null && (client.getCurrentWeight() + obj.getLiterature().getTotalWeight()) > client.getMaxWeight()) {
@@ -85,11 +91,11 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 
     @Override
     public void endBorrowing(Borrowing obj) {
-        ClientSession clientSession = mongoClient.startSession();
+        ClientSession clientSession = mongoClient.startSession(sessionOptions);
         try {
             clientSession.startTransaction();
-            MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
-            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
+            MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class);
+            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class);
             literatureCollection.updateOne(clientSession, Filters.eq("_id",
                     obj.getLiterature().getLiteratureId()), Updates.inc("isBorrowed", -1));
             clientCollection.updateOne(clientSession, Filters.eq("_id", obj.getClient().getClientId()), Updates.inc("currentWeight", -obj.getLiterature().getTotalWeight()));
