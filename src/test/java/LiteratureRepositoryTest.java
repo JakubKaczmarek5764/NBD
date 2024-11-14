@@ -62,7 +62,9 @@ public class LiteratureRepositoryTest {
         literatureRepository.update(b);
         Bson filter = Filters.eq("_id", b.getLiteratureId());
         Bson update = Updates.inc("isBorrowed", 1);
-        assertThrows(MongoWriteException.class, () -> {literatureRepository.getLiteratureCollection().updateOne(filter, update);});
+        assertThrows(MongoWriteException.class, () -> {
+            literatureRepository.getLiteratureCollection().updateOne(filter, update);
+        });
         assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
     }
 

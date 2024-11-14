@@ -18,6 +18,7 @@ public class Magazine extends Literature {
         super(name, weight);
         this.issue = issue;
     }
+
     @BsonCreator
     public Magazine(
             @BsonProperty("_id") MongoUniqueId literatureId,

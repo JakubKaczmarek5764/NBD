@@ -30,15 +30,16 @@ public class Book extends Literature {
         this.tier = tier;
 
     }
+
     @BsonCreator
-    public Book(@BsonProperty("_id")MongoUniqueId id,
+    public Book(@BsonProperty("_id") MongoUniqueId id,
                 @BsonProperty("name") String name,
                 @BsonProperty("genre") String genre,
                 @BsonProperty("author") String author,
                 @BsonProperty("weight") int weight,
                 @BsonProperty("tier") int tier,
                 @BsonProperty("isBorrowed") int isBorrowed
-                ){
+    ) {
         super(id, name, weight, isBorrowed);
         this.genre = genre;
         this.author = author;

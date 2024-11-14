@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @BsonDiscriminator(key = "_clazz")
 public abstract class Literature {
-//    @Id
+    //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "id", nullable = false)
     @BsonProperty("_id")
@@ -46,11 +46,11 @@ public abstract class Literature {
 //    }
 
 
-
     public Literature(String name, int weight) {
         this.name = name;
         this.weight = weight;
     }
+
     @BsonCreator
     public Literature(
             @BsonProperty("_id") MongoUniqueId literatureId,

@@ -2,13 +2,10 @@ package repositories;
 
 import com.mongodb.MongoCommandException;
 import com.mongodb.WriteConcern;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import com.mongodb.client.model.ValidationOptions;
 import exceptions.WeightExceededException;
 import mappers.MongoUniqueId;
 import objects.Borrowing;
@@ -20,7 +17,6 @@ import org.bson.conversions.Bson;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
@@ -35,7 +31,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
             MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
             Bson clientFilter = Filters.eq("_id", obj.getClient().getClientId());
             Client client = clientCollection.find(clientFilter).first();
-            if (client != null && (client.getCurrentWeight() + obj.getLiterature().getTotalWeight()) > client.getMaxWeight()){
+            if (client != null && (client.getCurrentWeight() + obj.getLiterature().getTotalWeight()) > client.getMaxWeight()) {
                 throw new WeightExceededException();
             }
             MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class);
@@ -94,6 +90,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
     public void emptyCollection() {
         borrowingCollection.deleteMany(new Document());
     }
+
     public boolean collectionExists() {
         return this.collectionExists("borrowings");
     }

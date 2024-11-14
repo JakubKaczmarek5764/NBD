@@ -9,12 +9,11 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.ZonedDateTime;
-import java.util.GregorianCalendar;
 
 //@Entity
 //@Access(AccessType.FIELD)
 public class Borrowing {
-//    @Id
+    //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @BsonProperty("_id")
     @NonNull
@@ -27,13 +26,13 @@ public class Borrowing {
 
     @BsonProperty("endDate")
     private ZonedDateTime endDate;
-//    @ManyToOne(fetch = FetchType.LAZY)
+    //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn
 //    @NotNull
     @BsonProperty("client")
     private Client client;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn
 //    @NotNull
     @BsonProperty("literature")

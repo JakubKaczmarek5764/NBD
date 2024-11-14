@@ -7,7 +7,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
