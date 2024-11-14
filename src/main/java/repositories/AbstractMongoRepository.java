@@ -34,7 +34,6 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     protected MongoClient mongoClient;
     protected MongoDatabase nbd;
 
-    // to bylo void, ale chyba lepiej jak zwraca
     public MongoDatabase getDatabase() {
         if (mongoClient != null && nbd != null) {
             return nbd;

@@ -9,22 +9,11 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.Objects;
 
-//@Entity
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "type")
-//@Access(AccessType.FIELD)
-
 @BsonDiscriminator(key = "_clazz")
 public abstract class Literature {
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Column(name = "id", nullable = false)
     @BsonProperty("_id")
     @NonNull
     private MongoUniqueId literatureId;
-
-//    @Version
-//    private long version;
 
     @BsonProperty("name")
     private String name;
@@ -32,19 +21,8 @@ public abstract class Literature {
     @BsonProperty("weight")
     private int weight;
 
-
-    // z tym borrowed trzeba pokminic, najlepiej chyba zrobic ta inkrementacje
     @BsonProperty("isBorrowed")
     private int isBorrowed;
-
-//    public int isBorrowed() {
-//        return isBorrowed;
-//    }
-//
-//    public void setBorrowed(int borrowed) {
-//        isBorrowed = borrowed;
-//    }
-
 
     public Literature(String name, int weight) {
         this.name = name;

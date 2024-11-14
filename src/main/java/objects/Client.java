@@ -7,12 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-//@Entity
-//@Access(AccessType.FIELD)
+
 public class Client {
-    // adapter?
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     @BsonProperty("_id")
     private MongoUniqueId clientId;
 
@@ -22,12 +19,8 @@ public class Client {
     @BsonProperty("lastName")
     private String lastName;
 
-    //    @Column(unique = true)
     @BsonProperty("personalID")
     private String personalID;
-
-//    @Version
-//    private long version;
 
     @BsonProperty("maxWeight")
     private int maxWeight;

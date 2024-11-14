@@ -10,31 +10,20 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.ZonedDateTime;
 
-//@Entity
-//@Access(AccessType.FIELD)
 public class Borrowing {
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @BsonProperty("_id")
     @NonNull
     private MongoUniqueId borrowingId;
-//    @Version
-//    private long version;
 
     @BsonProperty("beginDate")
     private ZonedDateTime beginDate;
 
     @BsonProperty("endDate")
     private ZonedDateTime endDate;
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn
-//    @NotNull
+
     @BsonProperty("client")
     private Client client;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn
-//    @NotNull
     @BsonProperty("literature")
     private Literature literature;
 

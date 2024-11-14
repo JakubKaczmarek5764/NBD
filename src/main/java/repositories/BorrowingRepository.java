@@ -49,18 +49,6 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
         } finally {
             clientSession.close();
         }
-//        Bson filter = Filters.eq("client", obj.getClient().getClientId().getId());
-//        Bson projections = Projections.exclude(obj.getClient().getClientId().toString(), obj.getLiterature().getLiteratureId().toString());
-//        AggregateIterable<Document> aggregates = borrowingCollection.aggregate(List.of(
-//                Aggregates.match(filter),
-//                Aggregates.lookup("clients", obj.getClient().getClientId().getId().toString(), "_id", "clientData"),
-//                Aggregates.unwind("$" + "clientData"),
-//                Aggregates.lookup("literature", obj.getLiterature().getLiteratureId().getId().toString(), "_id", "literatureData"),
-//                Aggregates.unwind("$" + "literatureData"),
-//                Aggregates.project(projections)
-//        ));
-//        ArrayList<Document> documents = aggregates.into(new ArrayList<>());
-//        System.out.println(documents);
     }
 
     @Override

@@ -8,10 +8,6 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-//@Entity
-//@Access(AccessType.FIELD)
-//@DiscriminatorValue("book")
-
 @BsonDiscriminator(key = "_clazz", value = "book")
 public class Book extends Literature {
     @BsonProperty("genre")
