@@ -1,59 +1,53 @@
 package repositories;
 
 import com.mongodb.MongoCommandException;
+import com.mongodb.WriteConcern;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.ValidationOptions;
 import exceptions.WeightExceededException;
 import mappers.MongoUniqueId;
 import objects.Borrowing;
+import objects.Client;
+import objects.Literature;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
-    private MongoCollection<Borrowing> borrowingCollection;
-    public BorrowingRepository() {
-        for (String name : getDatabase().listCollectionNames()){
-            if (name.equals("borrowings")){
-                getDatabase().getCollection("borrowings").drop();
-            }
-        }
+    private final MongoCollection<Borrowing> borrowingCollection = getDatabase().getCollection("borrowing", Borrowing.class);
 
-        getDatabase().createCollection("borrowings", new CreateCollectionOptions().validationOptions(new ValidationOptions().validator(
-                Document.parse("""
-                        {
-                          $jsonSchema: {
-                             bsonType: "object"
-                             properties: {
-                                has_rent: {
-                                   bsonType: "int",
-                                   minimum: 0,
-                                   maximum: 1,
-                                   description: "has_rent can have only value of 0 or 1"
-                                },
-                             }
-                          }
-                        }                           \s
-                    """)
-        )));
-        borrowingCollection = getDatabase().getCollection("borrowings", Borrowing.class);
 
-    }
     @Override
     public void create(Borrowing obj) {
         ClientSession clientSession = mongoClient.startSession();
         try {
             clientSession.startTransaction();
-            // tu chyba te twoje
-
+            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
+            Bson clientFilter = Filters.eq("_id", obj.getClient().getClientId());
+            Client client = clientCollection.find(clientFilter).first();
+            if (client != null && (client.getCurrentWeight() + obj.getLiterature().getTotalWeight()) > client.getMaxWeight()){
+                throw new WeightExceededException();
+            }
+            MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class);
+            Bson filter = Filters.eq("_id", obj.getLiterature().getLiteratureId().getId());
+            Bson update = Updates.inc("isBorrowed", 1);
+            Bson clientUpdate = Updates.inc("currentWeight", obj.getLiterature().getTotalWeight());
+            clientCollection.updateOne(clientFilter, clientUpdate);
+            literatureCollection.updateOne(filter, update);
+            borrowingCollection.insertOne(obj);
             clientSession.commitTransaction();
+
         } catch (MongoCommandException | WeightExceededException e) {
             clientSession.abortTransaction();
+            throw new WeightExceededException();
         } finally {
             clientSession.close();
         }
@@ -69,7 +63,6 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
 //        ));
 //        ArrayList<Document> documents = aggregates.into(new ArrayList<>());
 //        System.out.println(documents);
-        borrowingCollection.insertOne(obj);
     }
 
     @Override

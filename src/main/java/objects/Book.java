@@ -76,7 +76,7 @@ public class Book extends Literature {
     }
 
     @Override
-    int getTotalWeight() {
+    public int getTotalWeight() {
         return getWeight() * getTier();
     }
 

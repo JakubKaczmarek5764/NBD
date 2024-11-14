@@ -60,13 +60,15 @@ public class Client {
             @BsonProperty("firstName") String firstName,
             @BsonProperty("lastName") String lastName,
             @BsonProperty("personalID") String personalID,
-            @BsonProperty("maxWeight") int maxWeight
+            @BsonProperty("maxWeight") int maxWeight,
+            @BsonProperty("currentWeight") int currentWeight
     ) {
         this.clientId = clientId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.personalID = personalID;
         this.maxWeight = maxWeight;
+        this.currentWeight = currentWeight;
     }
 
     public Client() {

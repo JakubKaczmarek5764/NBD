@@ -21,7 +21,7 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
         nbd = super.getDatabase();
         nbd.drop();
         if (!collectionExists()) {
-            System.out.println("Collection does not exist");
+//            System.out.println("Collection does not exist");
 
             ValidationOptions validationOptions = new ValidationOptions()
                     .validator(Document.parse("""

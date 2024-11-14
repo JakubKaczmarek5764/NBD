@@ -36,7 +36,7 @@ public class Magazine extends Literature {
     }
 
     @Override
-    int getTotalWeight() {
+    public int getTotalWeight() {
         return getWeight();
     }
 

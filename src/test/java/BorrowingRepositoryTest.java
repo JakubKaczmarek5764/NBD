@@ -25,7 +25,7 @@ public class BorrowingRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         borrowingRepository.emptyCollection();
-        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10);
+        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10,0 );
         lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
         ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
         bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit1);
@@ -76,16 +76,16 @@ public class BorrowingRepositoryTest {
         assertEquals(borrowingRepository.getAll().size(), 1);
     }
 
-//    @Test
-//    public void businessLogicTest() {
-//        clientRepository.create(c);
-//        literatureRepository.create(lit1);
-//        borrowingRepository.create(bor1);
-//        literatureRepository.create(lit2);
-//        assertThrows(exceptions.WeightExceededException.class, () -> {
-//            borrowingRepository.create(bor2);
-//        });
-//    }
+    @Test
+    public void businessLogicTest() {
+        clientRepository.create(c);
+        literatureRepository.create(lit1);
+        borrowingRepository.create(bor1);
+        literatureRepository.create(lit2);
+        assertThrows(exceptions.WeightExceededException.class, () -> {
+            borrowingRepository.create(bor2);
+        });
+    }
 
 //    @Test
 //    public void endBorrowingTest() {

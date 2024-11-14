@@ -16,8 +16,8 @@ public class ClientRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         clientRepository.emptyCollection();
-        c = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "123", 10);
-        c2 = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "456", 10);
+        c = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "123", 10,0);
+        c2 = new Client(new MongoUniqueId(new ObjectId()),"Jan", "Kowalski", "456", 10, 0);
     }
 
     @AfterAll
@@ -30,7 +30,6 @@ public class ClientRepositoryTest {
     public void clientCreateTest() {
         clientRepository.create(c);
         assertEquals(1, clientRepository.getAll().size());
-//        System.out.println(ZonedDateTime.now());
     }
 
     @Test

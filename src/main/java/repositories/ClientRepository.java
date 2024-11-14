@@ -1,8 +1,11 @@
 package repositories;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ValidationOptions;
 import mappers.MongoUniqueId;
+import objects.Borrowing;
 import objects.Client;
 import org.bson.Document;
 import org.bson.conversions.Bson;

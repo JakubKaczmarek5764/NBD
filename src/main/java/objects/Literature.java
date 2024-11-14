@@ -111,7 +111,7 @@ public abstract class Literature {
         this.weight = weight;
     }
 
-    abstract int getTotalWeight();
+    public abstract int getTotalWeight();
 
     public int getIsBorrowed() {
         return isBorrowed;
