@@ -1,12 +1,26 @@
-version: '3.8'
+version: '3.9'
+
 services:
+  # Redis Stack Service
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    volumes:
+      - redis-stack-data:/bitname/redis/data
+    ports:
+      - "8001:8001"
+      - "6379:6379"
+    networks:
+      - appnet
+
+  # MongoDB Replica Set Nodes
   mongo_1:
     build: .
     image: mongocustom:8.0.1
     container_name: mongodb1
     hostname: mongodb1
     networks:
-      - mongonet
+      - appnet
     ports:
       - "27017:27017"
     volumes:
@@ -15,10 +29,10 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=nbd # temu trzeb sie przyjrzec
+      - MONGO_INITDB_DATABASE=nbd
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27017","--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -29,7 +43,7 @@ services:
     container_name: mongodb2
     hostname: mongodb2
     networks:
-      - mongonet
+      - appnet
     ports:
       - "27018:27018"
     volumes:
@@ -38,10 +52,10 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=nbd # temu trzeb sie przyjrzec
+      - MONGO_INITDB_DATABASE=nbd
     command: --config /etc/mongod.conf --port 27018
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27018","--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -52,7 +66,7 @@ services:
     container_name: mongodb3
     hostname: mongodb3
     networks:
-      - mongonet
+      - appnet
     ports:
       - "27019:27019"
     volumes:
@@ -61,21 +75,22 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=nbd # temu trzeb sie przyjrzec
+      - MONGO_INITDB_DATABASE=nbd
     command: --config /etc/mongod.conf --port 27019
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27019","--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--port", "27019", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
       timeout: 2s
       retries: 5
 
+  # MongoDB Initiator
   mongoinit:
     build: .
     image: mongocustom:8.0.1
-    hostname: mongodbinit
     container_name: mongodbinit
+    hostname: mongodbinit
     networks:
-      - mongonet
+      - appnet
     depends_on:
       mongo_1:
         condition: service_healthy
@@ -99,10 +114,13 @@ services:
         }
       );
       '
+
 networks:
-  mongonet: { }
+  appnet: { }
 
 volumes:
+  redis-stack-data:
+    driver: local
   mongo-db-data-1:
   mongo-configdb-data-1:
   mongo-db-data-2:
