@@ -1,24 +1,21 @@
 package repositories;
 
-import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisClientConfig;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class AbstractRedisRepository {
-    private JedisPool jedisPool;
-    public JedisPool initConnection(){
+    private JedisPooled jedisPool;
+    public JedisPooled initConnection(){
         if (jedisPool == null) {
             try {
                 Properties props = new Properties();
-                props.load(new FileInputStream("redis.properties"));
+                props.load(AbstractRedisRepository.class.getClassLoader().getResourceAsStream("redis.properties"));
 
                 JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
-                jedisPool = new JedisPool(props.getProperty("redis.host"), Integer.parseInt(props.getProperty("redis.port")));
+                jedisPool = new JedisPooled(props.getProperty("redis.host"), Integer.parseInt(props.getProperty("redis.port")));
             } catch (IOException e) {
                 e.printStackTrace();
             }
