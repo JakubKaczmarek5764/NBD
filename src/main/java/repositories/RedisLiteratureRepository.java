@@ -63,7 +63,7 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     @Override
     public void delete(Literature obj) {
         mongoLiteratureRepository.delete(obj);
-            jedisPool.del(hashPrefix + obj.getLiteratureId().getId().toString());
+        jedisPool.del(hashPrefix + obj.getLiteratureId().getId().toString());
     }
 
     @Override
@@ -80,6 +80,10 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     public void emptyCollection() {
         mongoLiteratureRepository.emptyCollection();
 //            jedisPool.del(hashPrefix + "*");
+        jedisPool.flushAll();
+    }
+
+    public void clearCache() {
         jedisPool.flushAll();
     }
 

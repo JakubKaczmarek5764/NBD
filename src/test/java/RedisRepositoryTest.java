@@ -79,6 +79,15 @@ public class RedisRepositoryTest {
         redisLiteratureRepository.create(m);
         redisLiteratureRepository.emptyCollection();
         assertEquals(redisLiteratureRepository.getAll().size(), 0);
+        assertEquals(literatureRepository.getAll().size(), 0);
+    }
+
+    @Test
+    public void literatureClearCache() {
+        redisLiteratureRepository.create(b);
+        redisLiteratureRepository.create(m);
+        redisLiteratureRepository.clearCache();
+        assertEquals(redisLiteratureRepository.getAll().size(), 0);
     }
 
 }
