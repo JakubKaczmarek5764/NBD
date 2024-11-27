@@ -23,6 +23,7 @@ public class Book extends Literature {
     @BsonProperty("tier")
     private int tier;
 
+    public Book() {}
     public Book(String name, String genre, String author, int weight, int tier) {
         super(name, weight);
         this.genre = genre;

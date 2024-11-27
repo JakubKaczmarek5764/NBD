@@ -3,20 +3,25 @@ package repositories;
 import com.mongodb.client.MongoCollection;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
+import mappers.LiteratureAdapter;
 import mappers.MongoUniqueId;
+import mappers.MongoUniqueIdAdapter;
 import objects.Literature;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.params.ScanParams;
 import redis.clients.jedis.resps.ScanResult;
+import redis.clients.jedis.search.Query;
+import redis.clients.jedis.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RedisLiteratureRepository extends AbstractRedisRepository implements ILiteratureRepository {
-    private final Jsonb jsonb = JsonbBuilder.create();
+    private final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new LiteratureAdapter(), new MongoUniqueIdAdapter()));
     private final static String hashPrefix = "literature:";
-    private final JedisPooled jedisPool = initConnection();
+    private final JedisPooled jedisPooled = initConnection();
     private LiteratureRepository mongoLiteratureRepository;
 
     public RedisLiteratureRepository(LiteratureRepository mongoLiteratureRepository) {
@@ -28,23 +33,35 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
         mongoLiteratureRepository.create(obj);
         String id = obj.getLiteratureId().getId().toString();
         String literatureJson = jsonb.toJson(obj);
-        jedisPool.jsonSet(hashPrefix + id, literatureJson);
+        System.out.println("\n\n\n costam");
+        System.out.println(literatureJson);
+        System.out.println("\n\n\n");
+
+        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
+        jedisPooled.expire(hashPrefix + id, 3600);
     }
 
     @Override
     public List<Literature> getAll() {
         try {
             List<Literature> literatures = new ArrayList<>();
-            String cursor = "0";
-            do {
-                ScanResult<String> result = jedisPool.scan(cursor, new ScanParams().match(hashPrefix + "*"));
-                cursor = result.getCursor();
-                for (String literatureJson : result.getResult()) {
-                    literatures.add(jsonb.fromJson(literatureJson, Literature.class));
-                }
-            } while (!cursor.equals("0"));
+
+            Set<String> keys = jedisPooled.keys(hashPrefix + "*");
+
+            for (String literatureId : keys) {
+                System.out.println(literatureId);
+                Object literatureObj = jedisPooled.jsonGet(literatureId);
+                String literatureJson = jsonb.toJson(literatureObj);
+                System.out.println(literatureJson);
+                System.out.println("tutaj?");
+                literatures.add(jsonb.fromJson(literatureJson, Literature.class));
+                System.out.println("\n\n\n\n got from redis getall \n\n\n\n");
+            }
             return literatures;
         } catch (Exception e) { // to takie robocze chyba rozwiazanie Zaimplementuj metodę, która pobierze dane z bazy danych MongoDB w przypadku utraty połączenia z Redisem.
+            System.out.println("\n\n\n\nerror message");
+
+            System.out.println(e.getMessage());
             return mongoLiteratureRepository.getAll();
         }
     }
@@ -52,7 +69,9 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     @Override
     public Literature getById(MongoUniqueId id) {
         try {
-            String literatureJson = jedisPool.get(hashPrefix + id.getId().toString());
+            String literatureJson = jedisPooled.get(hashPrefix + id.getId().toString());
+            System.out.println("\n\n\n\n got from redis \n\n\n\n");
+            System.out.println(literatureJson);
             return jsonb.fromJson(literatureJson, Literature.class);
         } catch (Exception e) { // to tez
             return mongoLiteratureRepository.getById(id);
@@ -63,7 +82,7 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     @Override
     public void delete(Literature obj) {
         mongoLiteratureRepository.delete(obj);
-        jedisPool.del(hashPrefix + obj.getLiteratureId().getId().toString());
+        jedisPooled.del(hashPrefix + obj.getLiteratureId().getId().toString());
     }
 
     @Override
@@ -72,7 +91,7 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
         // ciekawe jak zrobic update
         String id = obj.getLiteratureId().getId().toString();
         String literatureJson = jsonb.toJson(obj);
-        jedisPool.jsonSet(hashPrefix + id, literatureJson);
+        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
         // chyba po prostu tak ^-^
     }
 
@@ -80,11 +99,11 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     public void emptyCollection() {
         mongoLiteratureRepository.emptyCollection();
 //            jedisPool.del(hashPrefix + "*");
-        jedisPool.flushAll();
+        jedisPooled.flushAll();
     }
 
     public void clearCache() {
-        jedisPool.flushAll();
+        jedisPooled.flushAll();
     }
 
     @Override

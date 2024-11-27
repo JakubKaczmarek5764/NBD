@@ -14,6 +14,7 @@ public class Magazine extends Literature {
     @BsonProperty("issue")
     private String issue;
 
+    public Magazine() {}
     public Magazine(String name, String issue, int weight) {
         super(name, weight);
         this.issue = issue;

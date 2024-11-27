@@ -1,12 +1,15 @@
 package objects;
 
 import com.mongodb.lang.NonNull;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import mappers.MongoUniqueId;
+import mappers.MongoUniqueIdAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 //@Entity
@@ -15,10 +18,11 @@ import java.util.Objects;
 //@Access(AccessType.FIELD)
 
 @BsonDiscriminator(key = "_clazz")
-public abstract class Literature {
+public abstract class Literature implements Serializable {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "id", nullable = false)
+    @JsonbTypeAdapter(MongoUniqueIdAdapter.class)
     @BsonProperty("_id")
     @NonNull
     private MongoUniqueId literatureId;
@@ -46,7 +50,6 @@ public abstract class Literature {
 //    }
 
 
-
     public Literature(String name, int weight) {
         this.name = name;
         this.weight = weight;
@@ -62,6 +65,10 @@ public abstract class Literature {
         this.name = name;
         this.weight = weight;
         this.isBorrowed = isBorrowed;
+    }
+
+    public Literature() {
+
     }
 
     @Override
