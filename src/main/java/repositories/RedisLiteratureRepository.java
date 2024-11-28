@@ -57,22 +57,16 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
 
     @Override
     public List<Literature> getAll() {
-        // to chyba nie do konca dobrze, bo moze wyrzucic tylko rzeczy z cache i nie wyrzucic rzeczy ktore sa w mongo
-
         try {
             List<Literature> literatures = new ArrayList<>();
             Set<String> keys = jedisPooled.keys(hashPrefix + "*");
             for (String literatureId : keys) {
-                System.out.println(literatureId);
                 Object literatureObj = jedisPooled.jsonGet(literatureId);
                 String literatureJson = jsonb.toJson(literatureObj);
                 literatures.add(jsonb.fromJson(literatureJson, Literature.class));
-                System.out.println("\n\n\n\n got from redis getall \n\n\n\n");
             }
             return literatures;
-        } catch (JedisConnectionException | JsonbException e) { // to takie robocze chyba rozwiazanie Zaimplementuj metodę, która pobierze dane z bazy danych MongoDB w przypadku utraty połączenia z Redisem.
-            System.out.println("\n\n\n\nerror message");
-            System.out.println(e.getMessage());
+        } catch (JedisConnectionException | JsonbException e) {
             return mongoLiteratureRepository.getAll();
         }
     }
@@ -84,7 +78,6 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
             String literatureJson = jsonb.toJson(literatureObj);
             return jsonb.fromJson(literatureJson, Literature.class);
         } catch (JedisConnectionException | JsonbException e) { // to tez
-            System.out.println("\n\n\ncoswcatch");
             Literature lit;
             lit = mongoLiteratureRepository.getById(id);
             if (lit != null) {
@@ -111,8 +104,7 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
         try {
             jedisPooled.del(hashPrefix + obj.getLiteratureId().getId().toString());
         } catch (JsonbException | JedisConnectionException e) {
-            System.out.println("error deleting from cache");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -120,11 +112,9 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
     public void update(Literature obj) {
         try {
             mongoLiteratureRepository.update(obj);
-            // ciekawe jak zrobic update
             String id = obj.getLiteratureId().getId().toString();
             String literatureJson = jsonb.toJson(obj);
             jedisPooled.jsonSet(hashPrefix + id, literatureJson);
-            // chyba po prostu tak ^-^
         } catch (Exception e) {
             e.printStackTrace();
         }

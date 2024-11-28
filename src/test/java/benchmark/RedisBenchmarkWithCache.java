@@ -3,15 +3,11 @@ package benchmark;
 import mappers.MongoUniqueId;
 import objects.Book;
 import org.bson.types.ObjectId;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.annotations.*;
 
 import repositories.RedisLiteratureRepository;
+
+import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 public class RedisBenchmarkWithCache {
@@ -28,11 +24,17 @@ public class RedisBenchmarkWithCache {
     }
 
     @Benchmark
-    public void readWithCache(){
+    @BenchmarkMode(Mode.AverageTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS) // Results in milliseconds
+    public void readWithCacheAvgTime(){
         redisLiteratureRepository.getById(b.getLiteratureId());
     }
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder().include(RedisBenchmarkWithCache.class.getSimpleName()).forks(1).build();
-        new org.openjdk.jmh.runner.Runner(opt).run();
+
+    @Benchmark
+    @BenchmarkMode(Mode.Throughput)
+    public void readWithCacheThroughput(){
+        redisLiteratureRepository.getById(b.getLiteratureId());
     }
+
+
 }

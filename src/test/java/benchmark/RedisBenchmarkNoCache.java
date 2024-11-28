@@ -3,16 +3,13 @@ package benchmark;
 import mappers.MongoUniqueId;
 import objects.Book;
 import org.bson.types.ObjectId;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.annotations.*;
 import repositories.LiteratureRepository;
 import repositories.RedisLiteratureRepository;
 
+import java.util.concurrent.TimeUnit;
+
+@BenchmarkMode({Mode.Throughput, Mode.AverageTime}) // Measures Throughput and Average Time
 @State(Scope.Benchmark)
 public class RedisBenchmarkNoCache {
     RedisLiteratureRepository redisLiteratureRepository;
@@ -29,11 +26,15 @@ public class RedisBenchmarkNoCache {
         redisLiteratureRepository.clearCache();
     }
     @Benchmark
-    public void readNoCache(){
+    @BenchmarkMode(Mode.AverageTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS) // Results in milliseconds
+    public void readNoCacheAvgTime(){
         literatureRepository.getById(b.getLiteratureId());
     }
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder().include(RedisBenchmarkNoCache.class.getSimpleName()).forks(1).build();
-        new org.openjdk.jmh.runner.Runner(opt).run();
+
+    @Benchmark
+    @BenchmarkMode(Mode.Throughput)
+    public void readNoCacheThroughput(){
+        literatureRepository.getById(b.getLiteratureId());
     }
 }
