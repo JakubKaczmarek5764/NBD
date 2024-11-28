@@ -37,20 +37,23 @@ public class RedisRepositoryTest {
     @Test
     public void literatureCreateTest() {
         redisLiteratureRepository.create(b);
+        redisLiteratureRepository.createInCache(m);
         assertEquals(literatureRepository.getAll().size(), 1);
-        assertEquals(redisLiteratureRepository.getAll().size(), 1);
+        assertEquals(redisLiteratureRepository.getAll().size(), 2);
     }
 
     @Test
     public void literatureGettersTests() {
         redisLiteratureRepository.create(b);
-//        redisLiteratureRepository.create(m);
-//        assertEquals(literatureRepository.getAll().size(), 2);
-//        assertEquals(redisLiteratureRepository.getAll().size(), 2);
-        System.out.println(redisLiteratureRepository.getById(b.getLiteratureId()));
-//        assertEquals(b, redisLiteratureRepository.getById(b.getLiteratureId()));
-//        assertEquals(b, literatureRepository.getById(b.getLiteratureId()));
-
+        literatureRepository.create(m);
+        assertEquals(literatureRepository.getAll().size(), 2);
+        assertEquals(redisLiteratureRepository.getAll().size(), 1);
+        assertEquals(b, redisLiteratureRepository.getById(b.getLiteratureId()));
+        assertEquals(b, literatureRepository.getById(b.getLiteratureId()));
+        // m nie ma w redisie
+        assertEquals(m, redisLiteratureRepository.getById(m.getLiteratureId()));
+        // po wyszukaniu zostal dodany do redis
+        assertEquals(redisLiteratureRepository.getAll().size(), 2);
     }
 
     @Test

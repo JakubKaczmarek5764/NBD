@@ -49,6 +49,13 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
         jedisPooled.expire(hashPrefix + id, 3600);
     }
 
+    public void createInCache(Literature obj) {
+        String id = obj.getLiteratureId().getId().toString();
+        String literatureJson = jsonb.toJson(obj);
+        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
+        jedisPooled.expire(hashPrefix + id, 3600);
+    }
+
     @Override
     public List<Literature> getAll() {
         try {
@@ -79,7 +86,11 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
             return jsonb.fromJson(literatureJson, Literature.class);
         } catch (JedisConnectionException | JsonbException e) { // to tez
             System.out.println("\n\n\ncoswcatch");
-            return mongoLiteratureRepository.getById(id);
+            Literature lit = mongoLiteratureRepository.getById(id);
+            if(lit != null) {
+                createInCache(lit);
+            }
+            return lit;
         }
 
     }
