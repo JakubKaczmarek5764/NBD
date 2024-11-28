@@ -38,15 +38,12 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
 
     @Override
     public void create(Literature obj) {
-        mongoLiteratureRepository.create(obj);
-        String id = obj.getLiteratureId().getId().toString();
-        String literatureJson = jsonb.toJson(obj);
-        System.out.println("\n\n\n costam");
-        System.out.println(literatureJson);
-        System.out.println("\n\n\n");
-
-        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
-        jedisPooled.expire(hashPrefix + id, 3600);
+        try {
+            mongoLiteratureRepository.create(obj);
+            createInCache(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void createInCache(Literature obj) {
@@ -60,9 +57,7 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     public List<Literature> getAll() {
         try {
             List<Literature> literatures = new ArrayList<>();
-
             Set<String> keys = jedisPooled.keys(hashPrefix + "*");
-
             for (String literatureId : keys) {
                 System.out.println(literatureId);
                 Object literatureObj = jedisPooled.jsonGet(literatureId);
@@ -86,44 +81,73 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
             return jsonb.fromJson(literatureJson, Literature.class);
         } catch (JedisConnectionException | JsonbException e) { // to tez
             System.out.println("\n\n\ncoswcatch");
-            Literature lit = mongoLiteratureRepository.getById(id);
-            if(lit != null) {
+            Literature lit;
+            lit = mongoLiteratureRepository.getById(id);
+            if (lit != null) {
                 createInCache(lit);
             }
             return lit;
         }
-
     }
 
     @Override
     public void delete(Literature obj) {
-        mongoLiteratureRepository.delete(obj);
-        jedisPooled.del(hashPrefix + obj.getLiteratureId().getId().toString());
+        try {
+            mongoLiteratureRepository.delete(obj);
+            deleteFromCache(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    public void deleteFromCache(Literature obj){
+        try {
+            jedisPooled.del(hashPrefix + obj.getLiteratureId().getId().toString());
+        } catch (JsonbException | JedisConnectionException e) {
+            System.out.println("error deleting from cache");
+            System.out.println(e.getMessage());
+        }
 
+    }
     @Override
     public void update(Literature obj) {
-        mongoLiteratureRepository.update(obj);
-        // ciekawe jak zrobic update
-        String id = obj.getLiteratureId().getId().toString();
-        String literatureJson = jsonb.toJson(obj);
-        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
-        // chyba po prostu tak ^-^
+        try {
+            mongoLiteratureRepository.update(obj);
+            // ciekawe jak zrobic update
+            String id = obj.getLiteratureId().getId().toString();
+            String literatureJson = jsonb.toJson(obj);
+            jedisPooled.jsonSet(hashPrefix + id, literatureJson);
+            // chyba po prostu tak ^-^
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void emptyCollection() {
-        mongoLiteratureRepository.emptyCollection();
-//            jedisPool.del(hashPrefix + "*");
-        jedisPooled.flushAll();
+        try {
+            mongoLiteratureRepository.emptyCollection();
+            jedisPooled.del(hashPrefix + "*");
+            clearCache();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void clearCache() {
-        jedisPooled.flushAll();
+        try {
+            jedisPooled.flushAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public MongoCollection<Literature> getLiteratureCollection() {
-        return mongoLiteratureRepository.getLiteratureCollection();
+        try {
+            return mongoLiteratureRepository.getLiteratureCollection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
