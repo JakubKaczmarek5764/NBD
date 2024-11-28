@@ -55,6 +55,8 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
 
     @Override
     public List<Literature> getAll() {
+        // to chyba nie do konca dobrze, bo moze wyrzucic tylko rzeczy z cache i nie wyrzucic rzeczy ktore sa w mongo
+
         try {
             List<Literature> literatures = new ArrayList<>();
             Set<String> keys = jedisPooled.keys(hashPrefix + "*");
