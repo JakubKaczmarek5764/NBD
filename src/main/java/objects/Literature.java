@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @BsonDiscriminator(key = "_clazz")
 public abstract class Literature implements Serializable {
-//    @Id
+    //    @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 //    @Column(name = "id", nullable = false)
     @JsonbTypeAdapter(MongoUniqueIdAdapter.class)
@@ -58,6 +58,7 @@ public abstract class Literature implements Serializable {
         this.name = name;
         this.weight = weight;
     }
+
     @BsonCreator
     public Literature(
             @BsonProperty("_id") MongoUniqueId literatureId,

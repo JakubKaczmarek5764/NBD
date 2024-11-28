@@ -2,8 +2,10 @@ package repositories;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.*;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ValidationAction;
+import com.mongodb.client.model.ValidationOptions;
 import mappers.MongoUniqueId;
 import objects.Literature;
 import org.bson.BsonType;
@@ -47,6 +49,7 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
         }
         literatureCollection = getDatabase().getCollection("literature", Literature.class).withWriteConcern(WriteConcern.MAJORITY);
     }
+
     public boolean collectionExists() {
         return this.collectionExists("literature");
     }
@@ -61,6 +64,7 @@ public class LiteratureRepository extends AbstractMongoRepository implements ILi
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions()
                 .validationOptions(validationOptions);
     }
+
     @Override
     public void create(Literature obj) {
         literatureCollection.insertOne(obj);

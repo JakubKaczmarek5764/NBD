@@ -11,10 +11,6 @@ import mappers.MongoUniqueIdAdapter;
 import objects.Literature;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.jedis.params.ScanParams;
-import redis.clients.jedis.resps.ScanResult;
-import redis.clients.jedis.search.Query;
-import redis.clients.jedis.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +24,12 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
     private final JedisPooled jedisPooled = initConnection();
     private LiteratureRepository mongoLiteratureRepository;
 
-    public RedisLiteratureRepository(){
+    public RedisLiteratureRepository() {
         this.mongoLiteratureRepository = new LiteratureRepository();
     }
+
     public RedisLiteratureRepository(LiteratureRepository mongoLiteratureRepository) {
-        if (mongoLiteratureRepository == null){
+        if (mongoLiteratureRepository == null) {
             mongoLiteratureRepository = new LiteratureRepository();
         }
         this.mongoLiteratureRepository = mongoLiteratureRepository;
@@ -40,12 +37,8 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
 
     @Override
     public void create(Literature obj) {
-        try {
-            mongoLiteratureRepository.create(obj);
-            createInCache(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mongoLiteratureRepository.create(obj);
+        createInCache(obj);
     }
 
     public void createInCache(Literature obj) {
@@ -93,14 +86,11 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
 
     @Override
     public void delete(Literature obj) {
-        try {
-            mongoLiteratureRepository.delete(obj);
-            deleteFromCache(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mongoLiteratureRepository.delete(obj);
+        deleteFromCache(obj);
     }
-    public void deleteFromCache(Literature obj){
+
+    public void deleteFromCache(Literature obj) {
         try {
             jedisPooled.del(hashPrefix + obj.getLiteratureId().getId().toString());
         } catch (JsonbException | JedisConnectionException e) {
@@ -108,16 +98,13 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
         }
 
     }
+
     @Override
     public void update(Literature obj) {
-        try {
-            mongoLiteratureRepository.update(obj);
-            String id = obj.getLiteratureId().getId().toString();
-            String literatureJson = jsonb.toJson(obj);
-            jedisPooled.jsonSet(hashPrefix + id, literatureJson);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mongoLiteratureRepository.update(obj);
+        String id = obj.getLiteratureId().getId().toString();
+        String literatureJson = jsonb.toJson(obj);
+        jedisPooled.jsonSet(hashPrefix + id, literatureJson);
     }
 
     @Override

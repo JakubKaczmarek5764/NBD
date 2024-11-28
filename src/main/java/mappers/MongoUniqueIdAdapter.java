@@ -13,6 +13,6 @@ public class MongoUniqueIdAdapter implements JsonbAdapter<MongoUniqueId, String>
 
     @Override
     public MongoUniqueId adaptFromJson(String s) throws Exception {
-        return s != null ? new MongoUniqueId( new ObjectId(s)) : null;
+        return s != null ? new MongoUniqueId(new ObjectId(s)) : null;
     }
 }

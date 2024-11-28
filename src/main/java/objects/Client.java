@@ -22,7 +22,7 @@ public class Client {
     @BsonProperty("lastName")
     private String lastName;
 
-//    @Column(unique = true)
+    //    @Column(unique = true)
     @BsonProperty("personalID")
     private String personalID;
 

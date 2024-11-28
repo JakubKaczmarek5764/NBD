@@ -4,7 +4,6 @@ import mappers.MongoUniqueId;
 import objects.Book;
 import org.bson.types.ObjectId;
 import org.openjdk.jmh.annotations.*;
-
 import repositories.RedisLiteratureRepository;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +15,7 @@ public class RedisBenchmarkWithCache {
 
 
     @Setup
-    public void setup(){
+    public void setup() {
         redisLiteratureRepository = new RedisLiteratureRepository();
         b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
         redisLiteratureRepository.create(b);
@@ -26,13 +25,13 @@ public class RedisBenchmarkWithCache {
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS) // Results in milliseconds
-    public void readWithCacheAvgTime(){
+    public void readWithCacheAvgTime() {
         redisLiteratureRepository.getById(b.getLiteratureId());
     }
 
     @Benchmark
     @BenchmarkMode(Mode.Throughput)
-    public void readWithCacheThroughput(){
+    public void readWithCacheThroughput() {
         redisLiteratureRepository.getById(b.getLiteratureId());
     }
 

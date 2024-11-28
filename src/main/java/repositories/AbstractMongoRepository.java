@@ -26,9 +26,9 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
 
     private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
             PojoCodecProvider.builder()
-                .automatic(true)
-                .conventions(List.of(Conventions.ANNOTATION_CONVENTION))
-                .build());
+                    .automatic(true)
+                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION))
+                    .build());
 
 
     protected MongoClient mongoClient;
@@ -55,6 +55,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
         nbd = mongoClient.getDatabase("nbd");
         return nbd;
     }
+
     public boolean collectionExists(String collectionName) {
         MongoDatabase db = getDatabase();
         for (String name : db.listCollectionNames()) {
@@ -64,7 +65,8 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
         }
         return false;
     }
-    public void close(){
+
+    public void close() {
         mongoClient.close();
     }
 }

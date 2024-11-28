@@ -1,11 +1,11 @@
 package mappers;
 
 import jakarta.json.Json;
-import jakarta.json.bind.JsonbConfig;
-import jakarta.json.bind.adapter.JsonbAdapter;
+import jakarta.json.JsonObject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.JsonObject;
+import jakarta.json.bind.JsonbConfig;
+import jakarta.json.bind.adapter.JsonbAdapter;
 import objects.Literature;
 
 public class LiteratureAdapter implements JsonbAdapter<Literature, JsonObject> {

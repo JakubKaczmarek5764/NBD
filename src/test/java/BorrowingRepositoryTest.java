@@ -1,4 +1,3 @@
-
 import mappers.MongoUniqueId;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
@@ -8,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BorrowingRepositoryTest {
     private static final repositories.BorrowingRepository borrowingRepository = new repositories.BorrowingRepository();
@@ -25,7 +24,7 @@ public class BorrowingRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         borrowingRepository.emptyCollection();
-        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10,0 );
+        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10, 0);
         lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
         ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
         bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit1);

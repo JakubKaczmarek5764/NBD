@@ -1,6 +1,7 @@
 package mappers;
 
 import objects.Book;
+import objects.Literature;
 import objects.Magazine;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -10,15 +11,12 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import objects.Literature;
-
-import java.util.Objects;
 
 public class LiteratureCodec implements Codec<Literature> {
     private CodecRegistry registry;
     private Codec<MongoUniqueId> uniqueIdCodec;
 
-    public LiteratureCodec(CodecRegistry codecRegistry){
+    public LiteratureCodec(CodecRegistry codecRegistry) {
         this.registry = codecRegistry;
         this.uniqueIdCodec = registry.get(MongoUniqueId.class);
     }
@@ -29,7 +27,7 @@ public class LiteratureCodec implements Codec<Literature> {
         bsonReader.readStartDocument();
         MongoUniqueId id = null;
         Document document = new Document();
-        while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT){
+        while (bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = bsonReader.readName();
             if (fieldName.equals("_id")) {
                 id = uniqueIdCodec.decode(bsonReader, decoderContext);
@@ -42,7 +40,7 @@ public class LiteratureCodec implements Codec<Literature> {
         Literature literature = null;
         bsonReader.readEndDocument();
         String clazz = document.getString("_clazz");
-        if ("book".equalsIgnoreCase(clazz)){
+        if ("book".equalsIgnoreCase(clazz)) {
             literature = new Book(
                     id,
                     document.getString("name"),
@@ -51,9 +49,8 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getInteger("weight"),
                     document.getInteger("tier"),
                     document.getInteger("isBorrowed")
-                    );
-        }
-        else if ("magazine".equalsIgnoreCase(clazz)){
+            );
+        } else if ("magazine".equalsIgnoreCase(clazz)) {
             literature = new Magazine(
                     id,
                     document.getString("name"),
@@ -61,8 +58,7 @@ public class LiteratureCodec implements Codec<Literature> {
                     document.getInteger("weight"),
                     document.getInteger("isBorrowed")
             );
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Unknown class " + clazz);
         }
         return literature;
@@ -75,15 +71,13 @@ public class LiteratureCodec implements Codec<Literature> {
         bsonWriter.writeString("name", literature.getName());
         bsonWriter.writeInt32("weight", literature.getWeight());
         bsonWriter.writeInt32("isBorrowed", literature.getIsBorrowed());
-        if (literature instanceof Book){
-            bsonWriter.writeString("author", ((Book)literature).getAuthor());
-            bsonWriter.writeInt32("tier", ((Book)literature).getTier());
-            bsonWriter.writeString("genre", ((Book)literature).getGenre());
-        }
-        else if (literature instanceof Magazine){
-            bsonWriter.writeString("issue", ((Magazine)literature).getIssue());
-        }
-        else {
+        if (literature instanceof Book) {
+            bsonWriter.writeString("author", ((Book) literature).getAuthor());
+            bsonWriter.writeInt32("tier", ((Book) literature).getTier());
+            bsonWriter.writeString("genre", ((Book) literature).getGenre());
+        } else if (literature instanceof Magazine) {
+            bsonWriter.writeString("issue", ((Magazine) literature).getIssue());
+        } else {
             throw new IllegalArgumentException("Unknown class " + literature.getClass());
         }
 
@@ -97,11 +91,15 @@ public class LiteratureCodec implements Codec<Literature> {
     public Class<Literature> getEncoderClass() {
         return Literature.class;
     }
+
     private Object readValue(BsonReader bsonReader) {
-        switch (bsonReader.getCurrentBsonType()){
-            case STRING: return bsonReader.readString();
-            case INT32: return bsonReader.readInt32();
-            default: throw new IllegalArgumentException("Unknown type " + bsonReader.getCurrentBsonType());
+        switch (bsonReader.getCurrentBsonType()) {
+            case STRING:
+                return bsonReader.readString();
+            case INT32:
+                return bsonReader.readInt32();
+            default:
+                throw new IllegalArgumentException("Unknown type " + bsonReader.getCurrentBsonType());
         }
     }
 }

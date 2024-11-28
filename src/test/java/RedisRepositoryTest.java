@@ -1,15 +1,11 @@
 import com.mongodb.MongoWriteException;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import mappers.MongoUniqueId;
 import objects.Book;
 import objects.Magazine;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 import repositories.LiteratureRepository;
 import repositories.RedisLiteratureRepository;
 
@@ -40,10 +36,12 @@ public class RedisRepositoryTest {
         redisLiteratureRepository.create(b);
         assertEquals(redisLiteratureRepository.getAll().size(), 1);
     }
+
     public void literatureCreateCacheTest() {
-    redisLiteratureRepository.createInCache(m);
+        redisLiteratureRepository.createInCache(m);
 
     }
+
     @Test
     public void literatureGettersTests() {
         redisLiteratureRepository.create(b);
@@ -61,7 +59,6 @@ public class RedisRepositoryTest {
     @Test
     public void literatureGetByIdRedisOffTest() {
         literatureRepository.create(b);
-//        assertThrows(JedisConnectionException.class, () -> {redisLiteratureRepository.getById(b.getLiteratureId());}); cos nie lapie
         assertEquals(redisLiteratureRepository.getById(b.getLiteratureId()), b);
     }
 
@@ -82,9 +79,10 @@ public class RedisRepositoryTest {
         b.setName("Dziady");
         b.setIsBorrowed(1);
         redisLiteratureRepository.update(b);
-        Bson filter = Filters.eq("_id", b.getLiteratureId());
-        Bson update = Updates.inc("isBorrowed", 1);
-        assertThrows(MongoWriteException.class, () -> {literatureRepository.getLiteratureCollection().updateOne(filter, update);});
+        b.setIsBorrowed(2);
+        assertThrows(MongoWriteException.class, () -> {
+            redisLiteratureRepository.update(b);
+        });
         assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
         assertEquals(redisLiteratureRepository.getAll().getFirst().getName(), "Dziady");
     }

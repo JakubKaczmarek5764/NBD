@@ -1,6 +1,5 @@
 package mappers;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.types.ObjectId;
 
 import java.util.Objects;
@@ -8,17 +7,22 @@ import java.util.Objects;
 
 public class MongoUniqueId {
     private ObjectId id;
-    public MongoUniqueId(ObjectId id){
+
+    public MongoUniqueId(ObjectId id) {
         this.id = id;
     }
-    public ObjectId getId(){
+
+    public ObjectId getId() {
         return id;
     }
-    public MongoUniqueId(){}
+
+    public MongoUniqueId() {
+    }
+
     @Override
     public String toString() {
         return id.toString();
-}
+    }
 
     @Override
     public boolean equals(Object o) {
