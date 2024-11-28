@@ -17,18 +17,21 @@ import repositories.RedisLiteratureRepository;
 public class RedisBenchmark {
     RedisLiteratureRepository redisLiteratureRepository;
     LiteratureRepository literatureRepository;
-    Book b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
+    Book b;
+
 
     @Setup
     public void setup(){
         literatureRepository = new LiteratureRepository();
         redisLiteratureRepository = new RedisLiteratureRepository();
+        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
         literatureRepository.create(b);
     }
     @Benchmark
     public void readNoCache(){
         literatureRepository.getById(b.getLiteratureId());
     }
+    @Benchmark
     public void readWithCache(){
         redisLiteratureRepository.getById(b.getLiteratureId());
     }

@@ -4,11 +4,13 @@ import com.mongodb.client.MongoCollection;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
+import jakarta.json.bind.JsonbException;
 import mappers.LiteratureAdapter;
 import mappers.MongoUniqueId;
 import mappers.MongoUniqueIdAdapter;
 import objects.Literature;
 import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.params.ScanParams;
 import redis.clients.jedis.resps.ScanResult;
 import redis.clients.jedis.search.Query;
@@ -62,7 +64,7 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
                 System.out.println("\n\n\n\n got from redis getall \n\n\n\n");
             }
             return literatures;
-        } catch (Exception e) { // to takie robocze chyba rozwiazanie Zaimplementuj metodę, która pobierze dane z bazy danych MongoDB w przypadku utraty połączenia z Redisem.
+        } catch (JedisConnectionException | JsonbException e) { // to takie robocze chyba rozwiazanie Zaimplementuj metodę, która pobierze dane z bazy danych MongoDB w przypadku utraty połączenia z Redisem.
             System.out.println("\n\n\n\nerror message");
             System.out.println(e.getMessage());
             return mongoLiteratureRepository.getAll();
@@ -74,12 +76,9 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
         try {
             Object literatureObj = jedisPooled.jsonGet(hashPrefix + id.getId().toString());
             String literatureJson = jsonb.toJson(literatureObj);
-            System.out.println("\n\n\n\n got from redis \n\n\n\n");
-            System.out.println(literatureJson);
-            Literature obj = jsonb.fromJson(literatureJson, Literature.class);
-            System.out.println(obj);
-            return obj;
-        } catch (Exception e) { // to tez
+            return jsonb.fromJson(literatureJson, Literature.class);
+        } catch (JedisConnectionException | JsonbException e) { // to tez
+            System.out.println("\n\n\ncoswcatch");
             return mongoLiteratureRepository.getById(id);
         }
 
