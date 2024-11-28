@@ -47,6 +47,9 @@ public class RedisRepositoryTest {
         redisLiteratureRepository.create(m);
         assertEquals(literatureRepository.getAll().size(), 2);
         assertEquals(redisLiteratureRepository.getAll().size(), 2);
+        assertEquals(b, redisLiteratureRepository.getById(b.getLiteratureId()));
+        assertEquals(b, literatureRepository.getById(b.getLiteratureId()));
+
     }
 
     @Test

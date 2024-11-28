@@ -5,6 +5,8 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import java.util.Objects;
+
 //@Entity
 //@Access(AccessType.FIELD)
 //@DiscriminatorValue("magazine")
@@ -45,4 +47,20 @@ public class Magazine extends Literature {
         return issue;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Magazine magazine = (Magazine) o;
+        return Objects.equals(issue, magazine.issue);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Objects.hashCode(issue);
+        return result;
+    }
 }

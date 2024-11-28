@@ -50,6 +50,10 @@ public abstract class Literature implements Serializable {
 //    }
 
 
+    public void setLiteratureId(@NonNull MongoUniqueId literatureId) {
+        this.literatureId = literatureId;
+    }
+
     public Literature(String name, int weight) {
         this.name = name;
         this.weight = weight;
@@ -75,13 +79,18 @@ public abstract class Literature implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Literature that = (Literature) o;
-        return weight == that.weight && isBorrowed == that.isBorrowed && Objects.equals(literatureId, that.literatureId) && Objects.equals(name, that.name);
+        return weight == that.weight && isBorrowed == that.isBorrowed && literatureId.equals(that.literatureId) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(literatureId, name, weight, isBorrowed);
+        int result = literatureId.hashCode();
+        result = 31 * result + Objects.hashCode(name);
+        result = 31 * result + weight;
+        result = 31 * result + isBorrowed;
+        return result;
     }
 
     @Override

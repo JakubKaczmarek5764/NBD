@@ -24,7 +24,13 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     private final JedisPooled jedisPooled = initConnection();
     private LiteratureRepository mongoLiteratureRepository;
 
+    public RedisLiteratureRepository(){
+        this.mongoLiteratureRepository = new LiteratureRepository();
+    }
     public RedisLiteratureRepository(LiteratureRepository mongoLiteratureRepository) {
+        if (mongoLiteratureRepository == null){
+            mongoLiteratureRepository = new LiteratureRepository();
+        }
         this.mongoLiteratureRepository = mongoLiteratureRepository;
     }
 
@@ -52,15 +58,12 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
                 System.out.println(literatureId);
                 Object literatureObj = jedisPooled.jsonGet(literatureId);
                 String literatureJson = jsonb.toJson(literatureObj);
-                System.out.println(literatureJson);
-                System.out.println("tutaj?");
                 literatures.add(jsonb.fromJson(literatureJson, Literature.class));
                 System.out.println("\n\n\n\n got from redis getall \n\n\n\n");
             }
             return literatures;
         } catch (Exception e) { // to takie robocze chyba rozwiazanie Zaimplementuj metodę, która pobierze dane z bazy danych MongoDB w przypadku utraty połączenia z Redisem.
             System.out.println("\n\n\n\nerror message");
-
             System.out.println(e.getMessage());
             return mongoLiteratureRepository.getAll();
         }
@@ -69,10 +72,13 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
     @Override
     public Literature getById(MongoUniqueId id) {
         try {
-            String literatureJson = jedisPooled.get(hashPrefix + id.getId().toString());
+            Object literatureObj = jedisPooled.jsonGet(hashPrefix + id.getId().toString());
+            String literatureJson = jsonb.toJson(literatureObj);
             System.out.println("\n\n\n\n got from redis \n\n\n\n");
             System.out.println(literatureJson);
-            return jsonb.fromJson(literatureJson, Literature.class);
+            Literature obj = jsonb.fromJson(literatureJson, Literature.class);
+            System.out.println(obj);
+            return obj;
         } catch (Exception e) { // to tez
             return mongoLiteratureRepository.getById(id);
         }
