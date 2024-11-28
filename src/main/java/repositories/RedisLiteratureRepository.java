@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RedisLiteratureRepository extends AbstractRedisRepository implements ILiteratureRepository {
+import static repositories.AbstractRedisRepository.initConnection;
+
+public class RedisLiteratureRepository extends LiteratureRepository implements ILiteratureRepository {
     private final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new LiteratureAdapter(), new MongoUniqueIdAdapter()));
     private final static String hashPrefix = "literature:";
     private final JedisPooled jedisPooled = initConnection();
@@ -86,7 +88,11 @@ public class RedisLiteratureRepository extends AbstractRedisRepository implement
             Literature lit;
             lit = mongoLiteratureRepository.getById(id);
             if (lit != null) {
-                createInCache(lit);
+                try {
+                    createInCache(lit);
+                } catch (Exception e1) {
+                    return lit;
+                }
             }
             return lit;
         }

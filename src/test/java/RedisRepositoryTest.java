@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import repositories.LiteratureRepository;
 import repositories.RedisLiteratureRepository;
 
@@ -38,7 +39,6 @@ public class RedisRepositoryTest {
     public void literatureCreateTest() {
         redisLiteratureRepository.create(b);
         assertEquals(redisLiteratureRepository.getAll().size(), 1);
-        assertEquals(redisLiteratureRepository.getAll().size(), 2);
     }
     public void literatureCreateCacheTest() {
     redisLiteratureRepository.createInCache(m);
@@ -56,6 +56,13 @@ public class RedisRepositoryTest {
         assertEquals(m, redisLiteratureRepository.getById(m.getLiteratureId()));
         // po wyszukaniu zostal dodany do redis
         assertEquals(redisLiteratureRepository.getAll().size(), 2);
+    }
+
+    @Test
+    public void literatureGetByIdRedisOffTest() {
+        literatureRepository.create(b);
+//        assertThrows(JedisConnectionException.class, () -> {redisLiteratureRepository.getById(b.getLiteratureId());}); cos nie lapie
+        assertEquals(redisLiteratureRepository.getById(b.getLiteratureId()), b);
     }
 
     @Test

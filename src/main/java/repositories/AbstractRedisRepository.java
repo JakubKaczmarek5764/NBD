@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class AbstractRedisRepository {
-    private JedisPooled jedisPool;
-    public JedisPooled initConnection(){
+    private static JedisPooled jedisPool;
+    public static JedisPooled initConnection(){
         if (jedisPool == null) {
             try {
                 Properties props = new Properties();
