@@ -33,9 +33,15 @@ public class RedisRepositoryTest {
 
     @Test
     public void literatureCreateTest() {
-        redisLiteratureRepository.create(b);
+        try {
+            redisLiteratureRepository.create(b);
+            assertEquals(redisLiteratureRepository.getAll().size(), 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertEquals(redisLiteratureRepository.getAll().size(), 1);
     }
+
 
     public void literatureCreateCacheTest() {
         redisLiteratureRepository.createInCache(m);

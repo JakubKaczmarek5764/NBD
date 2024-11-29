@@ -45,7 +45,7 @@ public class RedisLiteratureRepository extends LiteratureRepository implements I
         String id = obj.getLiteratureId().getId().toString();
         String literatureJson = jsonb.toJson(obj);
         jedisPooled.jsonSet(hashPrefix + id, literatureJson);
-        jedisPooled.expire(hashPrefix + id, 3600);
+        jedisPooled.expire(hashPrefix + id, 300);
     }
 
     @Override
