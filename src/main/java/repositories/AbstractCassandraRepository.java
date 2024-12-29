@@ -16,6 +16,7 @@ public class AbstractCassandraRepository implements AutoCloseable {
                 .withAuthCredentials("cassandra", "cassandrapassword")
 //                .withKeyspace(CqlIdentifier.fromCql("nbd"))
                 .build();
+        // chyba trzeba stworzyc tu keyspace
     }
     public static CqlSession getSession() {
         return session;
