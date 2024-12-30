@@ -2,7 +2,6 @@ package objects;
 
 import com.datastax.oss.driver.api.mapper.annotations.CqlName;
 import com.datastax.oss.driver.api.mapper.annotations.Entity;
-import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 
 import java.util.Objects;
 import java.util.UUID;
