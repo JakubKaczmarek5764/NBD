@@ -1,49 +1,31 @@
 package objects;
 
-import mappers.MongoUniqueId;
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonDiscriminator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
-//@Entity
-//@Access(AccessType.FIELD)
-//@DiscriminatorValue("book")
 
-@BsonDiscriminator(key = "_clazz", value = "book")
+import java.util.UUID;
+
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("literatures")
 public class Book extends Literature {
-    @BsonProperty("genre")
+    @CqlName("genre")
     private String genre;
 
-    @BsonProperty("author")
+    @CqlName("author")
     private String author;
 
-    @BsonProperty("tier")
+    @CqlName("tier")
     private int tier;
 
     public Book() {
     }
 
-    public Book(String name, String genre, String author, int weight, int tier) {
-        super(name, weight);
-        this.genre = genre;
-        this.author = author;
-        this.tier = tier;
-
-    }
-
-    @BsonCreator
-    public Book(@BsonProperty("_id") MongoUniqueId id,
-                @BsonProperty("name") String name,
-                @BsonProperty("genre") String genre,
-                @BsonProperty("author") String author,
-                @BsonProperty("weight") int weight,
-                @BsonProperty("tier") int tier,
-                @BsonProperty("isBorrowed") int isBorrowed
-    ) {
-        super(id, name, weight, isBorrowed);
+    public Book(UUID literatureId, String name, int weight, int isBorrowed, String discriminator, String genre, String author, int tier) {
+        super(literatureId, name, weight, isBorrowed, discriminator);
         this.genre = genre;
         this.author = author;
         this.tier = tier;

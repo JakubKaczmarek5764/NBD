@@ -1,38 +1,23 @@
 package objects;
 
-import mappers.MongoUniqueId;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonDiscriminator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 
 import java.util.Objects;
+import java.util.UUID;
 
-//@Entity
-//@Access(AccessType.FIELD)
-//@DiscriminatorValue("magazine")
-
-@BsonDiscriminator(key = "_clazz", value = "magazine")
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("literatures")
 public class Magazine extends Literature {
-    @BsonProperty("issue")
+    @CqlName("issue")
     private String issue;
 
     public Magazine() {
     }
 
-    public Magazine(String name, String issue, int weight) {
-        super(name, weight);
-        this.issue = issue;
-    }
-
-    @BsonCreator
-    public Magazine(
-            @BsonProperty("_id") MongoUniqueId literatureId,
-            @BsonProperty("name") String name,
-            @BsonProperty("issue") String issue,
-            @BsonProperty("weight") int weight,
-            @BsonProperty("isBorrowed") int isBorrowed
-    ) {
-        super(literatureId, name, weight, isBorrowed);
+    public Magazine(UUID literatureId, String name, int weight, int isBorrowed, String discriminator, String issue) {
+        super(literatureId, name, weight, isBorrowed, discriminator);
         this.issue = issue;
     }
 

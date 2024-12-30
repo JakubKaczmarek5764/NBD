@@ -19,7 +19,7 @@ public class ClientRepository extends AbstractCassandraRepository {
                         .withColumn(CqlIdentifier.fromCql("current_weight"), DataTypes.INT)
                         .build();
         getSession().execute(createClients);
-    }
+    }   // jest jeszcze jakis clusteringKey
 
 
 }
