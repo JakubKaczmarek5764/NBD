@@ -1,53 +1,25 @@
 package repositories;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import mappers.MongoUniqueId;
-import objects.Client;
-import org.bson.Document;
-import org.bson.conversions.Bson;
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ClientRepository extends AbstractMongoRepository implements IClientRepository {
-    private final MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class);
-
-
-    @Override
-    public void create(Client obj) {
-        clientCollection.insertOne(obj);
+public class ClientRepository extends AbstractCassandraRepository {
+    public ClientRepository() {
+        initSession();
+        SimpleStatement createClients =
+                SchemaBuilder.createTable(CqlIdentifier.fromCql("clients"))
+                        .ifNotExists()
+                        .withPartitionKey(CqlIdentifier.fromCql("client_id"), DataTypes.UUID)
+                        .withColumn(CqlIdentifier.fromCql("first_name"), DataTypes.TEXT)
+                        .withColumn(CqlIdentifier.fromCql("last_name"), DataTypes.TEXT)
+                        .withColumn(CqlIdentifier.fromCql("personal_id"), DataTypes.TEXT)
+                        .withColumn(CqlIdentifier.fromCql("max_weight"), DataTypes.INT)
+                        .withColumn(CqlIdentifier.fromCql("current_weight"), DataTypes.INT)
+                        .build();
+        getSession().execute(createClients);
     }
 
-    @Override
-    public List<Client> getAll() {
-        return clientCollection.find().into(new ArrayList<>());
-    }
 
-    @Override
-    public Client getById(MongoUniqueId id) {
-        Bson filter = Filters.eq("_id", id);
-        return clientCollection.find(filter).first();
-    }
-
-    @Override
-    public void delete(Client obj) {
-        Bson filter = Filters.eq("_id", obj.getClientId());
-        clientCollection.deleteOne(filter);
-    }
-
-    @Override
-    public void update(Client obj) {
-        Bson filter = Filters.eq("_id", obj.getClientId());
-        clientCollection.replaceOne(filter, obj);
-    }
-
-    @Override
-    public void emptyCollection() {
-        clientCollection.deleteMany(new Document());
-    }
-
-    public boolean collectionExists() {
-        return this.collectionExists("clients");
-    }
 }

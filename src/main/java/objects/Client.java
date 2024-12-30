@@ -1,38 +1,36 @@
 package objects;
 
-import mappers.MongoUniqueId;
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
-//@Entity
-//@Access(AccessType.FIELD)
+import java.util.UUID;
+
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("clients")
+@PropertyStrategy(mutable = false)
 public class Client {
-    // adapter?
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @BsonProperty("_id")
-    private MongoUniqueId clientId;
 
-    @BsonProperty("firstName")
+    @PartitionKey
+    private UUID clientId;
+
+    @CqlName("first_name")
     private String firstName;
 
-    @BsonProperty("lastName")
+    @CqlName("last_name")
     private String lastName;
 
-    //    @Column(unique = true)
-    @BsonProperty("personalID")
+    @CqlName("personal_id")
     private String personalID;
 
-//    @Version
-//    private long version;
-
-    @BsonProperty("maxWeight")
+    @CqlName("max_weight")
     private int maxWeight;
 
-    @BsonProperty("currentWeight")
+    @CqlName("current_weight")
     private int currentWeight;
 
     public int getCurrentWeight() {
@@ -54,14 +52,13 @@ public class Client {
         this.maxWeight = maxWeight;
     }
 
-    @BsonCreator
     public Client(
-            @BsonProperty("_id") MongoUniqueId clientId,
-            @BsonProperty("firstName") String firstName,
-            @BsonProperty("lastName") String lastName,
-            @BsonProperty("personalID") String personalID,
-            @BsonProperty("maxWeight") int maxWeight,
-            @BsonProperty("currentWeight") int currentWeight
+            UUID clientId,
+            String firstName,
+            String lastName,
+            String personalID,
+            int maxWeight,
+            int currentWeight
     ) {
         this.clientId = clientId;
         this.firstName = firstName;
@@ -72,7 +69,6 @@ public class Client {
     }
 
     public Client() {
-
     }
 
     public String getFirstName() {
@@ -101,10 +97,6 @@ public class Client {
 
     public String getClientInfo() {
         return getFirstName() + " " + getLastName() + " " + getPersonalID();
-    }
-
-    public MongoUniqueId getClientId() {
-        return clientId;
     }
 
     public int getMaxWeight() {
