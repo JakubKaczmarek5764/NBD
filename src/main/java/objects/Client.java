@@ -1,21 +1,36 @@
-import jakarta.persistence.*;
+package objects;
+
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@Entity
-@Access(AccessType.FIELD)
+import java.util.UUID;
+
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("clients")
+@PropertyStrategy(mutable = false)
 public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+
+    @PartitionKey
+    private UUID clientId;
+
+    @CqlName("first_name")
     private String firstName;
+
+    @CqlName("last_name")
     private String lastName;
-    @Column(unique = true)
+
+    @CqlName("personal_id")
     private String personalID;
-    @Version
-    private long version;
+
+    @CqlName("max_weight")
     private int maxWeight;
+
+    @CqlName("current_weight")
     private int currentWeight;
 
     public int getCurrentWeight() {
@@ -37,8 +52,23 @@ public class Client {
         this.maxWeight = maxWeight;
     }
 
-    public Client() {
+    public Client(
+            UUID clientId,
+            String firstName,
+            String lastName,
+            String personalID,
+            int maxWeight,
+            int currentWeight
+    ) {
+        this.clientId = clientId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalID = personalID;
+        this.maxWeight = maxWeight;
+        this.currentWeight = currentWeight;
+    }
 
+    public Client() {
     }
 
     public String getFirstName() {
@@ -69,10 +99,6 @@ public class Client {
         return getFirstName() + " " + getLastName() + " " + getPersonalID();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public int getMaxWeight() {
         return maxWeight;
     }
@@ -90,18 +116,18 @@ public class Client {
 
         Client client = (Client) o;
 
-        return new EqualsBuilder().append(id, client.id).append(maxWeight, client.maxWeight).append(currentWeight, client.currentWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
+        return new EqualsBuilder().append(clientId, client.clientId).append(maxWeight, client.maxWeight).append(currentWeight, client.currentWeight).append(firstName, client.firstName).append(lastName, client.lastName).append(personalID, client.personalID).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(firstName).append(lastName).append(personalID).append(maxWeight).append(currentWeight).toHashCode();
+        return new HashCodeBuilder(17, 37).append(clientId).append(firstName).append(lastName).append(personalID).append(maxWeight).append(currentWeight).toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
+                .append("id", clientId)
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("personalID", personalID)

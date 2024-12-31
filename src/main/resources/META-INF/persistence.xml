@@ -5,11 +5,11 @@
              version="3.0">
     <persistence-unit name="nbd" transaction-type="RESOURCE_LOCAL">
         <class>org.hibernate.jpa.HibernatePersistenceProvider</class>
-        <class>Literature</class>
-        <class>Magazine</class>
-        <class>Book</class>
-        <class>Borrowing</class>
-        <class>Client</class>
+        <class>objects.Literature</class>
+        <class>objects.Magazine</class>
+        <class>objects.Book</class>
+        <class>objects.Borrowing</class>
+        <class>objects.Client</class>
         <properties>
             <!-- PostgreSQL -->
             <property name="jakarta.persistence.jdbc.url"

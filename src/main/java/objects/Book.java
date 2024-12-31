@@ -1,25 +1,34 @@
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+package objects;
+
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@Entity
-@Access(AccessType.FIELD)
-@DiscriminatorValue("book")
+
+import java.util.UUID;
+
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("literatures")
 public class Book extends Literature {
+    @CqlName("genre")
     private String genre;
+
+    @CqlName("author")
     private String author;
+
+    @CqlName("tier")
     private int tier;
 
-    public Book(String name, String genre, String author, int weight, int tier) {
-        super(name, weight);
+    public Book() {
+    }
+
+    public Book(UUID literatureId, String name, int weight, int isBorrowed, String discriminator, String genre, String author, int tier) {
+        super(literatureId, name, weight, isBorrowed, discriminator);
         this.genre = genre;
         this.author = author;
         this.tier = tier;
-
     }
 
     @Override
@@ -47,17 +56,13 @@ public class Book extends Literature {
         return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(genre).append(author).append(tier).toHashCode();
     }
 
-    public Book() {
-
-    }
-
     @Override
     String getLiteratureInfo() {
-        return "id: " + getId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
+        return "id: " + getLiteratureId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
     }
 
     @Override
-    int getTotalWeight() {
+    public int getTotalWeight() {
         return getWeight() * getTier();
     }
 

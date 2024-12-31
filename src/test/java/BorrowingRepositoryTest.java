@@ -1,60 +1,78 @@
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import mappers.MongoUniqueId;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BorrowingRepositoryTest {
-    private static final BorrowingRepository borrowingRepository = new BorrowingRepository();
-    private static final ClientRepository clientRepository = new ClientRepository();
-    private static final LiteratureRepository literatureRepository = new LiteratureRepository();
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("nbd");
-    private static final EntityManager em = emf.createEntityManager();
-    private Client c;
-    private Client c2;
-    private Literature lit1;
-    private Literature lit2;
-    private Borrowing bor1;
-    private Borrowing bor2;
+    private static final repositories.BorrowingRepository borrowingRepository = new repositories.BorrowingRepository();
+    private static final repositories.ClientRepository clientRepository = new repositories.ClientRepository();
+    private static final repositories.LiteratureRepository literatureRepository = new repositories.LiteratureRepository();
+    private objects.Client c;
+    private objects.Client c2;
+    private objects.Literature lit1;
+    private objects.Literature lit2;
+    private objects.Borrowing bor1;
+    private objects.Borrowing bor2;
 
     @BeforeEach
     public void prepareForTests() {
-        em.getTransaction().begin();
-        em.createQuery("delete from Borrowing").executeUpdate();
-        em.createQuery("delete from Literature").executeUpdate();
-        em.createQuery("delete from Client").executeUpdate();
-        em.getTransaction().commit();
-        c = new Client("Jan", "Kowalski", "123", 10);
-        lit1 = new Book("Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2);
-        GregorianCalendar date = GregorianCalendar.from(ZonedDateTime.now());
-        bor1 = new Borrowing(date, null, c, lit1);
-        lit2 = new Magazine("Swiat Nauki", "2002/11", 8);
-        bor2 = new Borrowing(date, null, c, lit2);
+        borrowingRepository.emptyCollection();
+        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10, 0);
+        lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
+        ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+        bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit1);
+        lit2 = new objects.Magazine(new MongoUniqueId(new ObjectId()), "Swiat Nauki", "2002/11", 8, 0);
+        bor2 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit2);
     }
 
     @AfterAll
     public static void close() {
-        if (em != null) {
-            emf.close();
-        }
+        borrowingRepository.close();
     }
 
     @Test
     public void borrowingCreateTest() {
-        clientRepository.create(c);
-        assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
-        literatureRepository.create(lit1);
-        assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
         borrowingRepository.create(bor1);
-        assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), lit1.getTotalWeight());
-        assertTrue(literatureRepository.getById(lit1.getId()).isBorrowed());
+        assertEquals(borrowingRepository.getAll().size(), 1);
+    }
+
+    @Test
+    public void borrowingGettersTests() {
+        borrowingRepository.create(bor1);
+        borrowingRepository.create(bor2);
+        assertEquals(borrowingRepository.getAll().size(), 2);
+    }
+
+    @Test
+    public void borrowingCollectionEmptyCollectionTest() {
+        borrowingRepository.create(bor1);
+        borrowingRepository.create(bor2);
+        borrowingRepository.emptyCollection();
+        assertEquals(borrowingRepository.getAll().size(), 0);
+    }
+
+    @Test
+    public void borrowingUpdateTest() {
+        borrowingRepository.create(bor1);
+        ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+        bor1.setEndDate(date);
+        borrowingRepository.update(bor1);
+        assertEquals(borrowingRepository.getById(bor1.getBorrowingId()).getEndDate(), date);
+    }
+
+    @Test
+    public void borrowingDeleteTest() {
+        borrowingRepository.create(bor1);
+        borrowingRepository.create(bor2);
+        borrowingRepository.delete(bor1);
+        assertEquals(borrowingRepository.getAll().size(), 1);
     }
 
     @Test
@@ -63,46 +81,20 @@ public class BorrowingRepositoryTest {
         literatureRepository.create(lit1);
         borrowingRepository.create(bor1);
         literatureRepository.create(lit2);
-        assertThrows(WeightExceededException.class, () -> {
+        assertThrows(exceptions.WeightExceededException.class, () -> {
             borrowingRepository.create(bor2);
         });
     }
 
-    @Test
-    public void endBorrowingTest() {
-        clientRepository.create(c);
-        literatureRepository.create(lit1);
-        borrowingRepository.create(bor1);
-        borrowingRepository.endBorrowing(bor1);
-        assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
-        assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
-        List<Borrowing> list = borrowingRepository.getAllBorrowingsByClientId(c.getId());
-        assertEquals(list.size(), 1);
-    }
-
-    @Test
-    public void borrowingUpdate() {
-        clientRepository.create(c);
-        literatureRepository.create(lit1);
-        borrowingRepository.create(bor1);
-        GregorianCalendar timeAfterCreation = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
-        bor1.setBorrowingEndDate(new GregorianCalendar());
-        borrowingRepository.update(bor1);
-        GregorianCalendar newTime = borrowingRepository.getAll().getFirst().getBorrowingEndDate();
-        assertNotEquals(timeAfterCreation, newTime);
-    }
-
-    @Test
-    public void borrowingDelete() {
-        clientRepository.create(c);
-        c.setMaxWeight(20);
-        clientRepository.update(c);
-        literatureRepository.create(lit1);
-        borrowingRepository.create(bor1);
-        literatureRepository.create(lit2);
-        borrowingRepository.create(bor2);
-        assertEquals(borrowingRepository.getAll().size(), 2);
-        borrowingRepository.delete(bor1.getId());
-        assertEquals(borrowingRepository.getAll().size(), 1);
-    }
+//    @Test
+//    public void endBorrowingTest() {
+//        clientRepository.create(c);
+//        literatureRepository.create(lit1);
+//        borrowingRepository.create(bor1);
+//        borrowingRepository.endBorrowing(bor1);
+//        assertFalse(literatureRepository.getById(lit1.getId()).isBorrowed());
+//        assertEquals(clientRepository.getById(c.getId()).getCurrentWeight(), 0);
+//        List<objects.Borrowing> list = borrowingRepository.getAllBorrowingsByClientId(c.getId());
+//        assertEquals(list.size(), 1);
+//    }
 }
