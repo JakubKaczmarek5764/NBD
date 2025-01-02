@@ -6,8 +6,6 @@ import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 import com.mongodb.lang.NonNull;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import mappers.MongoUniqueId;
-import mappers.MongoUniqueIdAdapter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,7 +14,6 @@ import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity(defaultKeyspace = "rent_a_literature")
@@ -57,7 +54,13 @@ public abstract class Literature implements Serializable {
     public Literature() {
 
     }
-
+    public Literature(java.util.UUID literatureId, java.lang.String discriminator, java.lang.String name, int weight, int isBorrowed) {
+        this.literatureId = literatureId;
+        this.discriminator = discriminator;
+        this.name = name;
+        this.weight = weight;
+        this.isBorrowed = isBorrowed;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,7 +110,7 @@ public abstract class Literature implements Serializable {
         this.name = name;
     }
 
-    abstract String getLiteratureInfo();
+    abstract String generateLiteratureInfo();
 
     public int getWeight() {
         return weight;
@@ -117,7 +120,7 @@ public abstract class Literature implements Serializable {
         this.weight = weight;
     }
 
-    public abstract int getTotalWeight();
+    public abstract int calculateTotalWeight();
 
     public int getIsBorrowed() {
         return isBorrowed;

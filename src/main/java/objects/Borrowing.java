@@ -96,7 +96,7 @@ public class Borrowing {
         return literature;
     }
 
-    public String getBorrowingInfo() {
+    public String generateBorrowingInfo() {
         return getBorrowingId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
     }
 

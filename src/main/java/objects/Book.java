@@ -30,7 +30,12 @@ public class Book extends Literature {
         this.author = author;
         this.tier = tier;
     }
-
+    public Book(java.util.UUID literatureId, java.lang.String genre, java.lang.String author, int tier, java.lang.String discriminator, java.lang.String name, int weight, int isBorrowed) {
+        super(literatureId, name, weight, isBorrowed, discriminator);
+        this.genre = genre;
+        this.author = author;
+        this.tier = tier;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,12 +62,12 @@ public class Book extends Literature {
     }
 
     @Override
-    String getLiteratureInfo() {
+    String generateLiteratureInfo() {
         return "id: " + getLiteratureId() + " name: " + getName() + " genre: " + getGenre() + " author: " + getAuthor();
     }
 
     @Override
-    public int getTotalWeight() {
+    public int calculateTotalWeight() {
         return getWeight() * getTier();
     }
 

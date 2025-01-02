@@ -29,13 +29,13 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
             MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
             Bson clientFilter = Filters.eq("_id", obj.getClient().getClientId());
             Client client = clientCollection.find(clientFilter).first();
-            if (client != null && (client.getCurrentWeight() + obj.getLiterature().getTotalWeight()) > client.getMaxWeight()) {
+            if (client != null && (client.getCurrentWeight() + obj.getLiterature().calculateTotalWeight()) > client.getMaxWeight()) {
                 throw new WeightExceededException();
             }
             MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class);
             Bson filter = Filters.eq("_id", obj.getLiterature().getLiteratureId().getId());
             Bson update = Updates.inc("isBorrowed", 1);
-            Bson clientUpdate = Updates.inc("currentWeight", obj.getLiterature().getTotalWeight());
+            Bson clientUpdate = Updates.inc("currentWeight", obj.getLiterature().calculateTotalWeight());
             clientCollection.updateOne(clientFilter, clientUpdate);
             literatureCollection.updateOne(filter, update);
             borrowingCollection.insertOne(obj);

@@ -67,7 +67,13 @@ public class Client {
         this.maxWeight = maxWeight;
         this.currentWeight = currentWeight;
     }
-
+    public Client(int currentWeight, java.lang.String firstName, java.lang.String lastName, java.lang.String personalID, int maxWeight) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalID = personalID;
+        this.maxWeight = maxWeight;
+        this.currentWeight = currentWeight;
+    }
     public Client() {
     }
 
@@ -95,7 +101,7 @@ public class Client {
         this.personalID = personalID;
     }
 
-    public String getClientInfo() {
+    public String generateClientInfo() {
         return getFirstName() + " " + getLastName() + " " + getPersonalID();
     }
 
