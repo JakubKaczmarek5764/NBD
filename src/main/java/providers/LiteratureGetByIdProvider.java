@@ -15,7 +15,7 @@ import objects.Magazine;
 import java.util.UUID;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
-
+// TODO: trzeba dodac update tutaj albo usunac z literatureDao, na razie zakomentowalem
 public class LiteratureGetByIdProvider {
     private final CqlSession session;
 
@@ -28,7 +28,7 @@ public class LiteratureGetByIdProvider {
         this.magazineEntityHelper = MagazineEntityHelper;
     }
 
-    void create(Literature literature) {
+    public void create(Literature literature) {
         session.execute(
                 switch (literature.getDiscriminator()) {
                     case "book" -> {
@@ -61,7 +61,7 @@ public class LiteratureGetByIdProvider {
                 });
     }
 
-    Literature getById(UUID literatureId) {
+    public Literature getById(UUID literatureId) {
         Select selectClient = QueryBuilder
                 .selectFrom(CqlIdentifier.fromCql("literatures"))
                 .all()

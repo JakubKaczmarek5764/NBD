@@ -97,7 +97,7 @@ public class Borrowing {
     }
 
     public String generateBorrowingInfo() {
-        return getBorrowingId() + getClient().getClientInfo() + getLiterature().getLiteratureInfo();
+        return getBorrowingId() + getClient().generateClientInfo() + getLiterature().generateLiteratureInfo();
     }
 
     public void endBorrowing(ZonedDateTime endDate) {

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Entity(defaultKeyspace = "rent_a_literature")
 @CqlName("literatures")
 @PropertyStrategy(mutable = false)
-public abstract class Literature implements Serializable {
+public class Literature implements Serializable {
 
     @PartitionKey
     @CqlName("literature_id")
@@ -107,7 +107,9 @@ public abstract class Literature implements Serializable {
         this.name = name;
     }
 
-    abstract String generateLiteratureInfo();
+    String generateLiteratureInfo() {
+        return null;
+    }
 
     public int getWeight() {
         return weight;
@@ -117,7 +119,9 @@ public abstract class Literature implements Serializable {
         this.weight = weight;
     }
 
-    public abstract int calculateTotalWeight();
+    public int calculateTotalWeight() {
+        return 0;
+    }
 
     public int getIsBorrowed() {
         return isBorrowed;
