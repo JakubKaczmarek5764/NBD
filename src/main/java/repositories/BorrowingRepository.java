@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import exceptions.WeightExceededException;
-import mappers.MongoUniqueId;
 import objects.Borrowing;
 import objects.Client;
 import objects.Literature;

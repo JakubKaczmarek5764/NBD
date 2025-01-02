@@ -1,4 +1,3 @@
-import mappers.MongoUniqueId;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,5 @@
 package benchmark;
 
-import mappers.MongoUniqueId;
 import objects.Book;
 import org.bson.types.ObjectId;
 import org.openjdk.jmh.annotations.*;

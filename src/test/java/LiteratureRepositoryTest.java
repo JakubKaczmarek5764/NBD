@@ -1,7 +1,6 @@
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import mappers.MongoUniqueId;
 import objects.Book;
 import objects.Magazine;
 import org.bson.conversions.Bson;

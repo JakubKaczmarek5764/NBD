@@ -1,5 +1,4 @@
 import com.mongodb.MongoWriteException;
-import mappers.MongoUniqueId;
 import objects.Book;
 import objects.Magazine;
 import org.bson.types.ObjectId;
