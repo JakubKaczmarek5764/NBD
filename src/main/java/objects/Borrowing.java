@@ -1,41 +1,33 @@
 package objects;
 
-import com.mongodb.lang.NonNull;
-import mappers.MongoUniqueId;
+import com.datastax.oss.driver.api.mapper.annotations.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
-//@Entity
-//@Access(AccessType.FIELD)
+@Entity(defaultKeyspace = "rent_a_literature")
+@CqlName("borrowings")
+@PropertyStrategy(mutable = false)  // to znaczy ze obiekt jest niemodyfikowalny, nw czy powinien byc
 public class Borrowing {
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @BsonProperty("_id")
-    @NonNull
-    private MongoUniqueId borrowingId;
-//    @Version
-//    private long version;
 
-    @BsonProperty("beginDate")
+    @PartitionKey
+    @CqlName("borrowing_id")
+    private UUID borrowingId;
+
+    @CqlName("begin_date")
     private ZonedDateTime beginDate;
 
-    @BsonProperty("endDate")
+    @ClusteringColumn   // chyba
+    @CqlName("end_date")
     private ZonedDateTime endDate;
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn
-//    @NotNull
-    @BsonProperty("client")
+
+    @CqlName("client")
     private Client client;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn
-//    @NotNull
-    @BsonProperty("literature")
+    @CqlName("literature")
     private Literature literature;
 
     public Borrowing(ZonedDateTime beginDate, ZonedDateTime endDate, Client client, Literature literature) {
@@ -45,21 +37,13 @@ public class Borrowing {
         this.literature = literature;
     }
 
-    @BsonCreator
-    public Borrowing(
-            @BsonProperty("_id") MongoUniqueId borrowingId,
-            @BsonProperty("beginDate") ZonedDateTime beginDate,
-            @BsonProperty("endDate") ZonedDateTime endDate,
-            @BsonProperty("client") Client client,
-            @BsonProperty("literature") Literature literature
-    ) {
+    public Borrowing(UUID borrowingId, ZonedDateTime beginDate, ZonedDateTime endDate, Client client, Literature literature) {
         this.borrowingId = borrowingId;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.client = client;
         this.literature = literature;
     }
-
 
     public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
@@ -92,7 +76,7 @@ public class Borrowing {
         return new HashCodeBuilder(17, 37).append(borrowingId).append(beginDate).append(endDate).append(client).append(literature).toHashCode();
     }
 
-    public MongoUniqueId getBorrowingId() {
+    public UUID getBorrowingId() {
         return borrowingId;
     }
 
