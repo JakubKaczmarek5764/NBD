@@ -77,6 +77,10 @@ public class Client {
     public Client() {
     }
 
+    public UUID getClientId() {
+        return clientId;
+    }
+
     public String getFirstName() {
         return firstName;
     }

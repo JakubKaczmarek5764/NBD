@@ -1,95 +1,68 @@
 package repositories;
 
-import com.mongodb.MongoCommandException;
-import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import com.datastax.oss.driver.api.core.cql.BatchStatement;
+import com.datastax.oss.driver.api.core.cql.BatchType;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.insert.Insert;
 import exceptions.WeightExceededException;
 import objects.Borrowing;
 import objects.Client;
 import objects.Literature;
-import org.bson.Document;
-import org.bson.conversions.Bson;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BorrowingRepository extends AbstractMongoRepository implements IBorrowingRepository {
-    private final MongoCollection<Borrowing> borrowingCollection = getDatabase().getCollection("borrowing", Borrowing.class);
+import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
+public class BorrowingRepository extends AbstractCassandraRepository {
 
-    @Override
+    public BorrowingRepository() {
+        initSession();
+        SimpleStatement createBorrowingsByClient =
+                SchemaBuilder.createTable(CqlIdentifier.fromCql("borrowings_by_client"))
+                        .ifNotExists()
+                        .withPartitionKey(CqlIdentifier.fromCql("borrowing_id"), DataTypes.UUID)
+                        .withClusteringColumn(CqlIdentifier.fromCql("begin_date"), DataTypes.TIMESTAMP)
+                        .withClusteringColumn(CqlIdentifier.fromCql("end_date"), DataTypes.TIMESTAMP)
+                        .withColumn(CqlIdentifier.fromCql("client"), DataTypes.UUID)
+                        .withColumn(CqlIdentifier.fromCql("literature"), DataTypes.UUID)
+                        .build();
+        getSession().execute(createBorrowingsByClient);
+
+        SimpleStatement createBorrowingsByLiterature =
+                SchemaBuilder.createTable(CqlIdentifier.fromCql("borrowings_by_literature"))
+                        .ifNotExists()
+                        .withPartitionKey(CqlIdentifier.fromCql("borrowing_id"), DataTypes.UUID)
+                        .withClusteringColumn(CqlIdentifier.fromCql("begin_date"), DataTypes.TIMESTAMP)
+                        .withClusteringColumn(CqlIdentifier.fromCql("end_date"), DataTypes.TIMESTAMP)
+                        .withColumn(CqlIdentifier.fromCql("client"), DataTypes.UUID)
+                        .withColumn(CqlIdentifier.fromCql("literature"), DataTypes.UUID)
+                        .build();
+        getSession().execute(createBorrowingsByLiterature);
+
+    }
     public void create(Borrowing obj) {
-        ClientSession clientSession = mongoClient.startSession();
-        try {
-            clientSession.startTransaction();
-            MongoCollection<Client> clientCollection = getDatabase().getCollection("clients", Client.class).withWriteConcern(WriteConcern.MAJORITY);
-            Bson clientFilter = Filters.eq("_id", obj.getClient().getClientId());
-            Client client = clientCollection.find(clientFilter).first();
-            if (client != null && (client.getCurrentWeight() + obj.getLiterature().calculateTotalWeight()) > client.getMaxWeight()) {
-                throw new WeightExceededException();
-            }
-            MongoCollection<Literature> literatureCollection = getDatabase().getCollection("literature", Literature.class);
-            Bson filter = Filters.eq("_id", obj.getLiterature().getLiteratureId().getId());
-            Bson update = Updates.inc("isBorrowed", 1);
-            Bson clientUpdate = Updates.inc("currentWeight", obj.getLiterature().calculateTotalWeight());
-            clientCollection.updateOne(clientFilter, clientUpdate);
-            literatureCollection.updateOne(filter, update);
-            borrowingCollection.insertOne(obj);
-            clientSession.commitTransaction();
-
-        } catch (MongoCommandException | WeightExceededException e) {
-            clientSession.abortTransaction();
-            throw new WeightExceededException();
-        } finally {
-            clientSession.close();
-        }
-//        Bson filter = Filters.eq("client", obj.getClient().getClientId().getId());
-//        Bson projections = Projections.exclude(obj.getClient().getClientId().toString(), obj.getLiterature().getLiteratureId().toString());
-//        AggregateIterable<Document> aggregates = borrowingCollection.aggregate(List.of(
-//                Aggregates.match(filter),
-//                Aggregates.lookup("clients", obj.getClient().getClientId().getId().toString(), "_id", "clientData"),
-//                Aggregates.unwind("$" + "clientData"),
-//                Aggregates.lookup("literature", obj.getLiterature().getLiteratureId().getId().toString(), "_id", "literatureData"),
-//                Aggregates.unwind("$" + "literatureData"),
-//                Aggregates.project(projections)
-//        ));
-//        ArrayList<Document> documents = aggregates.into(new ArrayList<>());
-//        System.out.println(documents);
+        Insert insertRentsByClient = QueryBuilder.insertInto(CqlIdentifier.fromCql("borrowings_by_client"))
+                .value(CqlIdentifier.fromCql("borrowing_id"), literal(obj.getBorrowingId()))
+                .value(CqlIdentifier.fromCql("begin_date"), literal(obj.getBeginDate()))
+                .value(CqlIdentifier.fromCql("end_date"), literal(obj.getEndDate()))
+                .value(CqlIdentifier.fromCql("client"), literal(obj.getClient().getClientId()))
+                .value(CqlIdentifier.fromCql("literature"), literal(obj.getLiterature().getLiteratureId()));
+        Insert insertRentsByLiterature = QueryBuilder.insertInto(CqlIdentifier.fromCql("borrowings_by_literature"))
+                .value(CqlIdentifier.fromCql("borrowing_id"), literal(obj.getBorrowingId()))
+                .value(CqlIdentifier.fromCql("begin_date"), literal(obj.getBeginDate()))
+                .value(CqlIdentifier.fromCql("end_date"), literal(obj.getEndDate()))
+                .value(CqlIdentifier.fromCql("client"), literal(obj.getClient().getClientId()))
+                .value(CqlIdentifier.fromCql("literature"), literal(obj.getLiterature().getLiteratureId()));
+    BatchStatement batchStatement = BatchStatement.builder(BatchType.LOGGED)
+            .addStatement(insertRentsByClient.build())
+            .addStatement(insertRentsByLiterature.build())
+            .build();
+    getSession().execute(batchStatement);
     }
-
-    @Override
-    public List<Borrowing> getAll() {
-        return borrowingCollection.find().into(new ArrayList<>());
-    }
-
-    @Override
-    public Borrowing getById(MongoUniqueId id) {
-        Bson filter = Filters.eq("_id", id);
-        return borrowingCollection.find(filter).first();
-    }
-
-    @Override
-    public void delete(Borrowing obj) {
-        Bson filter = Filters.eq("_id", obj.getBorrowingId());
-        borrowingCollection.deleteOne(filter);
-    }
-
-    @Override
-    public void update(Borrowing obj) {
-        Bson filter = Filters.eq("_id", obj.getBorrowingId());
-        borrowingCollection.replaceOne(filter, obj);
-    }
-
-    @Override
-    public void emptyCollection() {
-        borrowingCollection.deleteMany(new Document());
-    }
-
-    public boolean collectionExists() {
-        return this.collectionExists("borrowings");
-    }
-
 }
