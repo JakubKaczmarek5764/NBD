@@ -29,7 +29,7 @@ public class AbstractCassandraRepository implements AutoCloseable {
         session.execute(createKeyspace);
     }
 
-    public static CqlSession getSession() {
+    public CqlSession getSession() {
         return session;
     }
 

@@ -3,6 +3,7 @@ package dao;
 import com.datastax.oss.driver.api.mapper.annotations.*;
 import objects.Client;
 
+import java.util.List;
 import java.util.UUID;
 
 @Dao
