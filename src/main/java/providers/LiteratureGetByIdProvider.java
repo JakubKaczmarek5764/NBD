@@ -67,6 +67,9 @@ public class LiteratureGetByIdProvider {
                 .all()
                 .where(Relation.column("literature_id").isEqualTo(literal(literatureId)));
         Row row = session.execute(selectClient.build()).one();
+        if (row == null) {
+            return null;
+        }
         String discriminator = row.getString("discriminator");
         return switch (discriminator) {
             case "book" -> getBook(row);

@@ -1,8 +1,7 @@
 package dao;
 
-import com.datastax.oss.driver.api.mapper.annotations.Dao;
-import com.datastax.oss.driver.api.mapper.annotations.Delete;
-import com.datastax.oss.driver.api.mapper.annotations.QueryProvider;
+import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.mapper.annotations.*;
 import objects.Book;
 import objects.Literature;
 import objects.Magazine;
@@ -17,7 +16,6 @@ public interface LiteratureDao {
 
 //    @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
 //    void update(Literature literature);  // czy jak nie jest mutable to mozna update
-
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
     Literature getById(UUID literatureId);
 

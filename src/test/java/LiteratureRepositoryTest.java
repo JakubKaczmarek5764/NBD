@@ -1,57 +1,51 @@
-//import com.mongodb.MongoWriteException;
-//import com.mongodb.client.model.Filters;
-//import com.mongodb.client.model.Updates;
-//import objects.Book;
-//import objects.Magazine;
-//import org.bson.conversions.Bson;
-//import org.bson.types.ObjectId;
-//import org.junit.jupiter.api.AfterAll;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import repositories.LiteratureRepository;
-//
-//import static junit.framework.Assert.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//
-//public class LiteratureRepositoryTest {
-//    private LiteratureRepository literatureRepository = new LiteratureRepository();
-//
-//    private Book b;
-//    private Magazine m;
-//
-//    @BeforeEach
-//    public void prepareForTests() {
-//        literatureRepository.emptyCollection();
-//        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
-//        m = new Magazine(new MongoUniqueId(new ObjectId()), "Swiat nauki", "2001/10", 2, 0);
-//    }
-//
-//    @AfterAll
-//    public static void close() {
-//
-//    }
-//
-//    @Test
-//    public void literatureCreateTest() {
-//        literatureRepository.create(b);
-//        assertEquals(literatureRepository.getAll().size(), 1);
-//    }
-//
-//    @Test
-//    public void literatureGettersTests() {
-//        literatureRepository.create(b);
-//        literatureRepository.create(m);
-//        assertEquals(literatureRepository.getAll().size(), 2);
-//    }
-//
-//    @Test
-//    public void literatureDeleteTest() {
-//        literatureRepository.create(b);
-//        literatureRepository.create(m);
-//        assertEquals(literatureRepository.getAll().size(), 2);
-//        literatureRepository.delete(b);
-//        assertEquals(literatureRepository.getAll().size(), 1);
-//    }
+
+import dao.LiteratureDao;
+import mappers.LiteratureMapper;
+import mappers.LiteratureMapperBuilder;
+import objects.Book;
+import objects.Magazine;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import repositories.LiteratureRepository;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class LiteratureRepositoryTest {
+    private LiteratureRepository literatureRepository = new LiteratureRepository();
+    private Book b;
+    private Magazine m;
+
+    @BeforeEach
+    public void prepareForTests() {
+            b = new Book(UUID.randomUUID(), "Epopeja", "Adam Mickiewicz", 2, "book", "Pan Tadeusz", 2, 0);
+            m = new Magazine(UUID.randomUUID(), "2002/11", "magazine", "Swiat Nauki", 8, 0);
+    }
+
+    @AfterAll
+    public static void close() {
+
+    }
+
+    @Test
+    public void literatureCreateTest() {
+        literatureRepository.create(b);
+        assertEquals(literatureRepository.getById(b.getLiteratureId()).getName(), "Pan Tadeusz");
+        literatureRepository.create(m);
+        assertEquals(literatureRepository.getById(m.getLiteratureId()).getName(), "Swiat Nauki");
+    }
+
+
+    @Test
+    public void literatureDeleteTest() {
+        literatureRepository.create(b);
+        assertEquals(literatureRepository.getById(b.getLiteratureId()).getName(), "Pan Tadeusz");
+        literatureRepository.delete(b);
+        assertEquals(literatureRepository.getById(b.getLiteratureId()), null);
+    }
 //
 //    @Test
 //    public void literatureUpdate() {
@@ -67,11 +61,10 @@
 //        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
 //    }
 //
-//    @Test
-//    public void literatureCollectionEmptyCollectionTest() {
-//        literatureRepository.create(b);
-//        literatureRepository.create(m);
-//        literatureRepository.emptyCollection();
-//        assertEquals(literatureRepository.getAll().size(), 0);
-//    }
-//}
+    @Test
+    public void literatureCollectionEmptyCollectionTest() {
+        literatureRepository.create(b);
+        literatureRepository.emptyCollection();
+        assertEquals(literatureRepository.getById(b.getLiteratureId()), null);
+    }
+}

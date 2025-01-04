@@ -1,5 +1,6 @@
 package dao;
 
+import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.mapper.annotations.*;
 import objects.Client;
 
@@ -10,9 +11,6 @@ import java.util.UUID;
 public interface ClientDao {
     @Insert
     void create(Client client);
-
-    @Select
-    Iterable<Client> getAll();  // nw czy okok
 
     @Select
     Client getById(UUID clientId);
