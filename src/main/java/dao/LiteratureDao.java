@@ -14,8 +14,9 @@ public interface LiteratureDao {
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
     void create(Literature literature);
 
-//    @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
-//    void update(Literature literature);  // czy jak nie jest mutable to mozna update
+    @Update
+    void update(Literature literature);  // czy jak nie jest mutable to mozna update
+
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
     Literature getById(UUID literatureId);
 

@@ -68,6 +68,14 @@ public class Client {
         this.currentWeight = currentWeight;
     }
 
+    public void setCurrentWeight(int currentWeight) {
+        this.currentWeight = currentWeight;
+    }
+
+    public void setClientId(UUID clientId) {
+        this.clientId = clientId;
+    }
+
     public Client(java.util.UUID clientId, int currentWeight, java.lang.String firstName, java.lang.String lastName, java.lang.String personalID, int maxWeight) {
         this.clientId = clientId;
         this.firstName = firstName;

@@ -44,9 +44,9 @@ public class LiteratureRepository extends AbstractCassandraRepository {
     public Literature getById(UUID literatureId) {
         return literatureDao.getById(literatureId);
     }
-//    public void update(Literature literature) {
-//        literatureDao.update(literature);
-//    }
+    public void update(Literature literature) {
+        literatureDao.update(literature);
+    }
     public void delete(Literature literature) {
         literatureDao.remove(literature);
     }
