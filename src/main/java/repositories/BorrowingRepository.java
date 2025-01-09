@@ -19,7 +19,6 @@ import objects.Client;
 import objects.Literature;
 import providers.ZonedDateTimeConverter;
 
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +30,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
 
     private ClientRepository clientRepository = new ClientRepository();
     private LiteratureRepository literatureRepository = new LiteratureRepository();
+
     public BorrowingRepository() {
         initSession();
         SimpleStatement createBorrowingsByClient =
@@ -56,6 +56,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
         getSession().execute(createBorrowingsByLiterature);
 
     }
+
     public void create(Borrowing obj) {
         Client client = clientRepository.getById(obj.getClient().getClientId());
         Literature literature = literatureRepository.getById(obj.getLiterature().getLiteratureId());
@@ -86,11 +87,11 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 .value(CqlIdentifier.fromCql("end_date"), literal(ZonedDateTimeConverter.toCassandraValue(obj.getEndDate())))
                 .value(CqlIdentifier.fromCql("client"), literal(obj.getClient().getClientId()))
                 .value(CqlIdentifier.fromCql("literature"), literal(obj.getLiterature().getLiteratureId()));
-    BatchStatement batchStatement = BatchStatement.builder(BatchType.LOGGED)
-            .addStatement(insertRentsByClient.build())
-            .addStatement(insertRentsByLiterature.build())
-            .build();
-    getSession().execute(batchStatement);
+        BatchStatement batchStatement = BatchStatement.builder(BatchType.LOGGED)
+                .addStatement(insertRentsByClient.build())
+                .addStatement(insertRentsByLiterature.build())
+                .build();
+        getSession().execute(batchStatement);
     }
 
     public void endBorrowing(Borrowing obj) {
@@ -102,6 +103,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
         clientRepository.update(client);
         update(obj);
     }
+
     public List<Borrowing> getAllBorrowingsByClientId(UUID clientId) {
         // Execute the query
         List<Row> rows = getSession().execute(QueryBuilder.selectFrom(CqlIdentifier.fromCql("borrowings_by_client"))
@@ -122,6 +124,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 literatureRepository.getById(row.getUuid("literature")));
         return borrowing;
     }
+
     public List<Borrowing> getAllBorrowingsByLiteratureId(UUID literatureId) {
         List<Row> rows = getSession().execute(QueryBuilder.selectFrom(CqlIdentifier.fromCql("borrowings_by_literature"))
                 .all()
@@ -132,6 +135,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 .map(this::mapRowToBorrowing)
                 .collect(Collectors.toList());
     }
+
     private void deleteBorrowingsByClientId(UUID clientId) {
         getSession().execute(QueryBuilder.deleteFrom(CqlIdentifier.fromCql("borrowings_by_client"))
                 .where(Relation.column(CqlIdentifier.fromCql("client")).isEqualTo(literal(clientId)))
@@ -143,7 +147,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 .where(Relation.column(CqlIdentifier.fromCql("literature")).isEqualTo(literal(literatureId)))
                 .build());
     }
-    // TODO: tu jest cos nie tak bo usuwa wszystko
+
     public void delete(Borrowing obj) {
         getSession().execute(QueryBuilder.deleteFrom(CqlIdentifier.fromCql("borrowings_by_client"))
                 .where(Relation.column(CqlIdentifier.fromCql("client")).isEqualTo(literal(obj.getClient().getClientId())))
@@ -156,12 +160,14 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 .where(Relation.column(CqlIdentifier.fromCql("borrowing_id")).isEqualTo(literal(obj.getBorrowingId())))
                 .build());
     }
+
     public void emptyCollection() {
         SimpleStatement truncateTable = QueryBuilder.truncate(CqlIdentifier.fromCql("borrowings_by_client")).build();
         getSession().execute(truncateTable);
         truncateTable = QueryBuilder.truncate(CqlIdentifier.fromCql("borrowings_by_literature")).build();
         getSession().execute(truncateTable);
     }
+
     public void dropCollection() {
         Drop dropTableClients = SchemaBuilder.dropTable(CqlIdentifier.fromCql("borrowings_by_client")).ifExists();
         Drop dropTableLiterature = SchemaBuilder.dropTable(CqlIdentifier.fromCql("borrowings_by_literature")).ifExists();
@@ -171,6 +177,7 @@ public class BorrowingRepository extends AbstractCassandraRepository {
                 .build();
         getSession().execute(batchStatement);
     }
+
     public void update(Borrowing obj) {
         Update updateBorrowingsByClient = QueryBuilder.update(CqlIdentifier.fromCql("borrowings_by_client"))
                 .setColumn(CqlIdentifier.fromCql("end_date"), literal(ZonedDateTimeConverter.toCassandraValue(obj.getEndDate())))

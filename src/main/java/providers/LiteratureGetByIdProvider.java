@@ -15,6 +15,7 @@ import objects.Magazine;
 import java.util.UUID;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
+
 // TODO: trzeba dodac update tutaj albo usunac z literatureDao, na razie zakomentowalem
 public class LiteratureGetByIdProvider {
     private final CqlSession session;

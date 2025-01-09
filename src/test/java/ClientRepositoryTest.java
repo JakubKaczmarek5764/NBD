@@ -1,13 +1,9 @@
-import dao.ClientDao;
-import mappers.ClientMapper;
-import mappers.ClientMapperBuilder;
 import objects.Client;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.ClientRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,12 +49,12 @@ public class ClientRepositoryTest {
 
     @Test
     public void clientDeleteTest() {
-        // mozna zrobic z metoda getall jak bedzie dzialac, ale troche fikolki trzebaby zrobic zeby sprawdzac jej dlugosc
         clientRepository.create(c);
         assertEquals(clientRepository.getById(c.getClientId()).getFirstName(), "Jan");
         clientRepository.delete(c);
         assertEquals(clientRepository.getById(c.getClientId()), null);
     }
+
     @Test
     public void clientCollectionEmptyCollectionTest() {
         clientRepository.create(c);

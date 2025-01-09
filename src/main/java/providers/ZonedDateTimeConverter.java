@@ -1,9 +1,9 @@
 package providers;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ZonedDateTimeConverter {
     public static Long toCassandraValue(ZonedDateTime zonedDateTime) {

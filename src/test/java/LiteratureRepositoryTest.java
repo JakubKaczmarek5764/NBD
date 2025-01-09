@@ -1,10 +1,5 @@
-
-import dao.LiteratureDao;
-import mappers.LiteratureMapper;
-import mappers.LiteratureMapperBuilder;
 import objects.Book;
 import objects.Magazine;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +16,8 @@ public class LiteratureRepositoryTest {
 
     @BeforeEach
     public void prepareForTests() {
-            b = new Book(UUID.randomUUID(), "Epopeja", "Adam Mickiewicz", 2, "book", "Pan Tadeusz", 2, 0);
-            m = new Magazine(UUID.randomUUID(), "2002/11", "magazine", "Swiat Nauki", 8, 0);
+        b = new Book(UUID.randomUUID(), "Epopeja", "Adam Mickiewicz", 2, "book", "Pan Tadeusz", 2, 0);
+        m = new Magazine(UUID.randomUUID(), "2002/11", "magazine", "Swiat Nauki", 8, 0);
     }
 
     @AfterAll
@@ -46,21 +41,16 @@ public class LiteratureRepositoryTest {
         literatureRepository.delete(b);
         assertEquals(literatureRepository.getById(b.getLiteratureId()), null);
     }
-//
-//    @Test
-//    public void literatureUpdate() {
-//        literatureRepository.create(b);
-//        b.setName("Dziady");
-//        b.setIsBorrowed(1);
-//        literatureRepository.update(b);
-//        Bson filter = Filters.eq("_id", b.getLiteratureId());
-//        Bson update = Updates.inc("isBorrowed", 1);
-//        assertThrows(MongoWriteException.class, () -> {
-//            literatureRepository.getLiteratureCollection().updateOne(filter, update);
-//        });
-//        assertEquals(literatureRepository.getAll().getFirst().getName(), "Dziady");
-//    }
-//
+
+    @Test
+    public void literatureUpdate() {
+        literatureRepository.create(b);
+        b.setName("Dziady");
+        b.setIsBorrowed(1);
+        literatureRepository.update(b);
+        assertEquals(literatureRepository.getById(b.getLiteratureId()).getIsBorrowed(), 1);
+    }
+
     @Test
     public void literatureCollectionEmptyCollectionTest() {
         literatureRepository.create(b);

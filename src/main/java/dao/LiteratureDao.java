@@ -1,6 +1,5 @@
 package dao;
 
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.mapper.annotations.*;
 import objects.Book;
 import objects.Literature;
@@ -16,7 +15,7 @@ public interface LiteratureDao {
     void create(Literature literature);
 
     @Update
-    void update(Literature literature);  // czy jak nie jest mutable to mozna update
+    void update(Literature literature);
 
     @StatementAttributes(consistencyLevel = "QUORUM")
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})

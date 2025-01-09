@@ -19,10 +19,12 @@ public class Magazine extends Literature {
         super(literatureId, name, weight, isBorrowed, discriminator);
         this.issue = issue;
     }
+
     public Magazine(java.util.UUID literatureId, java.lang.String issue, java.lang.String discriminator, java.lang.String name, int weight, int isBorrowed) {
         super(literatureId, discriminator, name, weight, isBorrowed);
         this.issue = issue;
     }
+
     @Override
     String generateLiteratureInfo() {
         return "id: " + getLiteratureId() + " name: " + getName() + " issue: " + getIssue();

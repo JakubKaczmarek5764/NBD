@@ -1,4 +1,3 @@
-
 import objects.Book;
 import objects.Borrowing;
 import objects.Client;
@@ -12,7 +11,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BorrowingRepositoryTest {
     private static final repositories.BorrowingRepository borrowingRepository = new repositories.BorrowingRepository();
@@ -26,6 +26,7 @@ public class BorrowingRepositoryTest {
     private objects.Borrowing bor1;
     private objects.Borrowing bor2;
     private objects.Borrowing bor3;
+
     @BeforeEach
     public void prepareForTests() {
         borrowingRepository.emptyCollection();
@@ -73,6 +74,7 @@ public class BorrowingRepositoryTest {
         borrowingRepository.emptyCollection();
         assertEquals(borrowingRepository.getAllBorrowingsByClientId(c.getClientId()).size(), 0);
     }
+
     @Test
     public void borrowingDeleteTest() {
         borrowingRepository.create(bor1);
@@ -92,7 +94,7 @@ public class BorrowingRepositoryTest {
     }
 
 
-//
+    //
     @Test
     public void businessLogicTest() {
         borrowingRepository.create(bor1);
@@ -100,6 +102,7 @@ public class BorrowingRepositoryTest {
             borrowingRepository.create(bor3);
         });
     }
+
     @Test
     public void alreadyBorrowedTest() {
         Borrowing bor4 = new Borrowing(ZonedDateTime.now(), null, c2, lit1);

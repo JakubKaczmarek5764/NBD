@@ -1,10 +1,8 @@
 package dao;
 
-import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.mapper.annotations.*;
 import objects.Client;
 
-import java.util.List;
 import java.util.UUID;
 
 @Dao
@@ -19,7 +17,7 @@ public interface ClientDao {
 
 
     @Update
-    void update(Client client); // czy jak nie jest mutable to mozna update
+    void update(Client client);
 
     @Delete
     void delete(Client client);

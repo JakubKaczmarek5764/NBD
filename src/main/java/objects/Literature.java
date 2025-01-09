@@ -4,11 +4,9 @@ import com.datastax.oss.driver.api.mapper.annotations.CqlName;
 import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -28,7 +26,6 @@ public class Literature implements Serializable {
     @CqlName("weight")
     private int weight;
 
-    // z tym borrowed trzeba pokminic, najlepiej chyba zrobic ta inkrementacje
     @CqlName("isBorrowed")
     private int isBorrowed;
 
@@ -51,6 +48,7 @@ public class Literature implements Serializable {
     public Literature() {
 
     }
+
     public Literature(java.util.UUID literatureId, java.lang.String discriminator, java.lang.String name, int weight, int isBorrowed) {
         this.literatureId = literatureId;
         this.discriminator = discriminator;
@@ -58,6 +56,7 @@ public class Literature implements Serializable {
         this.weight = weight;
         this.isBorrowed = isBorrowed;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

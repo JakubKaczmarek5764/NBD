@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 import java.util.UUID;
 
 @Entity(defaultKeyspace = "rent_a_literature")
@@ -30,12 +29,14 @@ public class Book extends Literature {
         this.author = author;
         this.tier = tier;
     }
+
     public Book(java.util.UUID literatureId, java.lang.String genre, java.lang.String author, int tier, java.lang.String discriminator, java.lang.String name, int weight, int isBorrowed) {
         super(literatureId, name, weight, isBorrowed, discriminator);
         this.genre = genre;
         this.author = author;
         this.tier = tier;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

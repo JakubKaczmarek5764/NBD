@@ -21,7 +21,7 @@ public class Borrowing {
     @CqlName("begin_date")
     private ZonedDateTime beginDate;
 
-      // chyba
+    // chyba
     @CqlName("end_date")
     private ZonedDateTime endDate;
 

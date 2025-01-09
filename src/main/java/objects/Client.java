@@ -84,6 +84,7 @@ public class Client {
         this.maxWeight = maxWeight;
         this.currentWeight = currentWeight;
     }
+
     public Client() {
     }
 
