@@ -9,11 +9,14 @@ import java.util.UUID;
 
 @Dao
 public interface ClientDao {
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @Insert
     void create(Client client);
 
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @Select
     Client getById(UUID clientId);
+
 
     @Update
     void update(Client client); // czy jak nie jest mutable to mozna update

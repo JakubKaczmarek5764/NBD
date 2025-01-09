@@ -11,12 +11,14 @@ import java.util.UUID;
 
 @Dao
 public interface LiteratureDao {
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
     void create(Literature literature);
 
     @Update
     void update(Literature literature);  // czy jak nie jest mutable to mozna update
 
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @QueryProvider(providerClass = LiteratureGetByIdProvider.class, entityHelpers = {Book.class, Magazine.class})
     Literature getById(UUID literatureId);
 
