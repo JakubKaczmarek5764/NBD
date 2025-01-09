@@ -17,10 +17,11 @@ public class Borrowing {
     @CqlName("borrowing_id")
     private UUID borrowingId;
 
+    @ClusteringColumn
     @CqlName("begin_date")
     private ZonedDateTime beginDate;
 
-    @ClusteringColumn   // chyba
+      // chyba
     @CqlName("end_date")
     private ZonedDateTime endDate;
 
