@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.LiteratureRepository;
 
+import java.util.UUID;
+
 import static junit.framework.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -23,8 +25,8 @@ public class LiteratureRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         literatureRepository.emptyCollection();
-        b = new Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
-        m = new Magazine(new MongoUniqueId(new ObjectId()), "Swiat nauki", "2001/10", 2, 0);
+        b = new Book(new MongoUniqueId(UUID.randomUUID()), "Pan Tadeusz", "Epopeja", "Mickiewicz", 2, 2, 1);
+        m = new Magazine(new MongoUniqueId(UUID.randomUUID()), "Swiat nauki", "2001/10", 2, 0);
     }
 
     @AfterAll

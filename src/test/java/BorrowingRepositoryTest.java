@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,12 +25,12 @@ public class BorrowingRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         borrowingRepository.emptyCollection();
-        c = new objects.Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10, 0);
-        lit1 = new objects.Book(new MongoUniqueId(new ObjectId()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
+        c = new objects.Client(new MongoUniqueId(UUID.randomUUID()), "Jan", "Kowalski", "123", 10, 0);
+        lit1 = new objects.Book(new MongoUniqueId(UUID.randomUUID()), "Pan Tadeusz", "Epopeja", "Adam Mickiewicz", 2, 2, 0);
         ZonedDateTime date = ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS);
-        bor1 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit1);
-        lit2 = new objects.Magazine(new MongoUniqueId(new ObjectId()), "Swiat Nauki", "2002/11", 8, 0);
-        bor2 = new objects.Borrowing(new MongoUniqueId(new ObjectId()), date, null, c, lit2);
+        bor1 = new objects.Borrowing(new MongoUniqueId(UUID.randomUUID()), date, null, c, lit1);
+        lit2 = new objects.Magazine(new MongoUniqueId(UUID.randomUUID()), "Swiat Nauki", "2002/11", 8, 0);
+        bor2 = new objects.Borrowing(new MongoUniqueId(UUID.randomUUID()), date, null, c, lit2);
     }
 
     @AfterAll

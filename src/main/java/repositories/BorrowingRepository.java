@@ -9,6 +9,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import exceptions.WeightExceededException;
+import kafka.Producer;
 import mappers.MongoUniqueId;
 import objects.Borrowing;
 import objects.Client;
@@ -29,6 +30,15 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
                     .build())
             .build();
 
+    public BorrowingRepository() {
+        super();
+        try {
+            Producer.createTopic("topic2");
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Topic already exists");
+        }
+    }
     @Override
     public void create(Borrowing obj) {
         ClientSession clientSession = mongoClient.startSession(sessionOptions);
@@ -48,6 +58,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
             literatureCollection.updateOne(filter, update);
             borrowingCollection.insertOne(obj);
             clientSession.commitTransaction();
+            Producer.sendBorrowing(obj);
 
         } catch (MongoCommandException | WeightExceededException e) {
             clientSession.abortTransaction();

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.ClientRepository;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClientRepositoryTest {
@@ -16,8 +18,8 @@ public class ClientRepositoryTest {
     @BeforeEach
     public void prepareForTests() {
         clientRepository.emptyCollection();
-        c = new Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "123", 10, 0);
-        c2 = new Client(new MongoUniqueId(new ObjectId()), "Jan", "Kowalski", "456", 10, 0);
+        c = new Client(new MongoUniqueId(UUID.randomUUID()), "Jan", "Kowalski", "123", 10, 0);
+        c2 = new Client(new MongoUniqueId(UUID.randomUUID()), "Jan", "Kowalski", "456", 10, 0);
     }
 
     @AfterAll

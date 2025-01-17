@@ -1,16 +1,16 @@
 package mappers;
 
-import org.bson.types.ObjectId;
+import java.util.UUID;
 
 
 public class MongoUniqueId {
-    private ObjectId id;
+    private UUID id;
 
-    public MongoUniqueId(ObjectId id) {
+    public MongoUniqueId(UUID id) {
         this.id = id;
     }
 
-    public ObjectId getId() {
+    public UUID getId() {
         return id;
     }
 
