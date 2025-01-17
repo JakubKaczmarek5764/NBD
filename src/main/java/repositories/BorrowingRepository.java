@@ -31,13 +31,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
             .build();
 
     public BorrowingRepository() {
-        super();
-        try {
-            Producer.createTopic("topic2");
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Topic already exists");
-        }
+        Producer.createTopic("topic");
     }
     @Override
     public void create(Borrowing obj) {

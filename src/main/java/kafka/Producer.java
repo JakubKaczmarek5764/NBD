@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaFuture;
+import org.apache.kafka.common.errors.TopicExistsException;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.json.JSONObject;
@@ -25,28 +26,36 @@ public class Producer {
         topicName = topic;
         Properties properties = new Properties();
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka2:9292, kafka3:9392");
-        int partitionsNumber = 3;
-        short replicationFactor = 3;
+
         try (Admin admin = Admin.create(properties)) {
-            NewTopic newTopic = new NewTopic(topicName, partitionsNumber, (short) replicationFactor);
-            CreateTopicsOptions options = new CreateTopicsOptions()
-                    .timeoutMs(1000)
-                    .validateOnly(false)
-                    .retryOnQuotaViolation(true);
-            CreateTopicsResult result = admin.createTopics(List.of(newTopic), options);
-            KafkaFuture<Void> future = result.values().get(topicName);
-            future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+            // Check if the topic already exists
+            ListTopicsResult topics = admin.listTopics();
+            if (topics.names().get().contains(topicName)) {
+                System.out.println("Topic already exists: " + topicName);
+                return;
+            }
+
+            // Create the topic if it doesn't exist
+            NewTopic newTopic = new NewTopic(topicName, 3, (short) 3);
+            CreateTopicsResult result = admin.createTopics(List.of(newTopic));
+            result.all().get(); // Wait for topic creation
+            System.out.println("Topic created successfully: " + topicName);
+
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Failed to create topic: " + topicName, e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore the interrupted status
+            throw new RuntimeException("Interrupted while creating topic: " + topicName, e);
         }
     }
+
     public static void initProducer() {
         Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka2:9292, kafka3:9392");
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "local");
-        properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "859676a3-08b8-4bd0-b82e-e6267d524ea5");
+//        properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "859676a3-08b8-4bd0-b82e-e6267d524ea5");
 
         kafkaProducer = new KafkaProducer<>(properties);
     }

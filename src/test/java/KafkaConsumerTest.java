@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 public class KafkaConsumerTest {
     @Test
     public void consumeTest() throws InterruptedException {
-        Consumer.consumeTopicsByGroup("group1");
+        Consumer.consumeTopicsByGroup("topic");
 
     }
 }

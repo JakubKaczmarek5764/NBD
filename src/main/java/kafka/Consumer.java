@@ -52,9 +52,9 @@ public class Consumer {
             consumer.poll(0);
             Set<TopicPartition> assignment = consumer.assignment();
             System.out.println(consumer.groupMetadata().groupId());
-//            consumer.seekToBeginning(assignment);
+            consumer.seekToBeginning(assignment);
             Duration timeout = Duration.of(100, ChronoUnit.MILLIS);
-            MessageFormat format = new MessageFormat("Consumer {5} Topic {0} Partition {1} Offset {2, number, integer} Key {3} Value {4}");
+            MessageFormat format = new MessageFormat("Consumer {5} Topic {0} Partition {1} Offset {2, number, integer} Key {3} Value {4} siemanotoja");
             while (true) {
                 ConsumerRecords<UUID, String> records = consumer.poll(timeout);
                 for (ConsumerRecord<UUID, String> record : records) {
@@ -85,7 +85,10 @@ public class Consumer {
     }
     private static Borrowing mapRecordToBorrowing(ConsumerRecord<UUID, String> record) {
         JSONObject json = new JSONObject(record.value());
-        MongoUniqueId id = new MongoUniqueId(UUID.fromString(json.getString("id")));
+        System.out.println(json);
+        System.out.println("siemanotoborrowing");
+
+        MongoUniqueId id = new MongoUniqueId(UUID.fromString(json.getString("borrowingId")));
         ZonedDateTime beginDate = Instant.ofEpochMilli(json.getLong("beginDate")).atZone(ZoneId.systemDefault());
         ZonedDateTime endDate = null;
         try {
@@ -100,7 +103,10 @@ public class Consumer {
     }
 
     private static Literature mapJsonToLiterature(JSONObject jsonLiterature) {
-        MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonLiterature.getString("id")));
+        MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonLiterature.getJSONObject("literatureId").getString("id")));
+        System.out.println(jsonLiterature);
+        System.out.println("siemanotoliteratura");
+
         if (jsonLiterature.getString("type").equals("Book")) {
             return new Book(id, jsonLiterature.getString("name"), jsonLiterature.getString("genre"), jsonLiterature.getString("author"), jsonLiterature.getInt("weight"), jsonLiterature.getInt("tier"), jsonLiterature.getInt("isBorrowed"));
         }
@@ -113,7 +119,9 @@ public class Consumer {
     }
 
     private static Client mapJsonToClient(JSONObject jsonClient) {
-        MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonClient.getString("id")));
+        System.out.println(jsonClient);
+        System.out.println("siemanotoklient");
+        MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonClient.getJSONObject("clientId").getString("id")));
         return new Client(id, jsonClient.getString("firstName"), jsonClient.getString("lastName"), jsonClient.getString("personalID"), jsonClient.getInt("maxWeight"), jsonClient.getInt("currentWeight"));
 
     }
