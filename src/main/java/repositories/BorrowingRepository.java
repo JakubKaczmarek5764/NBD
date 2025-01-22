@@ -31,7 +31,7 @@ public class BorrowingRepository extends AbstractMongoRepository implements IBor
             .build();
 
     public BorrowingRepository() {
-        Producer.createTopic("topic");
+        Producer.createTopic("borrowings");
     }
     @Override
     public void create(Borrowing obj) {

@@ -1,3 +1,4 @@
+import kafka.Consumer;
 import kafka.Producer;
 import mappers.MongoUniqueId;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,9 @@ public class KafkaProducerTest {
     }
     @Test
     public void sendBorrowingTest() {
-        borrowingRepository.create(bor1);
-        borrowingRepository.create(bor2);
+        Producer.sendBorrowing(bor1);
+        Producer.sendBorrowing(bor2);
+//        borrowingRepository.create(bor1);
+//        borrowingRepository.create(bor2);
     }
 }

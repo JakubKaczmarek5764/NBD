@@ -35,11 +35,9 @@ public class Producer {
                 return;
             }
 
-            // Create the topic if it doesn't exist
             NewTopic newTopic = new NewTopic(topicName, 3, (short) 3);
             CreateTopicsResult result = admin.createTopics(List.of(newTopic));
-            result.all().get(); // Wait for topic creation
-            System.out.println("Topic created successfully: " + topicName);
+            result.all().get();
 
         } catch (ExecutionException e) {
             throw new RuntimeException("Failed to create topic: " + topicName, e);
