@@ -56,6 +56,7 @@ public class Producer {
 //        properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "859676a3-08b8-4bd0-b82e-e6267d524ea5");
 
         kafkaProducer = new KafkaProducer<>(properties);
+//        kafkaProducer.initTransactions();
     }
     public static void sendBorrowing(Borrowing borrowing) {
         try {
@@ -74,8 +75,8 @@ public class Producer {
         JSONObject jsonBorrowing = new JSONObject();
         jsonBorrowing.put("borrowingId", borrowing.getBorrowingId());
         jsonBorrowing.put("beginDate", borrowing.getBeginDate().toInstant().toEpochMilli());
-        if (borrowing.getEndDate() == null) {
-            jsonBorrowing.put("endDate", 0);
+        if (borrowing.getEndDate() != null) {
+            jsonBorrowing.put("endDate", borrowing.getEndDate());
         }
         jsonBorrowing.put("client", new JSONObject(borrowing.getClient()));
         JSONObject jsonLiterature = new JSONObject(borrowing.getLiterature());

@@ -31,9 +31,7 @@ public class KafkaProducerTest {
     }
     @Test
     public void sendBorrowingTest() {
-        Producer.sendBorrowing(bor1);
-        Producer.sendBorrowing(bor2);
-//        borrowingRepository.create(bor1);
-//        borrowingRepository.create(bor2);
+        borrowingRepository.create(bor1);
+        borrowingRepository.create(bor2);
     }
 }

@@ -11,6 +11,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.json.JSONObject;
 import repositories.BorrowingRepository;
+import repositories.BorrowingRepositoryConsumer;
 
 import java.text.MessageFormat;
 import java.time.Duration;
@@ -26,7 +27,7 @@ public class Consumer {
     static String consumerGroupId = "group1";
     static String topicName;
     static List<KafkaConsumer<UUID, String>> consumerGroup;
-    private static BorrowingRepository borrowingRepository = new BorrowingRepository();
+    private static BorrowingRepositoryConsumer borrowingRepository = new BorrowingRepositoryConsumer();
     private static void initConsumerGroup() {
         consumerGroup = new ArrayList<>();
         Properties properties = new Properties();
@@ -52,7 +53,7 @@ public class Consumer {
             consumer.poll(0);
             Set<TopicPartition> assignment = consumer.assignment();
             System.out.println(consumer.groupMetadata().groupId());
-            consumer.seekToBeginning(assignment);
+//            consumer.seekToBeginning(assignment);
             Duration timeout = Duration.of(100, ChronoUnit.MILLIS);
             MessageFormat format = new MessageFormat("Consumer {5} Topic {0} Partition {1} Offset {2, number, integer} Key {3} Value {4} siemanotoja");
             while (true) {

@@ -17,7 +17,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 
 import java.util.List;
 
-public abstract class AbstractMongoRepository implements AutoCloseable {
+public abstract class AbstractMongoRepositoryConsumer implements AutoCloseable {
     private static final ConnectionString connectionString = new ConnectionString(
             "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_single");
 
@@ -51,7 +51,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                 ))
                 .build();
         mongoClient = MongoClients.create(settings);
-        nbd = mongoClient.getDatabase("nbd");
+        nbd = mongoClient.getDatabase("nbdConsumer");
         return nbd;
     }
 
