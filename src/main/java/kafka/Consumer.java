@@ -81,8 +81,6 @@ public class Consumer {
     }
     private static Borrowing mapRecordToBorrowing(ConsumerRecord<UUID, String> record) {
         JSONObject json = new JSONObject(record.value());
-        System.out.println(json);
-        System.out.println("siemanotoborrowing");
 
         MongoUniqueId id = new MongoUniqueId(UUID.fromString(json.getString("borrowingId")));
         ZonedDateTime beginDate = Instant.ofEpochMilli(json.getLong("beginDate")).atZone(ZoneId.systemDefault());
@@ -100,8 +98,7 @@ public class Consumer {
 
     private static Literature mapJsonToLiterature(JSONObject jsonLiterature) {
         MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonLiterature.getJSONObject("literatureId").getString("id")));
-        System.out.println(jsonLiterature);
-        System.out.println("siemanotoliteratura");
+
 
         if (jsonLiterature.getString("type").equals("Book")) {
             return new Book(id, jsonLiterature.getString("name"), jsonLiterature.getString("genre"), jsonLiterature.getString("author"), jsonLiterature.getInt("weight"), jsonLiterature.getInt("tier"), jsonLiterature.getInt("isBorrowed"));
@@ -115,8 +112,7 @@ public class Consumer {
     }
 
     private static Client mapJsonToClient(JSONObject jsonClient) {
-        System.out.println(jsonClient);
-        System.out.println("siemanotoklient");
+
         MongoUniqueId id = new MongoUniqueId(UUID.fromString(jsonClient.getJSONObject("clientId").getString("id")));
         return new Client(id, jsonClient.getString("firstName"), jsonClient.getString("lastName"), jsonClient.getString("personalID"), jsonClient.getInt("maxWeight"), jsonClient.getInt("currentWeight"));
 

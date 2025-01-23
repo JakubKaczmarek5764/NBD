@@ -30,10 +30,8 @@ public class Producer {
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka2:9292, kafka3:9392");
 
         try (Admin admin = Admin.create(properties)) {
-            // Check if the topic already exists
             ListTopicsResult topics = admin.listTopics();
             if (topics.names().get().contains(topicName)) {
-                System.out.println("Topic already exists: " + topicName);
                 return;
             }
 
