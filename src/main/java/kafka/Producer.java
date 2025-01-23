@@ -90,7 +90,7 @@ public class Producer {
         JSONObject jsonLiterature = new JSONObject(borrowing.getLiterature());
         jsonLiterature.put("type", borrowing.getLiterature().getClass().getSimpleName());
         jsonBorrowing.put("literature", jsonLiterature);
-
+        jsonBorrowing.put("shopName", "firstShop");
         return jsonBorrowing;
     }
 }
