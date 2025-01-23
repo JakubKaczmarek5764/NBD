@@ -38,11 +38,6 @@ public class Consumer {
         properties.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
         for (int i = 0; i < 2; i++) {
             KafkaConsumer<UUID, String> consumer = new KafkaConsumer<>(properties);
-            consumerGroup.add(consumer);
-            consumer.subscribe(List.of(topicName));
-        }
-        for (int i = 0; i < 2; i++) {
-            KafkaConsumer<UUID, String> consumer = new KafkaConsumer<>(properties);
             consumer.subscribe(List.of(topicName));
             consumerGroup.add(consumer);
         }

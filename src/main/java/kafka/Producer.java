@@ -7,7 +7,9 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.KafkaFuture;
+import org.apache.kafka.common.errors.ProducerFencedException;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.common.serialization.UUIDSerializer;
@@ -53,23 +55,29 @@ public class Producer {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "local");
-//        properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "859676a3-08b8-4bd0-b82e-e6267d524ea5");
+        properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "859676a3-08b8-4bd0-b82e-e6267d524ea5");
 
         kafkaProducer = new KafkaProducer<>(properties);
 //        kafkaProducer.initTransactions();
     }
     public static void sendBorrowing(Borrowing borrowing) {
+        initProducer();
+        kafkaProducer.initTransactions();
         try {
-            initProducer();
+            kafkaProducer.beginTransaction();
             JSONObject jsonBorrowing = borToJson(borrowing);
             ProducerRecord<UUID, String> record = new ProducerRecord<>(topicName, borrowing.getBorrowingId().getId(), jsonBorrowing.toString());
             Future<RecordMetadata> sent = kafkaProducer.send(record);
             RecordMetadata metadata = sent.get();
             System.out.println(metadata.toString());
+            kafkaProducer.commitTransaction();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
+        } catch (ProducerFencedException e) {
+            kafkaProducer.close();
+        } catch (KafkaException e) {
+            kafkaProducer.abortTransaction();
         }
-
     }
     private static JSONObject borToJson(Borrowing borrowing) {
         JSONObject jsonBorrowing = new JSONObject();
